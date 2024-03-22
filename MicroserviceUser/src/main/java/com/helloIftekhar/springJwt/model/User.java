@@ -19,13 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-@Document(collection = "user")
+@Document(collection = "users")
 public class User implements UserDetails {
 
     @Id
     private String id;
 
-    @Field(name = "first_name")
+    @Field(name = "firstname")
     private String firstName;
 
     @Field(name = "last_name")
@@ -37,11 +37,34 @@ public class User implements UserDetails {
     @Field(name = "password")
     private String password;
 
+    @Field(name = "getEmail")
+    private String getEmail;
+
+
+    @Field(name = "niveau")
+    private String niveau;
+
+    @Field(name = "email")
+    private String email;
+
+    @Field(name = "address")
+    private String address;
+
+    @Field(name = "datebirth")
+    private String datebirth;
+
+    @Field(name = "validation")
+    private String validation;
+
+    @Field(name = "action")
+    private String action;
+
     @Field(name = "role")
     private Role role;
 
     @Field(name = "tokens")
     private List<Token> tokens;
+
 
 
     @Override
