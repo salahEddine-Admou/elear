@@ -46,6 +46,7 @@ public class SecurityConfig {
                         req->req.requestMatchers("/login/**","/register/**")
                                 .permitAll()
                                 .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
+                                .requestMatchers("/users/**").hasAuthority("ADMIN")
                                 .requestMatchers("/trainer_only/**").hasAuthority("TRAINER")
                                 .requestMatchers("/user_only/**").hasAuthority("USER")
                                 //.requestMatchers("/logOut/**").hasAuthority("TRAINER")

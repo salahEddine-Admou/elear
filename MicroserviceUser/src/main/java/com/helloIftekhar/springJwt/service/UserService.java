@@ -33,10 +33,8 @@ public class UserService implements IUserService {
             st.setNiveau(user.getNiveau());
             st.setEmail(user.getEmail());
             st.setAddress(user.getAddress());
-            st.setDatebirth(user.getDatebirth());
+            st.setDate(user.getDate());
             st.setPassword(user.getPassword());
-            st.setValidation(user.getValidation());
-            st.setAction(user.getAction());
             return userRepository.save(st);
         }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found"));
     }

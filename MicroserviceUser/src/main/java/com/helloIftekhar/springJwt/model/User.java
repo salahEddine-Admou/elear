@@ -37,10 +37,6 @@ public class User implements UserDetails {
     @Field(name = "password")
     private String password;
 
-    @Field(name = "getEmail")
-    private String getEmail;
-
-
     @Field(name = "niveau")
     private String niveau;
 
@@ -50,14 +46,8 @@ public class User implements UserDetails {
     @Field(name = "address")
     private String address;
 
-    @Field(name = "datebirth")
-    private String datebirth;
-
-    @Field(name = "validation")
-    private String validation;
-
-    @Field(name = "action")
-    private String action;
+    @Field(name = "date")
+    private String date;
 
     @Field(name = "role")
     private Role role;
