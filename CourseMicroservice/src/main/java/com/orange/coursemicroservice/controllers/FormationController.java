@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/formations")
+@RequestMapping("/formations")
 public class FormationController {
     @Autowired
     private FormationService formationService;
