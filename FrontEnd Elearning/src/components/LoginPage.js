@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import loginimg from '../images/loginUI.png';
 import alertimg from '../images/alert.svg';
+import axios from 'axios';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -18,13 +19,11 @@ function LoginPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('http:/f.com/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
+            const response = await axios.post('http://localhost:8080/login', {
+                username:username,
+                password:password,
             });
+            
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
@@ -34,6 +33,28 @@ function LoginPage() {
             setError('Failed to login, please try again.');
         }
     };
+    // const auth = {
+    //     username: username,
+    //     password: password,
+    // };
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     try {
+    //         await axios.post('http://localhost:8080/login', {
+    //             username: username,
+    //             password: password,
+    //         },{
+    //             auth: auth
+    //         });
+        
+    //         alert('Login successfuly');
+    
+    //         console.log('login successful');
+    //     } catch (error) {
+    //         setError('Failed to login, please try again.');
+    //     }
+    // };
+    
 
     return (
         <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0">

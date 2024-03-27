@@ -5,7 +5,6 @@ import LandingPage from './components/LandingPage';
 
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
