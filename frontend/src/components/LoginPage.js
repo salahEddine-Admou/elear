@@ -39,29 +39,6 @@ function LoginPage() {
         }
     };
 
-    // const auth = {
-    //     username: username,
-    //     password: password,
-    // };
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try {
-    //         await axios.post('http://localhost:8080/login', {
-    //             username: username,
-    //             password: password,
-    //         },{
-    //             auth: auth
-    //         });
-        
-    //         alert('Login successfuly');
-    
-    //         console.log('login successful');
-    //     } catch (error) {
-    //         setError('Failed to login, please try again.');
-    //     }
-    // };
-    
-
     return (
         <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0">
             <div className="w-[45%] max-md:ml-0 max-md:w-full bg-orange-500 items-start">
@@ -76,7 +53,7 @@ function LoginPage() {
                         <p className="mt-2.5 mr-5 text-lg tracking-normal leading-6 text-zinc-400 max-md:mr-2.5 max-md:max-w-full">
                             In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form
                         </p>
-                        <div className="flex flex-col justify-center mt-10 max-md:max-w-full">
+                        <div className="flex flex-col justify-center font-bold mt-10 max-md:max-w-full">
                             <div className="flex flex-col max-md:max-w-full">
                                 <label htmlFor="username" className="flex gap-1.5 self-start text-lg leading-6 whitespace-nowrap">
                                     <span className="grow text-black">Username</span>
