@@ -3,6 +3,7 @@ package com.helloIftekhar.springJwt.service;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -22,6 +23,7 @@ public class UserService implements IUserService {
         if (userAlreadyExists(user.getEmail())){
             throw  new UserAlreadyExistsException(user.getEmail()+ " already exists!");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -34,7 +36,6 @@ public class UserService implements IUserService {
             st.setEmail(user.getEmail());
             st.setAddress(user.getAddress());
             st.setDate(user.getDate());
-            st.setPassword(user.getPassword());
             return userRepository.save(st);
         }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found"));
     }

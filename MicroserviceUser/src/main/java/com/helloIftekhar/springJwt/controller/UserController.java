@@ -20,12 +20,18 @@ public class UserController {
     private final IUserService userService;
 
     @GetMapping
+
     public ResponseEntity<List<User>> getUsers(){
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.FOUND);
+        return new ResponseEntity<>(
+                userService.getUsers(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public User addUser(@RequestBody User user) throws UserAlreadyExistsException {
+        return userService.addUser(user);
+    }
+    @PostMapping("/add2")
+    public User addUser2(@RequestBody User user) throws UserAlreadyExistsException {
         return userService.addUser(user);
     }
 

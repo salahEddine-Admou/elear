@@ -55,7 +55,16 @@ public class User implements UserDetails {
     @Field(name = "tokens")
     private List<Token> tokens;
 
-
+    public User(String firstName, String lastName, String username, String niveau, String email, String address, String date, Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.niveau = niveau;
+        this.email = email;
+        this.address = address;
+        this.date = date;
+        this.role = role;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
