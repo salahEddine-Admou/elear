@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import loginimg from '../images/loginUI.png';
 import alertimg from '../images/alert.svg';
 import axios from 'axios';
@@ -35,7 +35,7 @@ function LoginPage() {
                 // Store the token in local storage
                 localStorage.setItem('userToken', token);
                 // Navigate to the home page
-                navigate('/home');
+                navigate('/');
                 return;
             } else if (response.status === 401) {
                 setError('Unauthorized: Invalid username or password');

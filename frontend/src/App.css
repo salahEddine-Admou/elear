@@ -36,3 +36,42 @@
     transform: rotate(360deg);
   }
 }
+/* Ajoutez cette classe à votre fichier CSS */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.success-dialog {
+  animation: fadeIn 2s; /* Animation de 2 secondes */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0); /* Fond semi-transparent */
+  z-index: 1000;
+  /* Ajoutez ces propriétés pour contrôler la taille de la boîte de dialogue */
+  width: 30%; /* ou une valeur fixe comme 400px */
+  height: 20%; /* ou une valeur fixe comme 200px */
+  margin: auto; /* Cela garde la boîte de dialogue centrée */
+  /* Ajoutez des propriétés pour arrondir les coins de la boîte de dialogue */
+  border-radius: 20px; /* Cela ajoute des coins arrondis à la boîte de dialogue */
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+
+  border-radius: 10px;
+}
+
+
+.success-text {
+  padding: 10px;
+  color: green;
+  display: inline-block;
+  
+}
+

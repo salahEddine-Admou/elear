@@ -1,0 +1,103 @@
+﻿/* Responsive table styles */
+.responsive-table {
+    margin: auto;
+    margin-top: 2px;
+    width: 95%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid #ddd;
+}
+
+td{
+    background-color: #F7F7F7;
+    
+    
+}
+th{
+   
+    font-style: normal;
+    color:black;
+    font-weight: bold;
+    background-color: #fff;
+    text-align: center;
+    width: 70px;
+    
+}
+
+/* Adjustments for smaller screens */
+@media screen and (max-width: 640px) {
+    .responsive-table table {
+        font-size: 0.875rem; /* Adjust font-size for small devices */
+    }
+    
+    /* Hide less important columns on small screens */
+    .responsive-table thead th:nth-child(6),
+    .responsive-table tbody td:nth-child(6),
+    .responsive-table thead th:nth-child(7),
+    .responsive-table tbody td:nth-child(7),
+    .responsive-table thead th:nth-child(8),
+    .responsive-table tbody td:nth-child(8) {
+        display: none;
+    }
+}
+
+
+
+/* Media Query pour petits écrans */
+@media (max-width: 600px) {
+  .pagination {
+    gap: 4px; /* Réduit l'espacement sur petits écrans */
+    width: 100% !important;
+  }
+
+  .pagination button {
+    padding: 5px 8px; /* Réduit légèrement le padding pour économiser de l'espace */
+    font-size: 0.75rem; /* Réduit la taille de la police pour les petits écrans */
+  }
+}
+
+  .pagination {
+  display: flex;
+  justify-content: center; /* Assure que la pagination reste centrée */
+  flex-wrap: wrap; /* Permet aux éléments de la pagination de passer à la ligne sur petits écrans */
+  gap: 8px; /* Espacement entre les boutons */
+}
+
+.pagination button {
+  padding: 5px 10px; /* Taille adaptée pour être facilement cliquable */
+  border: none;
+  border-radius: 5px;
+  background-color: #ea5d06;
+  color: white;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #ea5d06;
+}
+
+.pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Media Query pour petits écrans */
+
+/* customTableStyles.css */
+
+.custom-table .ant-table-cell {
+  font-size: 18px; /* Adjust the font size as needed */
+}
+
+.custom-table {
+  overflow-y: auto;
+}
+/* For the header cells */
+.custom-table .ant-table-thead > tr >th{
+  font-size: 17px; /* Adjust header font size as needed */
+}
+.my-table-container .table-row-selected {
+  background-color: orange !important;
+}
+
+
