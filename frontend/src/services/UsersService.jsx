@@ -110,3 +110,28 @@ export const updateUser = async (userId, userData) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+export const logout = async () => {
+    const api = `http://localhost:8080/logOut`; // L'URL pour se déconnecter
+
+    try {
+        const token = localStorage.getItem("userToken");
+        const response = await fetch(api, {
+            method: 'GET', // Utilisez 'GET' pour les demandes de déconnexion
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            console.log('Logout successful');
+            return { status: 'success', message: 'Logout successful'};
+        } else {
+            console.error('HTTP-Error:', response.status);
+            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+}
+

@@ -1,8 +1,9 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Orangelogo from "../images/Orange_logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom"; // Ensure this is correctly imported
 import {
   faChevronDown,
   faFolder,
@@ -23,6 +24,34 @@ function classNames(...classes) {
 }
 
 export default function NavBar() {
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Corrected logout function
+  const logout = async () => {
+    const api = `http://localhost:8080/logOut`; // Logout URL
+
+    try {
+      const token = localStorage.getItem("userToken");
+      const response = await fetch(api, {
+        method: 'GET', // Use 'GET' for logout requests
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        console.log('Logout successful');
+        localStorage.removeItem("userToken"); // Remove token on successful logout
+        navigate('/login'); // Redirect to login
+      } else {
+        console.error('HTTP-Error:', response.status);
+        alert(`Logout failed: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      alert(`Error: ${error.message}`);
+    }
+  };
   return (
     <Disclosure as="nav" className="bg-slate-950 fixed top-0 left-0 right-0 z-10">
       {({ open }) => (
@@ -93,20 +122,21 @@ export default function NavBar() {
                       </Menu.Item>
 
                       <Menu.Item>
-                        {({ active }) => (
-                          <div className="mb-2 mr-4 m-4">
-                            <a
-                              href="login"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-12 py-2 text-sm text-gray-700 border-2 border-orange-500 font-bold bg-orange-500"
-                              )}
-                            >
-                              Log out
-                            </a>
-                          </div>
-                        )}
-                      </Menu.Item>
+  {({ active }) => (
+    <div className="mb-2 mr-4 m-4">
+      <button
+              onClick={logout} // Call the corrected logout function here
+              className={classNames(
+                active ? "bg-gray-100" : "",
+                "block px-12 py-2 text-sm text-gray-700 border-2 border-orange-500 font-bold bg-orange-500 cursor-pointer"
+              )}
+            >
+              Log out
+            </button>
+    </div>
+  )}
+</Menu.Item>
+
                     </Menu.Items>
                   </Transition>
                 </Menu>
