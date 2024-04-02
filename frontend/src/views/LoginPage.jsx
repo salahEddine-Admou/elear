@@ -57,7 +57,7 @@ function LoginPage() {
             <div className="flex flex-col ml-5 w-[40%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col self-stretch px-5 pb-16 my-auto max-md:mt-10 max-md:max-w-full">
                     <h2 className="text-3xl font-bold tracking-normal leading-8 max-md:mr-2.5 max-md:max-w-full">
-                        Welcome to the <span className="text-orange-500">Admin Page</span>
+                        <span className="text-orange-500">Welcome again</span>
                     </h2>
                     <form onSubmit={handleSubmit}>
                         <p className="mt-2.5 mr-5 text-lg tracking-normal leading-6 text-zinc-400 max-md:mr-2.5 max-md:max-w-full">
