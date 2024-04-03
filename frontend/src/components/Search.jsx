@@ -40,7 +40,14 @@ const Search = () => {
           </button>
           <SearchOutlined className="md:hidden text-xl border-2 text-black border-black rounded-full py-1 px-1 font-bold ml-4 hover:bg-black hover:text-white" />
         </div>
-
+        <button
+          
+          className="md:border-2  md:text-red-600 md:flex md:items-center md:justify-around md:space-x- md:border-red-600 md:hover:bg-red-600 md:hover:text-white md:py-2 md:px-6 md:text-xl md:font-bold mx-4"
+          
+        >
+          <PlusCircleTwoTone twoToneColor="#52c41a" className="md:hidden  text-4xl" />
+          <span className="hidden md:inline-block">delete</span>
+        </button>
         <button
           onClick={openModal}
           className="md:border-2  md:text-green-600 md:flex md:items-center md:justify-around md:space-x-2 md:border-green-600 md:hover:bg-green-600 md:hover:text-white md:py-2 md:px-6 md:text-xl md:font-bold"
