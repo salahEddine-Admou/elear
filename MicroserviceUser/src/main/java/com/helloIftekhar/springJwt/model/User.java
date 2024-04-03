@@ -25,20 +25,14 @@ public class User implements UserDetails {
     @Id
     private String id;
 
-    @Field(name = "firstname")
-    private String firstName;
-
-    @Field(name = "last_name")
-    private String lastName;
+    @Field(name = "full_name")
+    private String fullName;
 
     @Field(name = "username")
     private String username;
 
     @Field(name = "password")
     private String password;
-
-    @Field(name = "niveau")
-    private String niveau;
 
     @Field(name = "email")
     private String email;
@@ -55,11 +49,9 @@ public class User implements UserDetails {
     @Field(name = "tokens")
     private List<Token> tokens;
 
-    public User(String firstName, String lastName, String username, String niveau, String email, String address, String date, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String fullName, String username, String email, String address, String date, Role role) {
+        this.fullName = fullName;
         this.username = username;
-        this.niveau = niveau;
         this.email = email;
         this.address = address;
         this.date = date;

@@ -30,9 +30,7 @@ public class UserService implements IUserService {
     @Override
     public User updateUser(User user, String id) {
         return userRepository.findById(id).map(st -> {
-            st.setFirstName(user.getFirstName());
-            st.setLastName(user.getLastName());
-            st.setNiveau(user.getNiveau());
+            st.setFullName(user.getFullName());
             st.setEmail(user.getEmail());
             st.setAddress(user.getAddress());
             st.setDate(user.getDate());
