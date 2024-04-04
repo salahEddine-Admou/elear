@@ -1,8 +1,8 @@
-spring.application.name=CourseMicroservice
 spring:
     data:
         mongodb:
             database: security
             host: localhost
             port: 27017
-server.port=8082  
+server:
+    port: 8082

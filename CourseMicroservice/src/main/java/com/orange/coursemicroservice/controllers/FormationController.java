@@ -19,7 +19,7 @@ public class FormationController {
         Formation CreatedFormation = formationService.CreateFormation(formation);
         return new ResponseEntity<>(CreatedFormation, HttpStatus.CREATED);
     }
-    @GetMapping
+    @GetMapping("/gett")
     public ResponseEntity<List<Formation>> getAllFormations(){
         List<Formation> formations = formationService.getAllFormations();
         return new ResponseEntity<>(formations,HttpStatus.OK);
