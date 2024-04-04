@@ -51,9 +51,9 @@ function LoginPage() {
 
     return (
         <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0">
-            <div className="w-[45%] max-md:ml-0 max-md:w-full bg-orange-500 items-start">
-                <img src={loginimg} alt="Login" style={{ height: "100vh", width: "auto" }} />
-            </div>
+            
+                <img src={loginimg} alt="Login" style={{ height: "100vh", width: "90vh" }} />
+            
             <div className="flex flex-col ml-5 w-[40%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col self-stretch px-5 pb-16 my-auto max-md:mt-10 max-md:max-w-full">
                     <h2 className="text-3xl font-bold tracking-normal leading-8 max-md:mr-2.5 max-md:max-w-full">

@@ -4,11 +4,10 @@ import { addUser} from "../services/UsersService";
 
 const AddUserModal = ({ isOpen, onClose }) => {
   const [user, setUser] = useState({
-    firstame: '',
-    lastname: '',
+  
+    fullName: '',
     username: '',
     email: '',
-    niveau: '',
     password: '',
     confirmPassword: '',
     date: '',
@@ -43,14 +42,11 @@ const AddUserModal = ({ isOpen, onClose }) => {
           // Réinitialiser l'état de l'utilisateur après la fermeture
           window.location.reload();
           setUser({
-            firstName: "",
-            lastName: "",
+            fullName: "",
             username: "",
             email: "",
-            niveau: "",
             password: "",
             date: "",
-            address: "",
             role: "",
           });
         }, 3000); // Message de succès affiché pendant 3 secondes
@@ -88,22 +84,16 @@ const AddUserModal = ({ isOpen, onClose }) => {
               <span className="modal-close font-black text-3xl absolute top-0 right-0 h-12 mt-3 mr-4 cursor-pointer" onClick={onClose}>&times;</span>
               <h2 className="text-xl font-bold mb-4 mt-4">Add New User</h2>
               <form onSubmit={handleSubmit} className='mb-2'>
-              <span className='font-bold '>First Name</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="firstName"  value={user.firstName } onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
-                <span className='font-bold '>Last name</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="lastName" value={user.lastName } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
+              <span className='font-bold '>Full Name</span><span className="text-orange-500">*</span><br />
+                <input type="text" name="fullName"  value={user.fullName } onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
                 <span className='font-bold '>User name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="username" value={user.username } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>Email</span><span className="text-orange-500">*</span><br />
                 <input type="email" name="email" value={user.email } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>Niveau</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="niveau" value={user.niveau } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>password</span><span className="text-orange-500">*</span><br />
                 <input type="password" name="password" value={user.password } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>Date of birth</span><span className="text-orange-500">*</span><br />
                 <input type="date" name="date" value={user.date } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full " /><br /><br />
-                <span className='font-bold '>Adress</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="address" value={user.address } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>Role</span><span className="text-orange-500">*</span><br />
                 <select
                 name="role"

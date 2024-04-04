@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-dom';
 import LoginPage from './views/LoginPage';
+import Register from './views/Register';
 import Home from './views/Home';
 import Layouts from './layout/Layouts';
 import Notification from './views/Notification';
@@ -26,6 +27,7 @@ function App() {
           <Route path="dashbord" element={<Dashbord />} />
         </Route>
           <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

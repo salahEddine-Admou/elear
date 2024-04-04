@@ -71,12 +71,8 @@ const UserTable = ({ searchValue }) => {
       ),
     },
     {
-      title: 'First Name',
-      dataIndex: 'firstName',
-    },
-    {
-      title: 'Last Name',
-      dataIndex: 'lastName',
+      title: 'Full Name',
+      dataIndex: 'fullName',
     },
     {
       title: 'Username',
@@ -85,14 +81,6 @@ const UserTable = ({ searchValue }) => {
     {
       title: 'Email',
       dataIndex: 'email',
-    },
-    {
-      title: 'Level',
-      dataIndex: 'niveau',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
     },
     {
       title: 'Date',
@@ -167,9 +155,8 @@ const UserTable = ({ searchValue }) => {
 
   const filteredData = searchValue.trim().length > 0
   ? data.filter(user =>
-      user.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
       user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+      user.fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
       user.email.toLowerCase().includes(searchValue.toLowerCase()) 
     )
   : data;

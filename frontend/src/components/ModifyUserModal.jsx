@@ -6,14 +6,11 @@ const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
   
   // Initialisation de l'état du formulaire avec les données de l'utilisateur initial
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     username: "",
     email: "",
-    niveau: "",
     password: "",
     date: "",
-    address: "",
     role: "",
   });
   const [showSuccess, setShowSuccess] = useState(false);
@@ -28,14 +25,11 @@ const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
   useEffect(() => {
     if (initialUser && isOpen) {
       setFormData({
-        firstName: initialUser.firstName || '',
-        lastName: initialUser.lastName || '',
+        fullName: initialUser.fullName || '',
         username: initialUser.username || '',
         email: initialUser.email || '',
-        niveau: initialUser.niveau || '',
         password: initialUser.password || '',
         date: initialUser.date || '',
-        address: initialUser.address || '',
         role: initialUser.role || '',
       });
     }
@@ -92,22 +86,16 @@ const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
               <span className="modal-close font-black text-3xl absolute top-0 right-0 h-12 mt-3 mr-4 cursor-pointer" onClick={onClose}>&times;</span>
               <h2 className="text-xl font-bold mb-4 mt-4">Modify User</h2>
               <form onSubmit={handleSubmit} className='mb-2'>
-                <span className='font-bold '>First Name</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="firstName"  value={formData ? formData.firstName : ''} onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
-                <span className='font-bold '>Last name</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="lastname" value={formData ? formData.lastName : ''} onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
+                <span className='font-bold '>Full Name</span><span className="text-orange-500">*</span><br />
+                <input type="text" name="fullName"  value={formData ? formData.fullName : ''} onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
                 <span className='font-bold '>User name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="username" value={formData ? formData.username : ''} onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>Email</span><span className="text-orange-500">*</span><br />
                 <input type="email" name="email" value={formData ? formData.email : ''} onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>Niveau</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="niveau" value={formData ? formData.niveau : ''} onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>password</span><span className="text-orange-500">*</span><br />
                 <input type="password" name="password" value={formData ? formData.password : ''} onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>Date of birth</span><span className="text-orange-500">*</span><br />
                 <input type="date" name="date" value={formData ? formData.date : ''} onChange={handleChange} className="border-2 border-gray-400 px-2 w-full " /><br /><br />
-                <span className='font-bold '>Adress</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="address" value={formData ? formData.address : ''} onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold '>Role</span><span className="text-orange-500">*</span><br />
                 <select
                 name="role"
