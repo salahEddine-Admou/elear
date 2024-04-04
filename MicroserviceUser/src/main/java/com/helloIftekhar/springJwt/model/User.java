@@ -37,9 +37,6 @@ public class User implements UserDetails {
     @Field(name = "email")
     private String email;
 
-    @Field(name = "address")
-    private String address;
-
     @Field(name = "date")
     private String date;
 
@@ -49,11 +46,10 @@ public class User implements UserDetails {
     @Field(name = "tokens")
     private List<Token> tokens;
 
-    public User(String fullName, String username, String email, String address, String date, Role role) {
+    public User(String fullName, String username, String email, String date, Role role) {
         this.fullName = fullName;
         this.username = username;
         this.email = email;
-        this.address = address;
         this.date = date;
         this.role = role;
     }

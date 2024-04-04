@@ -32,7 +32,6 @@ public class UserService implements IUserService {
         return userRepository.findById(id).map(st -> {
             st.setFullName(user.getFullName());
             st.setEmail(user.getEmail());
-            st.setAddress(user.getAddress());
             st.setDate(user.getDate());
             return userRepository.save(st);
         }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found"));
