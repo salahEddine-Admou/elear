@@ -57,11 +57,11 @@ export default function NavBar() {
       {({ open }) => (
         <>
           <div className="mx-auto max-w-9xl px-2 sm:px-6 lg:px-8 ">
-            <div className="relative flex h-24 items-center justify-between ">
-                <div className="flex flex-shrink-0 items-center m-12">
-                  <img className="h-11 w-auto " src={Orangelogo} alt="Orange" />
-                  <div className="text-white ml-2 font-helvetica ">
-                    <span className="text-white font-bold">
+            <div className="relative flex h-16 items-center justify-between ">
+                <div className="flex flex-shrink-0 items-center m-6">
+                  <img className="h-9 w-auto " src={Orangelogo} alt="Orange" />
+                  <div className="text-white ml-2 text-sm ">
+                    <span className="font-bold">
                       Orange Digital
                       <br />
                       Center
@@ -76,7 +76,7 @@ export default function NavBar() {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       <img
-                        className="h-12 w-12 rounded-full"
+                        className="h-10 w-10 rounded-full"
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                         alt=""
                       />
@@ -91,12 +91,12 @@ export default function NavBar() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-44 origin-top-right rounded-md bg-white py-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
                         {({ active }) => (
                           <div>
                             <div className="mb-4">
-                              <span className="text-gray-800 font-bold px-9 space-y-8">
+                              <span className="text-gray-800 font-bold px-9 space-y-8 text-xs">
                                 Abidi Yamina
                               </span>
                               <FontAwesomeIcon
@@ -104,14 +104,14 @@ export default function NavBar() {
                                 className="cursor-pointer"
                               />
                             </div>
-                            <div className=" mb-2 mr-4 m-4">
+                            <div className=" mb-2 mr-4 m-4 ">
                               {" "}
                               {/* Ajout de la marge en bas */}
                               <a
                                 href="#"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
-                                  "block px-12 py-2 text-sm text-gray-700 border-2 border-black font-bold"
+                                  "block px-12 py-2 text-xs text-gray-700 border-2 border-black font-bold"
                                 )}
                               >
                                 Settings
@@ -128,7 +128,7 @@ export default function NavBar() {
               onClick={logout} // Call the corrected logout function here
               className={classNames(
                 active ? "bg-gray-100" : "",
-                "block px-12 py-2 text-sm text-gray-700 border-2 border-orange-500 font-bold bg-orange-500 cursor-pointer"
+                "block px-12 py-2 text-xs text-gray-700 border-2 border-orange-500 font-bold bg-orange-500 cursor-pointer"
               )}
             >
               Log out

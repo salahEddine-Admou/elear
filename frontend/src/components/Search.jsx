@@ -28,25 +28,25 @@ const Search = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="border-2 border-gray-400 py-2 px-5 focus:outline-none focus:border-black text-xl font-bold w-full md:w-auto"
+            className="border-2 border-gray-400 py-2 px-5 focus:outline-none focus:border-black font-bold w-full md:w-auto text-sm "
             value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           />
-          <button className="border-2 text-black border-black py-2 px-4 text-xl font-bold ml-4 hover:bg-black hover:text-white md:inline-flex hidden"
+          <button className="border-2 text-black border-black py-2 px-4  font-bold ml-4 hover:bg-black hover:text-white md:inline-flex hidden text-sm"
           onClick={handleSearch}
           >
             
             Search
           </button>
-          <SearchOutlined className="md:hidden text-xl border-2 text-black border-black rounded-full py-1 px-1 font-bold ml-4 hover:bg-black hover:text-white" />
+          <SearchOutlined className="md:hidden  border-2 text-black border-black rounded-full py-1 px-1 font-bold ml-4 hover:bg-black hover:text-white" />
         </div>
         <button
           onClick={openModal}
-          className="md:border-2  md:text-green-600 md:flex md:items-center md:justify-around md:space-x-2 md:border-green-600 md:hover:bg-green-600 md:hover:text-white md:py-2 md:px-6 md:text-xl md:font-bold"
+          className="md:border-2  md:text-green-600 md:flex md:items-center md:justify-around md:space-x-2 md:border-green-600 md:hover:bg-green-600 md:hover:text-white md:py-2 md:px-6  md:font-bold"
           
         >
-          <PlusCircleTwoTone twoToneColor="#52c41a" className="md:hidden  text-4xl" />
-          <span className="hidden md:inline-block">Add User</span>
+          <PlusCircleTwoTone twoToneColor="#52c41a" className="md:hidden " />
+          <span className="hidden md:inline-block text-sm">Add User</span>
         </button>
       </div>
       <UserTable searchValue={filteredValue} />

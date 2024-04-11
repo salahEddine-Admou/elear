@@ -84,24 +84,24 @@ const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
           <div className="modal-container flex mx-auto w-11/12 max-w-6xl h-auto">
             <div className="flex flex-col w-full items-start modal-content px-10 rounded-lg">
               <span className="modal-close font-black text-3xl absolute top-0 right-0 h-12 mt-3 mr-4 cursor-pointer" onClick={onClose}>&times;</span>
-              <h2 className="text-xl font-bold mb-4 mt-4">Modify User</h2>
+              <h2 className="text-xl font-bold mb-4 mt-4 text-lg">Modify User</h2>
               <form onSubmit={handleSubmit} className='mb-2'>
-                <span className='font-bold '>Full Name</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm'>Full Name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="fullName"  value={formData ? formData.fullName : ''} onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
-                <span className='font-bold '>User name</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm'>User name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="username" value={formData ? formData.username : ''} onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>Email</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm'>Email</span><span className="text-orange-500">*</span><br />
                 <input type="email" name="email" value={formData ? formData.email : ''} onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>password</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm'>password</span><span className="text-orange-500">*</span><br />
                 <input type="password" name="password" value={formData ? formData.password : ''} onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>Date of birth</span><span className="text-orange-500">*</span><br />
-                <input type="date" name="date" value={formData ? formData.date : ''} onChange={handleChange} className="border-2 border-gray-400 px-2 w-full " /><br /><br />
-                <span className='font-bold '>Role</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm'>Date of birth</span><span className="text-orange-500">*</span><br />
+                <input type="date" name="date" value={formData ? formData.date : ''} onChange={handleChange} className="border-2 border-gray-400 px-2 w-full text-sm" /><br /><br />
+                <span className='font-bold text-sm'>Role</span><span className="text-orange-500">*</span><br />
                 <select
                 name="role"
                 value={initialUser ? initialUser.role : ''}
                 onChange={handleChange}
-                className="border-2 border-gray-400 px-2 w-full"
+                className="border-2 border-gray-400 px-2 w-full text-sm"
                 required
                 >
                 {/* Option par défaut pour inciter à la sélection */}
@@ -118,7 +118,7 @@ const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
                 ))} */}
                 </select>
                 <br /><br />
-                <input type="submit" value="Modify" className="border-2 border-orange-500 bg-orange-500 mb-6 px-4 font-bold" />
+                <input type="submit" value="Modify" className="border-2 border-orange-500 bg-orange-500 mb-6 px-4 font-bold text-sm" />
               </form>
             </div>
           </div>

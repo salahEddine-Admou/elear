@@ -78,33 +78,33 @@ const AddUserModal = ({ isOpen, onClose }) => {
   return (
     <>
       {!showSuccess && (
-        <dialog className="modal-backdrop w-[495px]" ref={dialogRef}>
+        <dialog className="modal-backdrop w-[480px]" ref={dialogRef}>
           <div className="modal-container flex mx-auto  w-11/12 max-w-6xl h-auto">
             <div className="flex flex-col w-full items-start modal-content px-10 rounded-lg">
-              <span className="modal-close font-black text-3xl absolute top-0 right-0 h-12 mt-3 mr-4 cursor-pointer" onClick={onClose}>&times;</span>
-              <h2 className="text-xl font-bold mb-4 mt-4">Add New User</h2>
+              <span className="modal-close font-black absolute top-0 right-0 h-12 mt-3 mr-4 cursor-pointer text-3xl" onClick={onClose}>&times;</span>
+              <h2 className="text-lg font-bold mb-4 mt-4">Add New User</h2>
               <form onSubmit={handleSubmit} className='mb-2'>
-              <span className='font-bold '>Full Name</span><span className="text-orange-500">*</span><br />
+              <span className='font-bold text-sm'>Full Name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="fullName"  value={user.fullName } onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
-                <span className='font-bold '>User name</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm '>User name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="username" value={user.username } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>Email</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm '>Email</span><span className="text-orange-500">*</span><br />
                 <input type="email" name="email" value={user.email } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>password</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm '>password</span><span className="text-orange-500">*</span><br />
                 <input type="password" name="password" value={user.password } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold '>Date of birth</span><span className="text-orange-500">*</span><br />
-                <input type="date" name="date" value={user.date } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full " /><br /><br />
-                <span className='font-bold '>Role</span><span className="text-orange-500">*</span><br />
+                <span className='font-bold text-sm '>Date of birth</span><span className="text-orange-500">*</span><br />
+                <input type="date" name="date" value={user.date } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full text-sm" /><br /><br />
+                <span className='font-bold text-sm '>Role</span><span className="text-orange-500">*</span><br />
                 <select
                 name="role"
                 value={user.role}
                 onChange={handleChange}
-                className="border-2 border-gray-400 px-2 w-full"
+                className="border-2 border-gray-400 px-2 w-full text-sm"
                 required
                 >
                 {/* Option par défaut pour inciter à la sélection */}
-                <option value="">Sélectionnez une adresse</option>
-                <option value="ADMIN">ADMIN</option>
+                <option value="" >Sélectionnez une adresse</option>
+                <option  value="ADMIN">ADMIN</option>
                 <option value="USER">USER</option>
                 <option value="TRAINER">TRAINER</option>
 
@@ -116,7 +116,7 @@ const AddUserModal = ({ isOpen, onClose }) => {
                 ))} */}
                 </select>
                 <br /><br />
-                <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 mb-6 px-4 font-bold" />
+                <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 mb-6 px-4 font-bold text-sm" />
               </form>
             </div>
           </div>

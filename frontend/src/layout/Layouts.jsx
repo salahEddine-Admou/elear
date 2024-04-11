@@ -10,7 +10,7 @@ const Layouts = () => {
   return (
     <>
       <NavBar /> 
-      <div className="flex pt-24 h-screen overflow-hidden"> 
+      <div className="flex pt-14 h-screen overflow-hidden"> 
         <div className="sticky  h-screen"> 
           <SideBar />
         </div>

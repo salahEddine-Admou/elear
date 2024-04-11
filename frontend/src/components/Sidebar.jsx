@@ -17,7 +17,7 @@ const navLinks = [
   {
     name: "Dashboard",
     icon: HomeFilled,
-    path: "/dashboard"
+    path: "/dashbord"
   },
   {
     name: "Users",
@@ -79,7 +79,7 @@ const navLinks = [
       className={`flex w-64 h-screen  border ease-in-out duration-700 bg-white border-r-1 py-5 flex-col relative sidebar-transition ${collapsed ? "w-[80px] px-5 py-4" : "w-64"}`}
     >
       <div
-        className="w-5 h-5  rounded-full absolute py-3 right-[5px] top-4  flex items-center justify-center text-black text-3xl"
+        className="w-5 h-5  rounded-full absolute py-3 right-[5px] top-4  flex items-center justify-center text-black text-2xl"
         onClick={toggleCollapsed}
       >
         {collapsed ? <CaretRightOutlined /> : <CaretLeftOutlined />}
@@ -90,7 +90,7 @@ const navLinks = [
           <NavLink
             to={item.path}
             key={index}
-            className={({ isActive }) => `flex flex-row items-center space-x-3 font-normal p-2 cursor-pointer text-xl ${isActive ? "bg-[#34313221] text-black  border-l-4 border-[#ff7900] font-semibold text-xl" : ""}`}
+            className={({ isActive }) => `flex flex-row items-center space-x-3 font-normal p-2 cursor-pointer  ${isActive ? "bg-[#34313221] text-black  border-l-4 border-[#ff7900] font-semibold " : ""}`}
             onClick={() => { } }
           >
             {React.createElement(item.icon)}

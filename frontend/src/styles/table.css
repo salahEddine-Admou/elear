@@ -86,7 +86,7 @@ th{
 /* customTableStyles.css */
 
 .custom-table .ant-table-cell {
-  font-size: 18px; /* Adjust the font size as needed */
+  font-size: 17px; /* Adjust the font size as needed */
 }
 
 .custom-table {
@@ -94,7 +94,7 @@ th{
 }
 /* For the header cells */
 .custom-table .ant-table-thead > tr >th{
-  font-size: 17px; /* Adjust header font size as needed */
+  font-size: 15px; /* Adjust header font size as needed */
 }
 .my-table-container .table-row-selected {
   background-color: orange !important;
