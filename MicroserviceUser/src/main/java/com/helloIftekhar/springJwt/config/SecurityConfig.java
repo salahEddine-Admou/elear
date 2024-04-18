@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 .requestMatchers("/trainer_only/**").hasAuthority("TRAINER")
                                 .requestMatchers("/user_only/**").hasAuthority("USER")
                                 .requestMatchers("/formations/**").hasAuthority("ADMIN")
+                                .requestMatchers("/formations/**").hasAuthority("USER")
                                 .requestMatchers("/logOut/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
