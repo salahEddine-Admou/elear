@@ -2,9 +2,9 @@ package com.helloIftekhar.springJwt.model;
 
 public class AuthenticationResponse {
     private String token;
-    private String message;
+    private Role message;
 
-    public AuthenticationResponse(String token, String message) {
+    public AuthenticationResponse(String token, Role message) {
         this.token = token;
         this.message = message;
     }
@@ -13,7 +13,7 @@ public class AuthenticationResponse {
         return token;
     }
 
-    public String getMessage() {
+    public Role getMessage() {
         return message;
     }
 }

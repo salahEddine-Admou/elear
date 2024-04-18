@@ -11,10 +11,12 @@ public class Formation {
 
     @Id
     private String id;
-    private String nom;
+    private String title;
+    private String domaine;
     private String description;
     private String photo;
     private String langue;
     private String localisation;
+    private Boolean finish;
     private List<Module> modules;
 }

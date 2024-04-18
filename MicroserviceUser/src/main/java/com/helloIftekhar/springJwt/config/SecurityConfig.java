@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 .requestMatchers("/users/**").hasAuthority("ADMIN")
                                 .requestMatchers("/trainer_only/**").hasAuthority("TRAINER")
                                 .requestMatchers("/user_only/**").hasAuthority("USER")
-                                .requestMatchers("/formations/**").hasAuthority("USER")
+                                .requestMatchers("/formations/**").hasAuthority("ADMIN")
                                 .requestMatchers("/logOut/**").permitAll()
                                 .anyRequest()
                                 .authenticated()

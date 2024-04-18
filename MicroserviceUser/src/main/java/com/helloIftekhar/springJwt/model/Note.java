@@ -6,10 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 @Document
 @Data
-public class Module {
+public class Note {
     private String id;
-    private String title;
-    private  List<Subtitle> subtitles;
-
+    private String Text;
 
 }

@@ -20,12 +20,22 @@ public class FormationController {
         Formation CreatedFormation = formationService.CreateFormation(formation);
         return new ResponseEntity<>(CreatedFormation, HttpStatus.CREATED);
     }
+    @GetMapping("/getFormations/current")
+    public ResponseEntity<List<Formation>> getAllFormationsCurrent(){
+        List<Formation> formations = formationService.getAllFormationsCurrent();
+        return new ResponseEntity<>(formations,HttpStatus.OK);
+    }
+    @GetMapping("/getFormations/finish")
+    public ResponseEntity<List<Formation>> getAllFormationsFinish(){
+        List<Formation> formations = formationService.getAllFormationsFinish();
+        return new ResponseEntity<>(formations,HttpStatus.OK);
+    }
     @GetMapping("/gett")
     public ResponseEntity<List<Formation>> getAllFormations(){
         List<Formation> formations = formationService.getAllFormations();
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
-    @GetMapping("/{id}")
+    @GetMapping("getById/{id}")
     public ResponseEntity<Formation> getFormationById(@PathVariable String id) {
         Formation formation = formationService.getFormationById(id);
         if (formation != null) {

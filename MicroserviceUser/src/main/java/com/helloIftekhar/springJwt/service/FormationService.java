@@ -19,6 +19,12 @@ public class FormationService {
     public List<Formation> getAllFormations(){
         return formationRepository.findAll();
     }
+    public List<Formation> getAllFormationsCurrent(){
+        return formationRepository.findAllCurrent();
+    }
+    public List<Formation> getAllFormationsFinish(){
+        return formationRepository.findAllFinish();
+    }
     public Formation getFormationById(String id){
         return formationRepository.findById(id).orElse(null);
     }
@@ -33,7 +39,7 @@ public class FormationService {
         Formation existingFormation = formationRepository.findById(id).orElse(null);
         if (existingFormation != null) {
             // Update the existing formation with the new data
-            existingFormation.setNom(updatedFormation.getNom());
+            existingFormation.setTitle(updatedFormation.getTitle());
 
             existingFormation.setDescription(updatedFormation.getDescription());
 
