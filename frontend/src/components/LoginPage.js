@@ -51,7 +51,7 @@ function LoginPage() {
 
     return (
         <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0">
-            <div className="w-[45%] max-md:ml-0 max-md:w-full bg-orange-500 items-start">
+            <div className="w-[45%] max-md:ml-0 max-md:w-full bg-black items-start">
                 <img src={loginimg} alt="Login" style={{ height: "100vh", width: "auto" }} />
             </div>
             <div className="flex flex-col ml-5 w-[40%] max-md:ml-0 max-md:w-full">

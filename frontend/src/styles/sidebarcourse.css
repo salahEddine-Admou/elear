@@ -1,0 +1,102 @@
+.sidebarcours {
+    position: fixed;
+    top: 60px; /* Ensure it starts after the navbar */
+    left: 0;
+    width: 250px;
+    overflow-y: auto;
+    height: calc(100vh - 60px); /* Adjusted height to fit viewport after considering navbar height */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  }
+  
+  .module-container {
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f2f2;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-radius: 3px;
+  }
+  
+  .module {
+    flex-grow: 1;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  ul li ul {
+    padding-left: 20px;
+    font-size: 0.9em;
+    list-style-type: none;
+  }
+  
+  .video-title {
+    flex-grow: 1; /* Allow the title to take up remaining space */
+
+  }
+  
+  .video-duration {
+    color: #999;
+    font-size: 0.8em;
+    margin-top: 2px;
+  }
+  
+  .video-clickable {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    padding: 5px 10px;
+  }
+  
+  .sidebarcours h2,
+  .sidebarcours h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+  }
+  
+  .sidebarcours h2 {
+    font-size: 1.2em;
+    margin-bottom: 1em;
+  }
+  
+  .sidebarcours h3 {
+    font-size: 1em;
+    color: #333;
+  }
+  
+  .selected-video {
+    font-weight: bold;
+    border-left: 4px solid #ff9204;
+    padding-left: 12px;
+    background-color: #e9ecef;
+    color: #212529;
+  }
+
+  
+  .play-icon {
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  .video-item,
+  .selected-video {
+    padding: 5px 0;
+  }
+  
+  .video-item:hover,
+  .selected-video:hover {
+    background-color: #f8f9fa;
+  }
+  

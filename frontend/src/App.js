@@ -9,6 +9,7 @@ import Email from './views/Email';
 import Test from './views/Test';
 import Dashbord from './views/Dashbord';
 import Formation from './views/Formation';
+import Parcourirmodules from './views/ParcourirModules';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         </Route>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<Register />} />
+          <Route path="modules" element={<Parcourirmodules />} />
       </Routes>
     </BrowserRouter>
   );
