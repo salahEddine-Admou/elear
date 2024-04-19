@@ -28,11 +28,8 @@ function App() {
           <Route path="dashbord" element={<Dashbord />} />
         </Route>
           <Route path="login" element={<LoginPage />} />
-<<<<<<< Updated upstream
           <Route path="register" element={<Register />} />
-=======
           <Route path="modules" element={<Parcourirmodules />} />
->>>>>>> Stashed changes
       </Routes>
     </BrowserRouter>
   );
