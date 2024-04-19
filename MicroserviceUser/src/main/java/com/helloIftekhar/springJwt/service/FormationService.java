@@ -25,6 +25,9 @@ public class FormationService {
     public List<Formation> getAllFormationsFinish(){
         return formationRepository.findAllFinish();
     }
+    public List<Formation> getAllFormationsMore(){
+        return formationRepository.findAllMore();
+    }
     public Formation getFormationById(String id){
         return formationRepository.findById(id).orElse(null);
     }

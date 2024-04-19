@@ -17,6 +17,6 @@ public class Formation {
     private String photo;
     private String langue;
     private String localisation;
-    private Boolean finish;
+    private String state;
     private List<Module> modules;
 }

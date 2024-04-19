@@ -33,6 +33,11 @@ public class FormationController {
         List<Formation> formations = formationService.getAllFormationsFinish();
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
+    @GetMapping("/getFormations/more")
+    public ResponseEntity<List<Formation>> getAllFormationsMore(){
+        List<Formation> formations = formationService.getAllFormationsMore();
+        return new ResponseEntity<>(formations,HttpStatus.OK);
+    }
     @GetMapping("/gett")
     public ResponseEntity<List<Formation>> getAllFormations(){
         List<Formation> formations = formationService.getAllFormations();
