@@ -84,13 +84,13 @@ function Register() {
                         
                         <div className="flex flex-col justify-center font-bold mt-8 max-md:max-w-full mb-6">
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="fullname" className="flex gap-1.5 self-start text-lg leading-6 whitespace-nowrap">
+                                <label htmlFor="fullname" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                                     <span className="grow text-black">Full name</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="fullname"
-                                    className="justify-center px-4 py-3.5 mt-3 text-lg leading-6 text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="text"
                                     value={fullname}
                                     onChange={handleFullnameChange}
@@ -99,13 +99,13 @@ function Register() {
                             </div>
                             <br/>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="username" className="flex gap-1.5 self-start text-lg leading-6 whitespace-nowrap">
+                                <label htmlFor="username" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
                                     <span className="grow text-black">User name</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="username"
-                                    className="justify-center px-4 py-3.5 mt-3 text-lg leading-6 text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="text"
                                     value={username}
                                     onChange={handleUsernameChange}
@@ -114,13 +114,13 @@ function Register() {
                             </div>
                             <br/>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="email" className="flex gap-1.5 self-start text-lg leading-6 whitespace-nowrap">
+                                <label htmlFor="email" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
                                     <span className="grow text-black">Email</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="email"
-                                    className="justify-center px-4 py-3.5 mt-3 text-lg leading-6 text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="email"
                                     value={email}
                                     onChange={handleEmailChange}
@@ -129,13 +129,13 @@ function Register() {
                             </div>
                             <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
                                 <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="password" className="flex gap-1.5 self-start text-lg leading-6">
+                                    <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
                                         <span className="grow text-black">Birth date</span>
                                         <span className="text-orange-500">*</span>
                                     </label>
                                     <input
                                         id="date"
-                                        className="justify-center px-4 py-3.5 mt-3 text-lg leading-6 text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                        className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                         type="date"
                                         value={date}
                                         onChange={handleDateChange}
@@ -145,13 +145,13 @@ function Register() {
                             </div>
                             <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
                                 <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="password" className="flex gap-1.5 self-start text-lg leading-6">
+                                    <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
                                         <span className="grow text-black">Password</span>
                                         <span className="text-orange-500">*</span>
                                     </label>
                                     <input
                                         id="password"
-                                        className="justify-center px-4 py-3.5 mt-3 text-lg leading-6 text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                        className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                         type="password"
                                         value={password}
                                         onChange={handlePasswordChange}
@@ -167,13 +167,13 @@ function Register() {
                             </div>}
                             <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
                                 <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="password" className="flex gap-1.5 self-start text-lg leading-6">
+                                    <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
                                         <span className="grow text-black">Retype Password</span>
                                         <span className="text-orange-500">*</span>
                                     </label>
                                     <input
                                         id="password"
-                                        className="justify-center px-4 py-3.5 mt-3 text-lg leading-6 text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                        className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                         type="password"
                                         value={password}
                                         onChange={handlePasswordChange}
@@ -181,7 +181,7 @@ function Register() {
                                     />
                                 </div>
                             </div>
-                            <div className="flex flex-col justify-center mt-6 max-w-full text-lg tracking-normal leading-6 text-center text-black whitespace-nowrap w-[182px] ">
+                            <div className="flex flex-col justify-center mt-6 max-w-full text-sm tracking-normal leading-6 text-center text-black whitespace-nowrap w-[182px] ">
                                 <button type="submit" className="justify-center px-2 py-2 bg-orange-500 max-md:px-2 mt-2">
                                     Register
 

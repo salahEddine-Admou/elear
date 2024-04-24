@@ -31,11 +31,16 @@ function LoginPage() {
             if (response.status === 200) {
                 console.log('Login successful');
                 // Extract the token from the response
+                console.log(response.data)
                 const { token } = response.data;
+                const { message } = response.data;
+               const { id } = response.data;
                 // Store the token in local storage
                 localStorage.setItem('userToken', token);
+                localStorage.setItem('userRole', message);
+                localStorage.setItem('userId', id);
                 // Navigate to the home page
-                navigate('/');
+                navigate('/Home');
                 return;
             } else if (response.status === 401) {
                 setError('Unauthorized: Invalid username or password');

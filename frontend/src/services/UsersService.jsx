@@ -135,3 +135,110 @@ export const logout = async () => {
     }
 }
 
+export const getFormationsCurrent = async () => {
+    const id = localStorage.getItem("userId");
+    const api = `http://localhost:8080/formations/getFormations/current/${id}`;
+    const token = localStorage.getItem("userToken");
+    
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+export const getFormationsFinish = async () => {
+    const id = localStorage.getItem("userId");
+    const api = `http://localhost:8080/formations/getFormations/finish/${id}`;
+    const token = localStorage.getItem("userToken");
+
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+export const getFormationsMore = async () => {
+    const api = `http://localhost:8080/formations/getFormations/more`;
+    const token = localStorage.getItem("userToken");
+
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};

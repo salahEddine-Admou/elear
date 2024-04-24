@@ -42,7 +42,7 @@ export default function NavBar() {
       if (response.ok) {
         console.log('Logout successful');
         localStorage.removeItem("userToken"); // Remove token on successful logout
-        navigate('/login'); // Redirect to login
+        navigate('/'); // Redirect to login
       } else {
         console.error('HTTP-Error:', response.status);
         alert(`Logout failed: ${response.status}`);
