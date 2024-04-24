@@ -2,6 +2,9 @@ package com.helloIftekhar.springJwt.controller;
 
 
 import com.helloIftekhar.springJwt.model.Formation;
+import com.helloIftekhar.springJwt.model.MyModule;
+import com.helloIftekhar.springJwt.model.Subtitle;
+import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.service.FormationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +23,28 @@ public class FormationController {
     private FormationService formationService;
     @PostMapping("/add")
     public ResponseEntity<Formation> createFormation(@RequestBody Formation formation){
+
         Formation CreatedFormation = formationService.CreateFormation(formation);
         return new ResponseEntity<>(CreatedFormation, HttpStatus.CREATED);
     }
-    @GetMapping("/getFormations/current")
-    public ResponseEntity<List<Formation>> getAllFormationsCurrent(){
-        List<Formation> formations = formationService.getAllFormationsCurrent();
+    @PostMapping("/AddModule/{id}")
+    public Formation InFor(@RequestBody MyModule module, @PathVariable String id){
+        System.out.println("hii");
+        return formationService.AddMod(id,module);
+    }
+    @PostMapping("/AddSubtitle/{id}/{nameModule}")
+    public Formation InSub(@RequestBody Subtitle subtitle, @PathVariable String id, @PathVariable String nameModule){
+        System.out.println("hii");
+        return formationService.AddSub(id,nameModule,subtitle);
+    }
+    @GetMapping("/getFormations/current/{id}")
+    public ResponseEntity<List<Formation>> getAllFormationsCurrent(@PathVariable String id){
+        List<Formation> formations = formationService.getAllFormationsCurrent(id);
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
-    @GetMapping("/getFormations/finish")
-    public ResponseEntity<List<Formation>> getAllFormationsFinish(){
-        List<Formation> formations = formationService.getAllFormationsFinish();
+    @GetMapping("/getFormations/finish/{id}")
+    public ResponseEntity<List<Formation>> getAllFormationsFinish(@PathVariable String id){
+        List<Formation> formations = formationService.getAllFormationsFinish(id);
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
     @GetMapping("/getFormations/more")
@@ -52,15 +66,17 @@ public class FormationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("getProgress/{id}/{name}")
+    public Integer getpro(@PathVariable String id, @PathVariable String name) {
+        return  formationService.getProgress(id,name);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Formation> updateFormation(@PathVariable String id, @RequestBody Formation formation) {
-        Formation updatedFormation = formationService.updateFormation(id, formation);
-        if (updatedFormation != null) {
-            return new ResponseEntity<>(updatedFormation, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        formationService.updateFormation(id, formation);
+
+            return new ResponseEntity<>( HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")
@@ -72,4 +88,5 @@ public class FormationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }

@@ -18,5 +18,6 @@ public class Formation {
     private String langue;
     private String localisation;
     private String state;
-    private List<Module> modules;
+    private Integer progress;
+    private List<MyModule> modules;
 }

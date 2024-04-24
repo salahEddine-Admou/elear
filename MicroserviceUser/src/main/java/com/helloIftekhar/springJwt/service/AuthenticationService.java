@@ -87,11 +87,11 @@ System.out.println("hii");
 
         User user = repository.findByUsername(request.getUsername()).orElseThrow();
         if (user == null){
-            return new AuthenticationResponse(null, user.getRole());
+            return new AuthenticationResponse(null, user.getRole(), user.getId());
         }
         else {
             if(!passwordEncoder.matches(request.getPassword(),user.getPassword())) {
-                return new AuthenticationResponse(null, user.getRole());
+                return new AuthenticationResponse(null, user.getRole(), user.getId());
 
             }
             else {
@@ -100,7 +100,7 @@ System.out.println("hii");
                 revokeAllTokenByUser(user);
                 saveUserToken(jwt, user);
  System.out.println(user.getRole());
-                return new AuthenticationResponse(jwt, user.getRole());
+                return new AuthenticationResponse(jwt, user.getRole(), user.getId());
 
             }
         }
