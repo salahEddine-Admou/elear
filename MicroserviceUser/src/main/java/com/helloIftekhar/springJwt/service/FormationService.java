@@ -68,7 +68,7 @@ public class FormationService {
     }
 
     public Formation AddMod(String id, MyModule module) {
-       return  formationRepository.findById(id)
+      Formation f =  formationRepository.findById(id)
                 .map(st -> {
 
 
@@ -81,9 +81,30 @@ public class FormationService {
                     return formationRepository.save(st);
                 }).orElseThrow(() -> new UserNotFoundException("Sorry, this formation could not be found"));
 
+        List<User> usersWithUpdatedFormation = userRepo.findAllByFormationName(id);
+
+        // Mettre à jour la formation dans chaque utilisateur
+        for (User user : usersWithUpdatedFormation) {
+            List<Formation> formations = user.getFormations();
+            for (Formation formation : formations) {
+                if (formation.getId().equals(id)) {
+                    if (formation.getModules()== null) {
+                        formation.setModules(new ArrayList<>()); // Créer une nouvelle liste si elle est null
+                    }
+                    module.setProgress(0);
+                    formation.getModules().add(module);
+                    // Mettre à jour d'autres champs si nécessaire
+                    break;
+                }
+            }
+            user.setFormations(formations);
+            userRepo.save(user);
+        }
+
+return f;
     }
     public Formation AddSub(String id, String nameModule, Subtitle subtitle) {
-        Optional<Formation> formationOptional = formationRepository.findById(id);
+       /* Optional<Formation> formationOptional = formationRepository.findById(id);
 
         if (formationOptional.isPresent()) {
             Formation formation = formationOptional.get();
@@ -107,6 +128,40 @@ public class FormationService {
 
                 return formation;
             }
+        }*/
+        List<User> usersWithUpdatedFormation = userRepo.findAllByFormationName(id);
+
+        // Mettre à jour la formation dans chaque utilisateur
+        for (User user : usersWithUpdatedFormation) {
+            List<Formation> formations = user.getFormations();
+            for (Formation formation : formations) {
+                if (formation.getId().equals(id)) {
+                    Optional<MyModule> moduleOptional = formation.getModules().stream()
+                            .filter(module -> module.getTitle().equals(nameModule))
+                            .findFirst();
+                    System.out.println(moduleOptional);
+                    if (moduleOptional.get().getSubtitles()==null) {
+                        MyModule module = moduleOptional.get();
+                        module.setSubtitles(new ArrayList<>()); // Créer une nouvelle liste si elle est null
+                    }
+                    if (moduleOptional.isPresent()) {
+                        MyModule module = moduleOptional.get();
+System.out.println();
+                        // Ajouter le sous-titre au module
+                        module.getSubtitles().add(subtitle);
+                        System.out.println(module.getSubtitles());
+                        // Mettre à jour la formation dans la base de données
+                        formationRepository.save(formation);
+
+                        break;
+                    }
+
+                    // Mettre à jour d'autres champs si nécessaire
+
+                }
+            }
+            user.setFormations(formations);
+            userRepo.save(user);
         }
 
         // Return null or throw an exception, depending on your requirements
