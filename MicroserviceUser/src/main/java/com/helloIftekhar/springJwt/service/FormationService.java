@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,33 +39,53 @@ public class FormationService {
             User user = userOptional.get();
             List<Formation> form = user.getFormations();
 
-            List<Formation> currentFormations = form.stream()
-                    .filter(formation -> "current".equals(formation.getState()))
-                    .map(formation -> {
-                        // Obtenir la progression de la formation
-                        Integer progress = getProgress(user.getId(), formation.getTitle());
-                        // Mettre à jour l'attribut de progression de la formation
-                        formation.setProgress(progress);
-                        return formation;
-                    })
-                    .collect(Collectors.toList());
+            if (form != null) { // Vérifier si la liste de formations n'est pas nulle
+                List<Formation> currentFormations = form.stream()
+                        .filter(formation -> "current".equals(formation.getState()))
+                        .map(formation -> {
+                            // Obtenir la progression de la formation
+                            Integer progress = getProgress(user.getId(), formation.getTitle());
+                            // Mettre à jour l'attribut de progression de la formation
+                            formation.setProgress(progress);
+                            return formation;
+                        })
+                        .collect(Collectors.toList());
 
-            return currentFormations;
+                return currentFormations;
+            } else {
+                // Gérer le cas où la liste de formations est nulle
+                return Collections.emptyList(); // Ou renvoyer une liste vide, selon vos besoins
+            }
         } else {
             // Gérer le cas où l'utilisateur n'est pas trouvé
             throw new UserNotFoundException("Utilisateur non trouvé avec l'ID : " + id);
         }
     }
 
-    public List<Formation> getAllFormationsFinish(String id){
 
-        Optional<User> user1 = userRepo.findById(id);
-        List<Formation> form =  user1.get().getFormations();
-        List<Formation> finishFormations = form.stream()
-                .filter(formation -> "finish".equals(formation.getState()))
-                .collect(Collectors.toList());
 
-        return finishFormations;
+
+    public List<Formation> getAllFormationsFinish(String id) {
+        Optional<User> userOptional = userRepo.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            List<Formation> form = user.getFormations();
+
+            if (form != null) { // Vérifier si la liste de formations n'est pas nulle
+                List<Formation> finishFormations = form.stream()
+                        .filter(formation -> "finish".equals(formation.getState()))
+                        .collect(Collectors.toList());
+
+                return finishFormations;
+            } else {
+                // Gérer le cas où la liste de formations est nulle
+                return Collections.emptyList(); // Ou renvoyer une liste vide, selon vos besoins
+            }
+        } else {
+            // Gérer le cas où l'utilisateur n'est pas trouvé
+            throw new UserNotFoundException("Utilisateur non trouvé avec l'ID : " + id);
+        }
     }
 
     public Formation AddMod(String id, MyModule module) {
@@ -216,8 +237,14 @@ System.out.println();
         }
     }
 
-    public List<Formation> getAllFormationsMore(){
-        return formationRepository.findAllMore();
+    public List<Formation> getAllFormationsMore() {
+        List<Formation> formations = formationRepository.findAllMore();
+
+        if (formations != null) {
+            return formations;
+        } else {
+            return Collections.emptyList(); // Ou une autre action à prendre si la liste est nulle
+        }
     }
     public Formation getFormationById(String id){
         return formationRepository.findById(id).orElse(null);
