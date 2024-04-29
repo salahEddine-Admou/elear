@@ -33,13 +33,9 @@ public class UserController {
     public User addUser(@RequestBody User user) throws UserAlreadyExistsException {
         return userService.addUser(user);
     }
-    @PostMapping("/add2")
-    public User addUser2(@RequestBody User user) throws UserAlreadyExistsException {
-        return userService.addUser(user);
-    }
-
     @PutMapping("/update/{id}")
     public User updateUser(@RequestBody User user, @PathVariable String id){
+
         return userService.updateUser(user, id);
     }
     @DeleteMapping("/delete/{id}")
@@ -51,17 +47,12 @@ public class UserController {
     public User getUserById(@PathVariable String id){
         return userService.getUserById(id);
     }
-    @GetMapping("/InscriptionFormation/{id}")
-    public User InFor(@RequestBody Formation formation, @PathVariable String id){
+    @GetMapping("/InscriptionFormation/{id}/{idF}")
+    public User InFor(@PathVariable String id,@PathVariable String idF){
         System.out.println("hii");
-       return userService.InscriptionFormation(id,formation.getTitle());
+       return userService.InscriptionFormation(id,idF);
     }
-    @GetMapping("/FinishFormation/{id}")
-    public Void Finir(@PathVariable String id ){
-System.out.println("hii");
-                userService.Finir(id,"react9");
-               return null;
-    }
+
 
 
 }

@@ -14,7 +14,6 @@ public interface IUserService {
 
     User updateUser(User user, String id);
     User InscriptionFormation(String id, String titlee);
-    Void Finir(String id,String nameFormation);
     User getUserById(String id);
 
     void deleteUser(String id);

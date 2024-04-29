@@ -16,6 +16,6 @@ public interface Formationrepository extends MongoRepository<Formation, String> 
     @Query("{'state' : not_registred }")
     List<Formation> findAllMore();
 
-    @Query("{'title' : ?0 }")
+    @Query("{'_id' : ?0 }")
     Formation findByTitle(String title);
 }

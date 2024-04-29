@@ -43,43 +43,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User InscriptionFormation(String id, String titlee) {
-        return
-        userRepository.findById(id)
+    public User InscriptionFormation(String id, String idF) {
+        return userRepository.findById(id)
                 .map(st -> {
-           Formation f = formationRepository.findByTitle(titlee);
-            f.setState("current");
-            if (st.getFormations() == null) {
-                st.setFormations(new ArrayList<>()); // Créer une nouvelle liste si elle est null
-            }
-            st.getFormations().add(f); // Ajouter la formation à la liste
+                    Formation f = formationRepository.findById(idF)
+                            .orElseThrow(() -> new RuntimeException("Formation not found"));
+                    f.setState("current");
+                    if (st.getFormations() == null) {
+                        st.setFormations(new ArrayList<>()); // Créer une nouvelle liste si elle est null
+                    }
+                    st.getFormations().add(f); // Ajouter la formation à la liste
 
-            return userRepository.save(st);
-        }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found"));
+                    return userRepository.save(st);
+                })
+                .orElseThrow(() -> new RuntimeException("Sorry, this user could not be found"));
     }
 
-    @Override
-    public Void Finir(String id,String nameFormation) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            // Parcourir les formations de l'utilisateur pour trouver celle avec l'ID correspondant
-            for (Formation formation : user.getFormations()) {
-                if (formation.getTitle().equals(nameFormation)) {
-                    System.out.println(formation.getTitle());
-                    System.out.println(nameFormation);
-                    // Modifier l'état de la formation
-                    formation.setState("finish");
-                    System.out.println(formation);
-                    // Enregistrer les modifications dans la base de données
-                    formationRepository.save(formation);
-                    userRepository.save(user);
-                    break; // Sortir de la boucle une fois la formation trouvée et modifiée
-                }
-            }
-        }
-        return null;
-    }
 
     @Override
     public User getUserById(String id) {
