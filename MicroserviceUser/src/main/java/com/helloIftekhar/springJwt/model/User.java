@@ -46,17 +46,14 @@ public class User implements UserDetails {
 
     @Field(name = "tokens")
     private List<Token> tokens;
-    @DocumentReference(collection = "formation")
-    @Field(name = "formations")
-    private List<Formation> formations;
 
-    public User(String fullName, String username, String email, String date, Role role, List<Formation> formations) {
+
+    public User(String fullName, String username, String email, String date, Role role) {
         this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.date = date;
         this.role = role;
-        this.formations = formations;
     }
 
     @Override

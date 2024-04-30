@@ -1,8 +1,11 @@
 package com.helloIftekhar.springJwt.service;
 
 import com.helloIftekhar.springJwt.model.Formation;
+import com.helloIftekhar.springJwt.model.InscriptionFormation;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.Formationrepository;
+import com.helloIftekhar.springJwt.repository.InscriptionFormationRepository;
+import com.helloIftekhar.springJwt.repository.TokenRepository;
 import com.helloIftekhar.springJwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +21,8 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final Formationrepository formationRepository;
     private final PasswordEncoder passwordEncoder;
+    private  final InscriptionFormationRepository inscriptionFormationRepository;
+    private TokenRepository tokenRepository;
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -34,29 +39,13 @@ public class UserService implements IUserService {
 
     @Override
     public User updateUser(User user, String id) {
+
         return userRepository.findById(id).map(st -> {
             st.setFullName(user.getFullName());
             st.setEmail(user.getEmail());
             st.setDate(user.getDate());
             return userRepository.save(st);
         }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found"));
-    }
-
-    @Override
-    public User InscriptionFormation(String id, String idF) {
-        return userRepository.findById(id)
-                .map(st -> {
-                    Formation f = formationRepository.findById(idF)
-                            .orElseThrow(() -> new RuntimeException("Formation not found"));
-                    f.setState("current");
-                    if (st.getFormations() == null) {
-                        st.setFormations(new ArrayList<>()); // Créer une nouvelle liste si elle est null
-                    }
-                    st.getFormations().add(f); // Ajouter la formation à la liste
-
-                    return userRepository.save(st);
-                })
-                .orElseThrow(() -> new RuntimeException("Sorry, this user could not be found"));
     }
 
 

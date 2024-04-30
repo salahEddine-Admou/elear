@@ -47,11 +47,7 @@ public class UserController {
     public User getUserById(@PathVariable String id){
         return userService.getUserById(id);
     }
-    @GetMapping("/InscriptionFormation/{id}/{idF}")
-    public User InFor(@PathVariable String id,@PathVariable String idF){
-        System.out.println("hii");
-       return userService.InscriptionFormation(id,idF);
-    }
+
 
 
 

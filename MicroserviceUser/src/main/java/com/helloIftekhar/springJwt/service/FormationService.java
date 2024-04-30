@@ -1,12 +1,8 @@
 package com.helloIftekhar.springJwt.service;
 
 
-import com.helloIftekhar.springJwt.model.Formation;
-import com.helloIftekhar.springJwt.model.MyModule;
-import com.helloIftekhar.springJwt.model.Subtitle;
-import com.helloIftekhar.springJwt.model.User;
-import com.helloIftekhar.springJwt.repository.Formationrepository;
-import com.helloIftekhar.springJwt.repository.UserRepository;
+import com.helloIftekhar.springJwt.model.*;
+import com.helloIftekhar.springJwt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,204 +18,100 @@ public class FormationService {
     private Formationrepository formationRepository;
     @Autowired
     private UserRepository userRepo;
-
+    @Autowired
+    private ModuleRep moduleRep;
+    @Autowired
+    private SubtitleRep subtitleRep;
+    @Autowired
+    private InscriptionFormationRepository inscriptionFormationRepository;
+    @Autowired
+    private FormationModuleRep formationModuleRep;
 
 
     public Formation CreateFormation(Formation formation) {
-        formation.setState("not_registred");
+        Formation existingFormation = formationRepository.findByTitle(formation.getTitle());
+
+        if (existingFormation != null) {
+            return null;
+        }
         return formationRepository.save(formation);
     }
+
     public List<Formation> getAllFormations(){
 
         return formationRepository.findAll();
     }
-    public List<Formation> getAllFormationsCurrent(String id) {
-        Optional<User> userOptional = userRepo.findById(id);
+    public List<InscriptionFormation> getAllFormationsCurrent(String userId) {
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            List<Formation> form = user.getFormations();
+        Optional<User> userOptional = userRepo.findById(userId);
 
-            if (form != null) {
-                List<Formation> currentFormations = form.stream()
-                        .filter(formation -> "current".equals(formation.getState()))
-                        .map(formation -> {
-                            Integer progress = getProgress(user.getId(), formation.getTitle());
-                            formation.setProgress(progress);
-                            return formation;
-                        })
-                        .collect(Collectors.toList());
-
-                return currentFormations;
-            } else {
-                return Collections.emptyList();
-            }
-        } else {
-            throw new UserNotFoundException("Utilisateur non trouvé avec l'ID : " + id);
-        }
-    }
-
-
-
-
-    public List<Formation> getAllFormationsFinish(String id) {
-        Optional<User> userOptional = userRepo.findById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            List<Formation> form = user.getFormations();
-
-            if (form != null) {
-                List<Formation> finishFormations = form.stream()
-                        .filter(formation -> "finish".equals(formation.getState()))
-                        .collect(Collectors.toList());
-
-                return finishFormations;
-            } else {
-                return Collections.emptyList();
-            }
-        } else {
-            throw new UserNotFoundException("Utilisateur non trouvé avec l'ID : " + id);
-        }
-    }
-
-    public Formation AddMod(String id, MyModule module) {
-      Formation f =  formationRepository.findById(id)
-                .map(st -> {
-
-
-                    if (st.getModules()== null) {
-                        st.setModules(new ArrayList<>()); // Créer une nouvelle liste si elle est null
-                    }
-                        module.setProgress(0);
-                    st.getModules().add(module); // Ajouter la formation à la liste
-
-                    return formationRepository.save(st);
-                }).orElseThrow(() -> new UserNotFoundException("Sorry, this formation could not be found"));
-
-        List<User> usersWithUpdatedFormation = userRepo.findAllByFormationName(id);
-
-        // Mettre à jour la formation dans chaque utilisateur
-        for (User user : usersWithUpdatedFormation) {
-            List<Formation> formations = user.getFormations();
-            for (Formation formation : formations) {
-                if (formation.getId().equals(id)) {
-                    if (formation.getModules()== null) {
-                        formation.setModules(new ArrayList<>()); // Créer une nouvelle liste si elle est null
-                    }
-                    module.setProgress(0);
-                    formation.getModules().add(module);
-                    // Mettre à jour d'autres champs si nécessaire
-                    break;
+        List<InscriptionFormation> inscriptionFormations = inscriptionFormationRepository.findByUserAndState(userOptional.get().getId(),"current");
+        for (InscriptionFormation inscription : inscriptionFormations) {
+            int tailleInscriptionsAll = formationModuleRep.findAllByUser(userOptional.get().getId()).size();
+            List<FormationModule> allf = formationModuleRep.findAllByUser(userOptional.get().getId());
+            int nombreModulesActifs = 0;
+           for (FormationModule formationModule : allf) {
+                //Vérifier si le module a l'état "true"
+             if (formationModule.getState().equals("true")) {
+                    // Incrémenter le compteur si l'état est "true"
+                    nombreModulesActifs++;
                 }
             }
-            user.setFormations(formations);
-            userRepo.save(user);
+
+            int progress = 0;
+           if (tailleInscriptionsAll != 0) {
+               double ratio = ((double) nombreModulesActifs / tailleInscriptionsAll) * 100.0;
+
+               progress = (int) Math.round(ratio);
+            }
+           System.out.println(nombreModulesActifs);
+
+            inscription.setProgress(progress);
+            inscriptionFormationRepository.save(inscription);
         }
 
-return f;
-    }
-    public Formation AddSub(String id, String nameModule, Subtitle subtitle) {
-       /* Optional<Formation> formationOptional = formationRepository.findById(id);
 
-        if (formationOptional.isPresent()) {
-            Formation formation = formationOptional.get();
+        return inscriptionFormations;
 
-            // Trouver le module correspondant par son nom
-            Optional<MyModule> moduleOptional = formation.getModules().stream()
-                    .filter(module -> module.getTitle().equals(nameModule))
-                    .findFirst();
-            if (moduleOptional.get().getSubtitles()==null) {
-                MyModule module = moduleOptional.get();
-                module.setSubtitles(new ArrayList<>()); // Créer une nouvelle liste si elle est null
-            }
-            if (moduleOptional.isPresent()) {
-                MyModule module = moduleOptional.get();
-
-                // Ajouter le sous-titre au module
-                module.getSubtitles().add(subtitle);
-
-                // Mettre à jour la formation dans la base de données
-                formationRepository.save(formation);
-
-                return formation;
-            }
-        }*/
-        List<User> usersWithUpdatedFormation = userRepo.findAllByFormationName(id);
-        for (User user : usersWithUpdatedFormation) {
-            List<Formation> formations = user.getFormations();
-            for (Formation formation : formations) {
-                if (formation.getId().equals(id)) {
-                    Optional<MyModule> moduleOptional = formation.getModules().stream()
-                            .filter(module -> module.getTitle().equals(nameModule))
-                            .findFirst();
-                    System.out.println(moduleOptional);
-                    if (moduleOptional.get().getSubtitles()==null) {
-                        MyModule module = moduleOptional.get();
-                        module.setSubtitles(new ArrayList<>()); // Créer une nouvelle liste si elle est null
-                    }
-                    if (moduleOptional.isPresent()) {
-                        MyModule module = moduleOptional.get();
-System.out.println();
-                        module.getSubtitles().add(subtitle);
-                        System.out.println(module.getSubtitles());
-                        // Mettre à jour la formation dans la base de données
-                        formationRepository.save(formation);
-
-                        break;
-                    }
-
-
-                }
-            }
-            user.setFormations(formations);
-            userRepo.save(user);
-        }
-
-        return null;
     }
 
-
-    public Integer getProgress(String id, String nameFormation) {
+    public List<InscriptionFormation> getAllFormationsFinish(String id) {
         Optional<User> userOptional = userRepo.findById(id);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            for (Formation formation : user.getFormations()) {
-                if (formation.getTitle().equals(nameFormation)) {
-                    List<MyModule> modules = formation.getModules();
-                    if (modules == null || modules.isEmpty()) {
-                        return 0;
-                    }
-                    int totalModules = modules.size();
-                    int completedModules = 0;
-
-                    for (MyModule module : modules) {
-                        if (module.getStateM().equals(true)) {
-                            completedModules++;
-                        }
-                    }
-                    if (totalModules > 0) {
-                        return (int) ((double) completedModules / totalModules * 100);
-                    } else {
-                        return 0;
-                    }
+        List<InscriptionFormation> inscriptionFormations = inscriptionFormationRepository.findByUserAndState(userOptional.get().getId(),"finish");
+        for (InscriptionFormation inscription : inscriptionFormations) {
+            int tailleInscriptionsAll = formationModuleRep.findAllByUser(userOptional.get().getId()).size();
+            List<FormationModule> allf = formationModuleRep.findAllByUser(userOptional.get().getId());
+            int nombreModulesActifs = 0;
+            for (FormationModule formationModule : allf) {
+                //Vérifier si le module a l'état "true"
+                if (formationModule.getState().equals("true")) {
+                    // Incrémenter le compteur si l'état est "true"
+                    nombreModulesActifs++;
                 }
             }
-            return -1;
-        } else {
-            throw new UserNotFoundException("Utilisateur non trouvé avec l'ID : " + id);
+
+            int progress = 0;
+            if (tailleInscriptionsAll != 0) {
+                double ratio = ((double) nombreModulesActifs / tailleInscriptionsAll) * 100.0;
+
+                progress = (int) Math.round(ratio);
+            }
+            System.out.println(nombreModulesActifs);
+
+            inscription.setProgress(progress);
+            inscriptionFormationRepository.save(inscription);
         }
+        return inscriptionFormations;
     }
 
     public List<Formation> getAllFormationsMore() {
-        List<Formation> formations = formationRepository.findAllMore();
+        List<Formation> formations = formationRepository.findAll();
 
         if (formations != null) {
             return formations;
         } else {
-            return Collections.emptyList(); // Ou une autre action à prendre si la liste est nulle
+            return Collections.emptyList();
         }
     }
     public Formation getFormationById(String id){
@@ -232,23 +124,135 @@ System.out.println();
     }
 
 
-    public void updateFormation(String formationId, Formation updatedFormation) {
-        Formation existingFormation = formationRepository.findById(formationId).orElse(null);
+    public Formation updateFormation(String formationId, Formation updatedFormation) {
+        Optional<Formation> optionalExistingFormation = formationRepository.findById(formationId);
 
+        if (optionalExistingFormation.isPresent()) {
+            Formation existingFormation = optionalExistingFormation.get();
             existingFormation.setTitle(updatedFormation.getTitle());
-
+            existingFormation.setDomaine(updatedFormation.getDomaine());
             existingFormation.setDescription(updatedFormation.getDescription());
-
             existingFormation.setPhoto(updatedFormation.getPhoto());
             existingFormation.setLangue(updatedFormation.getLangue());
             existingFormation.setLocalisation(updatedFormation.getLocalisation());
-       formationRepository.save(existingFormation);
+            existingFormation.setModules(updatedFormation.getModules());
+            return formationRepository.save(existingFormation);
+        } else {
+            return null;
+        }
     }
 
 
 
+    public MyModule addModuleToFormation(String id, MyModule module) {
+        Formation formation = formationRepository.findById(id).orElse(null);
+
+        if (formation == null) {
+            return null;
+        }
+        List<MyModule> modules = formation.getModules();
+        if (modules != null) {
+            for (MyModule existingModule : modules) {
+                if (existingModule.getTitle().equals(module.getTitle())) {
+                    return null;
+                }
+            }
+        } else {
+            modules = new ArrayList<>();
+        }
+
+        module.setStateM(false);
+        modules.add(module);
+        formation.setModules(modules);
+
+        moduleRep.save(module);
+        formationRepository.save(formation);
 
 
+
+        return module;
+    }
+
+    public Subtitle addSubtitleToModule(String idModule, Subtitle subtitle) {
+        MyModule module = moduleRep.findById(idModule)
+                .orElse(null);
+        if (module == null) {
+            return null;
+        }
+        List<Subtitle> subtitles = module.getSubtitles();
+        if (subtitles != null) {
+            for (Subtitle existingSub : subtitles) {
+                if (existingSub.getTitle().equals(subtitle.getTitle())) {
+                    return null;
+                }
+            }
+        } else {
+            subtitles = new ArrayList<>();
+        }
+        subtitles.add(subtitle);
+        module.setSubtitles(subtitles);
+        subtitleRep.save(subtitle);
+        moduleRep.save(module);
+        return subtitle;
+    }
+
+
+    public List<MyModule> getModulesForFormation(String formationId) {
+        Optional<Formation> formationOptional = formationRepository.findById(formationId);
+        if (formationOptional.isPresent()) {
+            Formation formation = formationOptional.get();
+            List<MyModule> modules = formation.getModules();
+            return modules;
+        } else {
+            throw new RuntimeException("Formation not found");
+        }
+    }
+    public List<Subtitle> getSubtitlesForModule(String moduleId) {
+        Optional<MyModule> moduleOptional = moduleRep.findById(moduleId);
+        if (moduleOptional.isPresent()) {
+            MyModule myModule = moduleOptional.get();
+            List<Subtitle> subtitles = myModule.getSubtitles();
+            return subtitles;
+        } else {
+            throw new RuntimeException("Module not found");
+        }
+    }
+
+
+    public InscriptionFormation InscriptionFormation(String userId, String formationName) {
+        Optional<User> optionalUser = userRepo.findById(userId);
+        Optional<Formation> optionalFormation = Optional.ofNullable(formationRepository.findByTitle(formationName));
+
+        if (optionalUser.isPresent() && optionalFormation.isPresent()) {
+            User user = optionalUser.get();
+            Formation formation = optionalFormation.get();
+            InscriptionFormation existingInscription = inscriptionFormationRepository.findByUserFormation(user.getId(), formation.getId());
+            if (existingInscription != null) {
+                return null;
+            }
+            InscriptionFormation inscription = new InscriptionFormation();
+            inscription.setUser(user);
+            inscription.setFormation(formation);
+            inscription.setState("current");
+            inscription.setProgress(0);
+            List<MyModule> modules = formation.getModules();
+            if (modules != null) {
+                for (MyModule module : modules) {
+                    FormationModule formationModule = new FormationModule();
+                    formationModule.setUser(optionalUser.get());
+                    formationModule.setFormation(formation);
+                    formationModule.setMyModule(module);
+                    formationModule.setState("false");
+                    formationModuleRep.save(formationModule);
+                }
+            }
+            inscriptionFormationRepository.save(inscription);
+
+            return inscription;
+        } else {
+            return null;
+        }
+    }
 
 
 

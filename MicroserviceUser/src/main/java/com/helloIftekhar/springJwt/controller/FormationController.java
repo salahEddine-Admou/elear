@@ -1,17 +1,16 @@
 package com.helloIftekhar.springJwt.controller;
 
 
-import com.helloIftekhar.springJwt.model.Formation;
-import com.helloIftekhar.springJwt.model.MyModule;
-import com.helloIftekhar.springJwt.model.Subtitle;
-import com.helloIftekhar.springJwt.model.User;
+import com.helloIftekhar.springJwt.model.*;
 import com.helloIftekhar.springJwt.service.FormationService;
+import com.helloIftekhar.springJwt.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin
@@ -21,42 +20,29 @@ import java.util.List;
 public class FormationController {
     @Autowired
     private FormationService formationService;
+    @Autowired
+    private UserService userService;
     @PostMapping("/add")
-    public ResponseEntity<Formation> createFormation(@RequestBody Formation formation){
+    public ResponseEntity<Object> createFormation(@RequestBody Formation formation) {
+        Formation createdFormation = formationService.CreateFormation(formation);
 
-        Formation CreatedFormation = formationService.CreateFormation(formation);
-        return new ResponseEntity<>(CreatedFormation, HttpStatus.CREATED);
+        if (createdFormation == null) {
+            String message = "Une formation avec le même titre existe déjà : " + formation.getTitle();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdFormation);
     }
-    @PostMapping("/AddModule/{id}")
-    public Formation InFor(@RequestBody MyModule module, @PathVariable String id){
-        System.out.println("hii");
-        return formationService.AddMod(id,module);
-    }
-    @PostMapping("/AddSubtitle/{id}/{nameModule}")
-    public Formation InSub(@RequestBody Subtitle subtitle, @PathVariable String id, @PathVariable String nameModule){
-        System.out.println("hii");
-        return formationService.AddSub(id,nameModule,subtitle);
-    }
-    @GetMapping("/getFormations/current/{id}")
-    public ResponseEntity<List<Formation>> getAllFormationsCurrent(@PathVariable String id){
-        List<Formation> formations = formationService.getAllFormationsCurrent(id);
-        return new ResponseEntity<>(formations,HttpStatus.OK);
-    }
-    @GetMapping("/getFormations/finish/{id}")
-    public ResponseEntity<List<Formation>> getAllFormationsFinish(@PathVariable String id){
-        List<Formation> formations = formationService.getAllFormationsFinish(id);
-        return new ResponseEntity<>(formations,HttpStatus.OK);
-    }
-    @GetMapping("/getFormations/more")
-    public ResponseEntity<List<Formation>> getAllFormationsMore(){
-        List<Formation> formations = formationService.getAllFormationsMore();
-        return new ResponseEntity<>(formations,HttpStatus.OK);
-    }
-    @GetMapping("/gett")
-    public ResponseEntity<List<Formation>> getAllFormations(){
+
+    @GetMapping("/getAllFormations")
+    public ResponseEntity<?> getAllFormations() {
         List<Formation> formations = formationService.getAllFormations();
-        return new ResponseEntity<>(formations,HttpStatus.OK);
+        if (formations == null || formations.isEmpty()) {
+            String message = "Aucune formation n'a été trouvée.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(formations);
     }
+
     @GetMapping("getById/{id}")
     public ResponseEntity<Formation> getFormationById(@PathVariable String id) {
         Formation formation = formationService.getFormationById(id);
@@ -66,19 +52,17 @@ public class FormationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("getProgress/{id}/{name}")
-    public Integer getpro(@PathVariable String id, @PathVariable String name) {
-        return  formationService.getProgress(id,name);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Formation> updateFormation(@PathVariable String id, @RequestBody Formation formation) {
-        formationService.updateFormation(id, formation);
+        Formation formation1 = formationService.updateFormation(id, formation);
 
-            return new ResponseEntity<>( HttpStatus.OK);
+        if (formation1 != null) {
+            return new ResponseEntity<>(formation1, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFormation(@PathVariable String id) {
         boolean deleted = formationService.deleteFormation(id);
@@ -88,5 +72,67 @@ public class FormationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/getFormations/current/{idUser}")
+    public ResponseEntity<?> getAllFormationsCurrent(@PathVariable String idUser) {
+        List<InscriptionFormation> formations = formationService.getAllFormationsCurrent(idUser);
+        if (formations == null) {
+            String message = "Aucune inscription de formation trouvée pour l'utilisateur avec l'ID : " + idUser;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(formations);
+    }
+
+    @GetMapping("/getFormations/finish/{idUser}")
+    public ResponseEntity<List<InscriptionFormation>> getAllFormationsFinish(@PathVariable String idUser){
+        List<InscriptionFormation> formations = formationService.getAllFormationsFinish(idUser);
+        return new ResponseEntity<>(formations,HttpStatus.OK);
+    }
+    @GetMapping("/getFormations/more")
+    public ResponseEntity<List<Formation>> getAllFormationsMore(){
+        List<Formation> formations = formationService.getAllFormationsMore();
+        return new ResponseEntity<>(formations,HttpStatus.OK);
+    }
+
+    @PostMapping ("addModule/{idFormation}")
+    public ResponseEntity<?> addMod(@PathVariable String idFormation, @RequestBody MyModule module) {
+        MyModule module1 = formationService.addModuleToFormation(idFormation, module);
+
+        if (module1 == null) {
+            String message = "Le module n'a pas été ajouté à la formation avec l'ID : " + idFormation;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @GetMapping ("getModules/{idFormation}")
+    public List<MyModule> gettt(@PathVariable String idFormation) {
+        List<MyModule> modules = formationService.getModulesForFormation(idFormation);
+        return modules;
+    }
+    @PostMapping("addSubtitle/{idModule}")
+    public ResponseEntity<?> addSub(@RequestBody Subtitle subtitle, @PathVariable String idModule){
+        Subtitle subtitle1 = formationService.addSubtitleToModule(idModule,subtitle);
+        if (subtitle1 == null) {
+            String message = "Le subModule n'a pas été ajouté à la formation avec l'ID : " + idModule;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+    @GetMapping ("getSubtitles/{idModule}")
+    public List<Subtitle> gett(@PathVariable String idModule) {
+        List<Subtitle> subtitles = formationService.getSubtitlesForModule(idModule);
+        return subtitles;
+    }
+    @GetMapping("/InscriptionFormation/{idUser}/{NameF}")
+    public ResponseEntity<?> InFor(@PathVariable String idUser, @PathVariable String NameF) {
+        InscriptionFormation inscriptionFormation = formationService.InscriptionFormation(idUser, NameF);
+
+        if (inscriptionFormation == null) {
+            String message = "L'inscription à la formation pour l'utilisateur avec l'ID : " + idUser + " n'a pas été effectue.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(inscriptionFormation);
+    }
+
 
 }

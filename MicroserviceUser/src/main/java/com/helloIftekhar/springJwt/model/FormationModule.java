@@ -5,19 +5,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-import java.util.List;
 @Data
-@Document(collection = "formation")
-public class Formation {
-
+@Document(collection = "formationModule")
+public class FormationModule {
     @Id
     private String id;
-    private String title;
-    private String domaine;
-    private String description;
-    private String photo;
-    private String langue;
-    private String localisation;
+    @DocumentReference(collection = "users")
+    private User user;
+    @DocumentReference(collection = "formation")
+    private Formation formation;
     @DocumentReference(collection = "module")
-    List<MyModule> modules;
+    private MyModule myModule;
+    private String state;
+
 }

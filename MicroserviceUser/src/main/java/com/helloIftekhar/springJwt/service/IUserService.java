@@ -13,7 +13,7 @@ public interface IUserService {
     List<User> getUsers();
 
     User updateUser(User user, String id);
-    User InscriptionFormation(String id, String titlee);
+
     User getUserById(String id);
 
     void deleteUser(String id);
