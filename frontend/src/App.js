@@ -13,7 +13,7 @@ import Parcourirmodules from './views/ParcourirModules';
 import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
-
+import AjoutFormation from "./views/ajoutFormation";
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -44,6 +44,7 @@ function App() {
       <Route path="/" element={<LoginPage />} />
       <Route path="register" element={<Register />} />
       <Route path="modules" element={<Parcourirmodules />} />
+      <Route path='AjoutFormation' element={<AjoutFormation />} />
     </Routes>
   </BrowserRouter>
           
