@@ -15,7 +15,5 @@ public class Subtitle {
     private String contenu;
     private List<Question> questions;
     private List<Note> notes;
-    @DocumentReference(collection = "module")
-    private MyModule module;
 }
 

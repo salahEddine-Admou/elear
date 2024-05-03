@@ -12,8 +12,6 @@ public class MyModule {
     private String id;
     private String title;
     private Boolean stateM;
-    @DocumentReference(collection = "formation")
-    private Formation formation;
     @DocumentReference(collection = "subtitle")
     List<Subtitle> subtitles;
 }

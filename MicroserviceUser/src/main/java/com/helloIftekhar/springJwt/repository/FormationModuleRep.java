@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface FormationModuleRep extends MongoRepository<FormationModule, String> {
-    @Query("{'user.id' : ?0 }")
-    List<FormationModule> findAllByUser(String user);
+    @Query("{'user.id' : ?0, 'formation.id' : ?1  }")
+    List<FormationModule> findAllByUser(String user, String formation);
 }

@@ -1,6 +1,8 @@
 package com.helloIftekhar.springJwt.model;
 
 import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -20,4 +22,12 @@ public class Formation {
     private String localisation;
     @DocumentReference(collection = "module")
     List<MyModule> modules;
+
+    //@Getter
+    //@Setter
+    //private List<User> enrolledUsers;
+
+    //public List<User> getUsers() {
+       // return enrolledUsers;
+    //}
 }

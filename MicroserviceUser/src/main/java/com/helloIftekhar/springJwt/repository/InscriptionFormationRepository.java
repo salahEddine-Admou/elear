@@ -15,6 +15,6 @@ public interface InscriptionFormationRepository extends MongoRepository<Inscript
     List<InscriptionFormation> findByUserAndState(String user, String state);
     @Query("{'user.id' : ?0 }")
     List<InscriptionFormation> findByUser(User user);
-    @Query("{'user.d' : ?0, 'formation.id': ?1 }")
+    @Query("{'user.id' : ?0, 'formation.id': ?1 }")
     InscriptionFormation findByUserFormation(String user,String formation);
 }

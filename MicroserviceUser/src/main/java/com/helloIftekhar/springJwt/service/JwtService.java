@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,7 @@ public class JwtService {
         String token = Jwts
                 .builder()
                 .subject(user.getUsername())
+                .claim("userId", user.getId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 24*60*60*1000 ))
                 .signWith(getSigninKey())
@@ -77,6 +79,11 @@ public class JwtService {
     private SecretKey getSigninKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+    public String getUserIdFromToken(String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userId = Jwts.parser().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody().get("userId", String.class);
+        return userId;
     }
 
 }

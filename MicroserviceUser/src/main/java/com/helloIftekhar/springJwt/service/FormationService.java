@@ -4,6 +4,8 @@ package com.helloIftekhar.springJwt.service;
 import com.helloIftekhar.springJwt.model.*;
 import com.helloIftekhar.springJwt.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,12 +46,14 @@ public class FormationService {
     public List<InscriptionFormation> getAllFormationsCurrent(String userId) {
 
         Optional<User> userOptional = userRepo.findById(userId);
-
+        System.out.println("heeloo");
         List<InscriptionFormation> inscriptionFormations = inscriptionFormationRepository.findByUserAndState(userOptional.get().getId(),"current");
         for (InscriptionFormation inscription : inscriptionFormations) {
-            int tailleInscriptionsAll = formationModuleRep.findAllByUser(userOptional.get().getId()).size();
-            List<FormationModule> allf = formationModuleRep.findAllByUser(userOptional.get().getId());
+
+            int tailleInscriptionsAll = formationModuleRep.findAllByUser(userOptional.get().getId(),inscription.getFormation().getId()).size();
+            List<FormationModule> allf = formationModuleRep.findAllByUser(userOptional.get().getId(),inscription.getFormation().getId());
             int nombreModulesActifs = 0;
+            System.out.println(allf);
            for (FormationModule formationModule : allf) {
                 //Vérifier si le module a l'état "true"
              if (formationModule.getState().equals("true")) {
@@ -57,16 +61,22 @@ public class FormationService {
                     nombreModulesActifs++;
                 }
             }
-
+System.out.println(nombreModulesActifs);
+            System.out.println(tailleInscriptionsAll);
             int progress = 0;
            if (tailleInscriptionsAll != 0) {
+
                double ratio = ((double) nombreModulesActifs / tailleInscriptionsAll) * 100.0;
 
                progress = (int) Math.round(ratio);
+               System.out.println("progress"+progress);
             }
-           System.out.println(nombreModulesActifs);
+
 
             inscription.setProgress(progress);
+            if(progress==100){
+                inscription.setState("finish");
+            }
             inscriptionFormationRepository.save(inscription);
         }
 
@@ -80,8 +90,8 @@ public class FormationService {
 
         List<InscriptionFormation> inscriptionFormations = inscriptionFormationRepository.findByUserAndState(userOptional.get().getId(),"finish");
         for (InscriptionFormation inscription : inscriptionFormations) {
-            int tailleInscriptionsAll = formationModuleRep.findAllByUser(userOptional.get().getId()).size();
-            List<FormationModule> allf = formationModuleRep.findAllByUser(userOptional.get().getId());
+            int tailleInscriptionsAll = formationModuleRep.findAllByUser(userOptional.get().getId(),inscription.getFormation().getId()).size();
+            List<FormationModule> allf = formationModuleRep.findAllByUser(userOptional.get().getId(),inscription.getFormation().getId());
             int nombreModulesActifs = 0;
             for (FormationModule formationModule : allf) {
                 //Vérifier si le module a l'état "true"
@@ -97,7 +107,6 @@ public class FormationService {
 
                 progress = (int) Math.round(ratio);
             }
-            System.out.println(nombreModulesActifs);
 
             inscription.setProgress(progress);
             inscriptionFormationRepository.save(inscription);
@@ -162,6 +171,7 @@ public class FormationService {
         }
 
         module.setStateM(false);
+
         modules.add(module);
         formation.setModules(modules);
 
@@ -254,7 +264,52 @@ public class FormationService {
         }
     }
 
+    public InscriptionFormation enrollUserToFormation(Formation formation, User user) {
 
+        // Vérifier l'authentification de l'utilisateur
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Extraire l'ID de l'utilisateur à partir des détails de l'utilisateur
+        String userUsername = userDetails.getUsername(); // Supposant que l'ID de l'utilisateur est stocké dans le nom d'utilisateur
+
+        // Vérifier si l'ID de l'utilisateur correspond à celui fourni dans la méthode
+        if (!userUsername.equals(user.getUsername())) {
+            throw new IllegalArgumentException("L'utilisateur actuellement authentifié ne correspond pas à l'utilisateur fourni.");
+        }
+        System.out.println(formation.getModules());
+if(inscriptionFormationRepository.findByUserFormation(user.getId(),formation.getId())==null) {
+    //List<User> enrolledUsers = formation.getEnrolledUsers();
+    // enrolledUsers.add(user);
+    //formation.setEnrolledUsers(enrolledUsers);
+    //formationRepository.save(formation);
+    InscriptionFormation inscription = new InscriptionFormation();
+    inscription.setUser(user);
+    inscription.setFormation(formation);
+    inscription.setState("current");
+    inscription.setProgress(0);
+    List<MyModule> modules = formation.getModules();
+    if (modules != null) {
+        for (MyModule module : modules) {
+            FormationModule formationModule = new FormationModule();
+            formationModule.setUser(user);
+            formationModule.setFormation(formation);
+            formationModule.setMyModule(module);
+            formationModule.setState("false");
+            formationModuleRep.save(formationModule);
+        }
+    }
+    inscriptionFormationRepository.save(inscription);
+    return inscription;
+}
+else{
+   // throw new IllegalArgumentException("l'inscription est deja faite");
+    return null;
+}
+
+    }
+    public Formation getFormationByName(String NameF) {
+        return formationRepository.findByTitle(NameF);
+    }
 
 
 }

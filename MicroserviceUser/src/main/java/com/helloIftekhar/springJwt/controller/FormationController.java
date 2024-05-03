@@ -3,12 +3,16 @@ package com.helloIftekhar.springJwt.controller;
 
 import com.helloIftekhar.springJwt.model.*;
 import com.helloIftekhar.springJwt.service.FormationService;
+import com.helloIftekhar.springJwt.service.JwtService;
 import com.helloIftekhar.springJwt.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +26,8 @@ public class FormationController {
     private FormationService formationService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private final JwtService jwtTokenProvider;
     @PostMapping("/add")
     public ResponseEntity<Object> createFormation(@RequestBody Formation formation) {
         Formation createdFormation = formationService.CreateFormation(formation);
@@ -134,5 +140,33 @@ public class FormationController {
         return ResponseEntity.status(HttpStatus.OK).body(inscriptionFormation);
     }
 
+
+
+    @PostMapping("/{formation}/enroll")
+    public ResponseEntity<?> enrollToFormation(@PathVariable("formation") String formationName, @RequestParam("id") String userId,@RequestHeader("Authorization") String authorizationHeader) {
+
+
+        String userIdFromToken = jwtTokenProvider.getUserIdFromToken(authorizationHeader);
+
+        Formation formation = formationService.getFormationByName(formationName);
+
+        if (formation == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La formation spécifiée n'existe pas.");
+        }
+        User user = userService.getUserById(userIdFromToken);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("L'utilisateur spécifié n'existe pas.");
+        }
+        InscriptionFormation inscriptionFormation = formationService.enrollUserToFormation(formation, user);
+        if (inscriptionFormation == null) {
+            String message = "L'inscription à la formation pour l'utilisateur avec l'ID  n'a pas été effectue.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        else {
+            String enrollLink = "http://localhost:8080/formations/" + formation + "/enroll?id=" + userId;
+            return ResponseEntity.ok(enrollLink);
+        }
+    }
 
 }
