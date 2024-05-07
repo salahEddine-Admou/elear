@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FormationService {
@@ -162,7 +161,7 @@ System.out.println(nombreModulesActifs);
         List<MyModule> modules = formation.getModules();
         if (modules != null) {
             for (MyModule existingModule : modules) {
-                if (existingModule.getTitle().equals(module.getTitle())) {
+                if (existingModule.getName().equals(module.getName())) {
                     return null;
                 }
             }
@@ -183,27 +182,27 @@ System.out.println(nombreModulesActifs);
         return module;
     }
 
-    public Subtitle addSubtitleToModule(String idModule, Subtitle subtitle) {
+    public Submodule addSubtitleToModule(String idModule, Submodule submodule) {
         MyModule module = moduleRep.findById(idModule)
                 .orElse(null);
         if (module == null) {
             return null;
         }
-        List<Subtitle> subtitles = module.getSubtitles();
-        if (subtitles != null) {
-            for (Subtitle existingSub : subtitles) {
-                if (existingSub.getTitle().equals(subtitle.getTitle())) {
+        List<Submodule> submodules = module.getSubmodules();
+        if (submodules != null) {
+            for (Submodule existingSub : submodules) {
+                if (existingSub.getTitle().equals(submodule.getTitle())) {
                     return null;
                 }
             }
         } else {
-            subtitles = new ArrayList<>();
+            submodules = new ArrayList<>();
         }
-        subtitles.add(subtitle);
-        module.setSubtitles(subtitles);
-        subtitleRep.save(subtitle);
+        submodules.add(submodule);
+        module.setSubmodules(submodules);
+        subtitleRep.save(submodule);
         moduleRep.save(module);
-        return subtitle;
+        return submodule;
     }
 
 
@@ -217,12 +216,12 @@ System.out.println(nombreModulesActifs);
             throw new RuntimeException("Formation not found");
         }
     }
-    public List<Subtitle> getSubtitlesForModule(String moduleId) {
+    public List<Submodule> getSubtitlesForModule(String moduleId) {
         Optional<MyModule> moduleOptional = moduleRep.findById(moduleId);
         if (moduleOptional.isPresent()) {
             MyModule myModule = moduleOptional.get();
-            List<Subtitle> subtitles = myModule.getSubtitles();
-            return subtitles;
+            List<Submodule> submodules = myModule.getSubmodules();
+            return submodules;
         } else {
             throw new RuntimeException("Module not found");
         }

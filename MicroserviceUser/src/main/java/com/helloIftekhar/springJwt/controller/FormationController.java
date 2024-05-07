@@ -5,10 +5,8 @@ import com.helloIftekhar.springJwt.model.*;
 import com.helloIftekhar.springJwt.service.FormationService;
 import com.helloIftekhar.springJwt.service.JwtService;
 import com.helloIftekhar.springJwt.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -116,18 +114,18 @@ public class FormationController {
         return modules;
     }
     @PostMapping("addSubtitle/{idModule}")
-    public ResponseEntity<?> addSub(@RequestBody Subtitle subtitle, @PathVariable String idModule){
-        Subtitle subtitle1 = formationService.addSubtitleToModule(idModule,subtitle);
-        if (subtitle1 == null) {
+    public ResponseEntity<?> addSub(@RequestBody Submodule submodule, @PathVariable String idModule){
+        Submodule submodule1 = formationService.addSubtitleToModule(idModule, submodule);
+        if (submodule1 == null) {
             String message = "Le subModule n'a pas été ajouté à la formation avec l'ID : " + idModule;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
     @GetMapping ("getSubtitles/{idModule}")
-    public List<Subtitle> gett(@PathVariable String idModule) {
-        List<Subtitle> subtitles = formationService.getSubtitlesForModule(idModule);
-        return subtitles;
+    public List<Submodule> gett(@PathVariable String idModule) {
+        List<Submodule> submodules = formationService.getSubtitlesForModule(idModule);
+        return submodules;
     }
     @GetMapping("/InscriptionFormation/{idUser}/{NameF}")
     public ResponseEntity<?> InFor(@PathVariable String idUser, @PathVariable String NameF) {

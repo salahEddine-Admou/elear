@@ -5,10 +5,10 @@ import ReactPlayer from 'react-player';
 import { submodule } from '../components/ModuleInput';
 
 
+
 const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameChange, onFileUpload, fileUploads }) => {
   const [editableSubmoduleName, setEditableSubmoduleName] = useState(submodule.name);
-  const [videoUploaded, setVideoUploaded] = useState(false);
-  const [pdfUploaded, setPdfUploaded] = useState(false);
+  const [uploads, setUploads] = useState({});
 
   const handleNameBlur = () => {
     if (editableSubmoduleName.trim() === '') {
@@ -23,7 +23,7 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
     if (file) {
       const url = URL.createObjectURL(file);
       onFileUpload(moduleId, submoduleIndex, 'video', url);
-      setVideoUploaded(true);
+      setUploads(prev => ({ ...prev, [submoduleIndex]: { ...prev[submoduleIndex], videoUploaded: true } }));
     }
   };
 
@@ -32,8 +32,12 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
     if (file) {
       const url = URL.createObjectURL(file);
       onFileUpload(moduleId, submoduleIndex, 'pdf', url);
-      setPdfUploaded(true);
+      setUploads(prev => ({ ...prev, [submoduleIndex]: { ...prev[submoduleIndex], pdfUploaded: true } }));
     }
+  };
+
+  const getUploadState = (type) => {
+    return uploads[submoduleIndex] ? uploads[submoduleIndex][type] : false;
   };
 
   return (
@@ -47,9 +51,9 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
           className="w-full bg-gray-100 px-3 py-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <div className="mt-6 w-full">
-          <label className={`w-full bg-gray-100 ${videoUploaded ? 'p-2' : 'p-24'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
-            {videoUploaded ? (
-              <RiPlayCircleFill className="text-2xl mr-2" onClick={() => setVideoUploaded(false)} />
+          <label className={`w-full bg-gray-100 ${getUploadState('videoUploaded') ? 'p-2' : 'p-24'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
+            {getUploadState('videoUploaded') ? (
+              <RiPlayCircleFill className="text-2xl mr-2" onClick={() => setUploads(prev => ({ ...prev, [submoduleIndex]: { ...prev[submoduleIndex], videoUploaded: false } }))} />
             ) : (
               <>
                 <LuUpload className="text-2xl mr-2" />
@@ -57,15 +61,15 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
                 <input type="file" accept="video/*" onChange={handleVideoUpload} style={{ display: 'none' }} />
               </>
             )}
-            {fileUploads?.video && videoUploaded && (
+            {fileUploads?.video && getUploadState('videoUploaded') && (
               <ReactPlayer url={fileUploads.video} controls width="100%" height="400px" />
             )}
           </label>
         </div>
 
         <div className="mt-8 mb-8 w-full">
-          <label className={`w-full bg-gray-100 ${pdfUploaded ? 'p-2' : 'p-24'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
-            {pdfUploaded ? (
+          <label className={`w-full bg-gray-100 ${getUploadState('pdfUploaded') ? 'p-2' : 'p-24'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
+            {getUploadState('pdfUploaded') ? (
               <span>PDF uploaded. Click to change.</span>
             ) : (
               <>
@@ -74,7 +78,7 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
                 <input type="file" accept="application/pdf" onChange={handlePdfUpload} style={{ display: 'none' }} />
               </>
             )}
-            {fileUploads?.pdf && pdfUploaded && (
+            {fileUploads?.pdf && getUploadState('pdfUploaded') && (
               <object data={fileUploads.pdf} type="application/pdf" width="100%" height="200px" style={{ border: 'none' }}>
                 <p>Your browser does not support PDFs. <a href={fileUploads.pdf}>Download the PDF</a>.</p>
               </object>
