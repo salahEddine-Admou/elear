@@ -10,8 +10,8 @@ import java.util.List;
 @Document(collection = "module")
 public class MyModule {
     private String id;
-    private String title;
+    private String name;
     private Boolean stateM;
-    @DocumentReference(collection = "subtitle")
-    List<Subtitle> subtitles;
+    @DocumentReference(collection = "submodules")
+    List<Submodule> submodules;
 }

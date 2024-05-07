@@ -14,6 +14,7 @@ import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
 import AjoutFormation from "./views/ajoutFormation";
+import FormationInput from "./views/FormationInput";
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -44,7 +45,8 @@ function App() {
       <Route path="/" element={<LoginPage />} />
       <Route path="register" element={<Register />} />
       <Route path="modules" element={<Parcourirmodules />} />
-      <Route path='AjoutFormation' element={<AjoutFormation />} />
+      <Route path='AjoutModuleFormation' element={<AjoutFormation />} />
+      <Route path='FormationInput' element={<FormationInput />} />
     </Routes>
   </BrowserRouter>
           

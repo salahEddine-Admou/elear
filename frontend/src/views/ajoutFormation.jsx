@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ModuleInput from '../components/ModuleInput';
 import FileUploadArea from '../components/FileUploadarea'; 
 import NavBar from '../components/Navbar';
+import axios from 'axios';
 
 const AjoutFormation = () => {
   const [modules, setModules] = useState([]);

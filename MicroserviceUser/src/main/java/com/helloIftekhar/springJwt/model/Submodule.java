@@ -2,13 +2,12 @@ package com.helloIftekhar.springJwt.model;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
 
-@Document(collection = "subtitle")
+@Document(collection = "submodule")
 @Data
-public class Subtitle {
+public class Submodule {
     private String id;
     private String title;
     private String duree;
