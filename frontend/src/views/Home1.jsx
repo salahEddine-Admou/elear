@@ -18,7 +18,24 @@ const Home1 = () => {
       try {
         setLoading(true);
         const fetchedCourses = await getFormationsCurrent();
-        setCourses(fetchedCourses || []);
+        const formations = fetchedCourses.map(course => ({
+          id: course.formation.id,
+          title: course.formation.title,
+          domaine: course.formation.domaine,
+          description: course.formation.description,
+          photo: course.formation.photo,
+          langue: course.formation.langue,
+          localisation: course.formation.localisation,
+          modules: course.formation.modules.map(module => ({
+            id: module.id,
+            title: module.title,
+            stateM: module.stateM,
+            subtitles: module.subtitles
+          })),
+          state: course.state,
+          progress: course.progress
+        }));
+        setCourses(formations || []);
       } catch (err) {
         console.error("An error occurred while fetching courses:", err);
         setError('Failed to fetch courses');

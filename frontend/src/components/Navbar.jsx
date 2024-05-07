@@ -25,6 +25,7 @@ function classNames(...classes) {
 
 export default function NavBar() {
   const navigate = useNavigate(); // Hook for navigation
+  
 
   // Corrected logout function
   const logout = async () => {

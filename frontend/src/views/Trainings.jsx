@@ -15,9 +15,43 @@ const Training = () => {
         const fetchData = async () => {
           try {
             const fetchedCurrent = await getFormationsCurrent();
-            setCurrentTrainings(fetchedCurrent || []);
+        const formations = fetchedCurrent.map(course => ({
+          id: course.formation.id,
+          title: course.formation.title,
+          domaine: course.formation.domaine,
+          description: course.formation.description,
+          photo: course.formation.photo,
+          langue: course.formation.langue,
+          localisation: course.formation.localisation,
+          modules: course.formation.modules.map(module => ({
+            id: module.id,
+            title: module.title,
+            stateM: module.stateM,
+            subtitles: module.subtitles
+          })),
+          state: course.state,
+          progress: course.progress
+        }));
+            setCurrentTrainings(formations || []);
             const fetchedFinish = await getFormationsFinish();
-            setFinishedTrainings(fetchedFinish || []);
+            const formations1 = fetchedFinish.map(course => ({
+                id: course.formation.id,
+                title: course.formation.title,
+                domaine: course.formation.domaine,
+                description: course.formation.description,
+                photo: course.formation.photo,
+                langue: course.formation.langue,
+                localisation: course.formation.localisation,
+                modules: course.formation.modules.map(module => ({
+                  id: module.id,
+                  title: module.title,
+                  stateM: module.stateM,
+                  subtitles: module.subtitles
+                })),
+                state: course.state,
+                progress: course.progress
+              }));
+              setFinishedTrainings(formations1 || []);
           } catch (err) {
             console.error("Error fetching courses:", err);
             setError('Failed to fetch courses');

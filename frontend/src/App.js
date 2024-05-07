@@ -13,6 +13,7 @@ import Parcourirmodules from './views/ParcourirModules';
 import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
+import Certificats from './views/Certificats';
 import AjoutFormation from "./views/ajoutFormation";
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
         <Route path="users" element={<Home />} />
         <Route path="formation" element={<Formation />} />
         <Route path="dashbord" element={<Dashbord />} />
-        
+        <Route path="Certificats" element={<Certificats />} />
         <Route path="homeC" element={<HomeC />} />
         <Route path="home1" element={<Home1 />} />
       </Route>
