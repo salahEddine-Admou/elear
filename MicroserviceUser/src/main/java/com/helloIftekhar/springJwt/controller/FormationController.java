@@ -113,7 +113,7 @@ public class FormationController {
         List<MyModule> modules = formationService.getModulesForFormation(idFormation);
         return modules;
     }
-    @PostMapping("addSubtitle/{idModule}")
+    @PostMapping("addSubmodule/{idModule}")
     public ResponseEntity<?> addSub(@RequestBody Submodule submodule, @PathVariable String idModule){
         Submodule submodule1 = formationService.addSubtitleToModule(idModule, submodule);
         if (submodule1 == null) {
@@ -122,7 +122,7 @@ public class FormationController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
-    @GetMapping ("getSubtitles/{idModule}")
+    @GetMapping ("getSubmodules/{idModule}")
     public List<Submodule> gett(@PathVariable String idModule) {
         List<Submodule> submodules = formationService.getSubtitlesForModule(idModule);
         return submodules;

@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SubtitleRep extends MongoRepository<Submodule, String> {
+public interface SubmoduleRep extends MongoRepository<Submodule, String> {
 }

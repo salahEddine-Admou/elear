@@ -22,7 +22,7 @@ public class FormationService {
     @Autowired
     private ModuleRep moduleRep;
     @Autowired
-    private SubtitleRep subtitleRep;
+    private SubmoduleRep subtitleRep;
     @Autowired
     private InscriptionFormationRepository inscriptionFormationRepository;
     @Autowired
