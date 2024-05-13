@@ -119,7 +119,34 @@ public class FormationService {
     }
     public boolean deleteFormation(String id){
         formationRepository.deleteById(id);
-        return false;
+       List<InscriptionFormation> list =  inscriptionFormationRepository.findByFormation(id);
+       for(InscriptionFormation i : list){
+           inscriptionFormationRepository.deleteById(i.getId());
+       }
+
+        return true;
+    }
+    public boolean deleteModule(String idModule,String idFormation){
+        moduleRep.deleteById(idModule);
+        List<FormationModule> list =  formationModuleRep.findByFormationModule(idFormation,idModule);
+        for(FormationModule i : list){
+            formationModuleRep.deleteById(i.getId());
+        }
+        Optional<Formation> f = formationRepository.findById(idFormation);
+        f.get().getModules().remove(idModule);
+        formationRepository.save(f.get());
+        return true;
+    }
+    public boolean deleteSubmodule(String idModule,String idSubmodule){
+        subtitleRep.deleteById(idSubmodule);
+        List<ModuleSubModule> list =  moduleSubRep.findBySub(idSubmodule);
+        for(ModuleSubModule i : list){
+            moduleSubRep.deleteById(i.getId());
+        }
+        Optional<MyModule> f = moduleRep.findById(idModule);
+        f.get().getSubmodules().remove(idSubmodule);
+        moduleRep.save(f.get());
+        return true;
     }
 
 

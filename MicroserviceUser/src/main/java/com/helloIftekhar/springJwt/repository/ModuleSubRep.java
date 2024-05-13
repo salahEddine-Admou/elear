@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ModuleSubRep extends MongoRepository<ModuleSubModule, String> {
-    @Query("{'myModule.id' : ?0  }")
-    List<ModuleSubModule> findByModule(String module);
+
+    @Query("{'submodule.id' : ?0  }")
+    List<ModuleSubModule> findBySub(String sub);
 }

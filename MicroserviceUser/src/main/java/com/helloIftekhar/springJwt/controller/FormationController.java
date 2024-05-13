@@ -38,15 +38,6 @@ public class FormationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFormation);
     }
 
-    @GetMapping("/getAllFormations")
-    public ResponseEntity<?> getAllFormations() {
-        List<Formation> formations = formationService.getAllFormations();
-        if (formations == null || formations.isEmpty()) {
-            String message = "Aucune formation n'a été trouvée.";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(formations);
-    }
 
     @GetMapping("getById/{id}")
     public ResponseEntity<Formation> getFormationById(@PathVariable String id) {
@@ -72,7 +63,25 @@ public class FormationController {
     public ResponseEntity<Void> deleteFormation(@PathVariable String id) {
         boolean deleted = formationService.deleteFormation(id);
         if (deleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("DeleteModule/{idModule}/{idFormation}")
+    public ResponseEntity<Void> deleteModule(@PathVariable String idModule,@PathVariable String idFormation) {
+        boolean deleted = formationService.deleteModule(idModule,idFormation);
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("DeleteSubModule/{idModule}/{idSub}")
+    public ResponseEntity<Void> deleteSub(@PathVariable String idModule,@PathVariable String idSub) {
+        boolean deleted = formationService.deleteSubmodule(idModule,idSub);
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
