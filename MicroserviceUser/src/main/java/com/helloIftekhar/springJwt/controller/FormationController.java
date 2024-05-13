@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,14 +109,30 @@ public class FormationController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @GetMapping ("getModules/{idFormation}")
-    public List<MyModule> gettt(@PathVariable String idFormation) {
-        List<MyModule> modules = formationService.getModulesForFormation(idFormation);
-        return modules;
+    @GetMapping ("getModules/{idFormation}/{idUser}")
+    public List<MyModule> gettt(@PathVariable String idFormation, @PathVariable String idUser) {
+        List<FormationModule> modules = formationService.getModulesForFormation(idFormation,idUser);
+        List<MyModule> modules2 = new ArrayList<>();
+        for (FormationModule module : modules) {
+            modules2.add(module.getMyModule());
+        }
+        return modules2;
     }
-    @PostMapping("addSubmodule/{idModule}")
-    public ResponseEntity<?> addSub(@RequestBody Submodule submodule, @PathVariable String idModule){
-        Submodule submodule1 = formationService.addSubtitleToModule(idModule, submodule);
+    @GetMapping ("getState/{idFormation}/{idUser}/{idModule}/{idSub}")
+    public  Boolean getttS(@PathVariable String idFormation, @PathVariable String idUser, @PathVariable String idModule, @PathVariable String idSub) {
+        Boolean s = formationService.getStateM(idFormation,idUser,idModule, idSub);
+
+       return s;
+    }
+    @GetMapping ("changeState/{idFormation}/{idUser}/{idModule}/{idSub}")
+    public  Boolean getttSC(@PathVariable String idFormation, @PathVariable String idUser, @PathVariable String idModule, @PathVariable String idSub) {
+        Boolean s = formationService.changeStateM(idFormation,idUser,idModule ,idSub);
+
+        return s;
+    }
+    @PostMapping("addSubmodule/{idFormation}/{idModule}")
+    public ResponseEntity<?> addSub(@RequestBody Submodule submodule,@PathVariable String idModule,@PathVariable String idFormation){
+        Submodule submodule1 = formationService.addSubtitleToModule(idFormation,idModule,  submodule);
         if (submodule1 == null) {
             String message = "Le subModule n'a pas été ajouté à la formation avec l'ID : " + idModule;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
@@ -127,19 +144,6 @@ public class FormationController {
         List<Submodule> submodules = formationService.getSubtitlesForModule(idModule);
         return submodules;
     }
-    @GetMapping("/InscriptionFormation/{idUser}/{NameF}")
-    public ResponseEntity<?> InFor(@PathVariable String idUser, @PathVariable String NameF) {
-        InscriptionFormation inscriptionFormation = formationService.InscriptionFormation(idUser, NameF);
-
-        if (inscriptionFormation == null) {
-            String message = "L'inscription à la formation pour l'utilisateur avec l'ID : " + idUser + " n'a pas été effectue.";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(inscriptionFormation);
-    }
-
-
-
     @PostMapping("/{formation}/enroll")
     public ResponseEntity<?> enrollToFormation(@PathVariable("formation") String formationName, @RequestParam("id") String userId,@RequestHeader("Authorization") String authorizationHeader) {
 
