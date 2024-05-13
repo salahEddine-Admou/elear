@@ -46,6 +46,10 @@
     flex-grow: 1; /* Allow the title to take up remaining space */
 
   }
+  .video-title2 {
+    flex-grow: 1; /* Allow the title to take up remaining space */
+    color: #f0f0f0;
+  }
   
   .video-duration {
     color: #999;
@@ -57,7 +61,7 @@
     display: flex;
     cursor: pointer;
     align-items: center;
-    padding: 5px 10px;
+    padding: 5px 2px;
   }
   
   .sidebarcours h2,
@@ -99,4 +103,18 @@
   .selected-video:hover {
     background-color: #f8f9fa;
   }
+  .textarea-lined {
+    width: 90%;
+    height: 270px; /* ou toute autre hauteur qui convient à votre mise en page */
+    padding: 8px;
+    box-sizing: border-box;
+    background-image: linear-gradient(to bottom, transparent, transparent 31px, white 31px, white 32px);
+    background-size: 100% 32px;
+    background-color: #f3f2f2; /* Couleur de fond grise */
+    color: black; /* Couleur du texte */
+    border: none;
+    outline: none;
+    resize: none; /* Empêche l'utilisateur de redimensionner le textarea */
+}
+
   
