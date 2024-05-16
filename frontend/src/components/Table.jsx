@@ -8,7 +8,9 @@ const UserTable = ({ searchValue }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
   const [checkedIndices, setCheckedIndices] = useState(new Set());
+  
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const response = await getUsers();
@@ -19,6 +21,7 @@ const UserTable = ({ searchValue }) => {
           // Si la réponse est undefined, vide, ou n'a pas de propriété length, définissez data comme un tableau vide
           setData([]);
         }
+        console.log("Utilisateurs cochés :", filteredData.filter(user => checkedIndices.has(user.key)));
       } catch (error) {
         console.error("An error occurred while fetching users:", error);
         // Gérer l'erreur comme il convient, par exemple en définissant data à un tableau vide ou en affichant un message d'erreur
@@ -28,6 +31,7 @@ const UserTable = ({ searchValue }) => {
   
     fetchData();
   }, []);
+ 
   
 
   const openModal = () => setIsModalOpen(true);

@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import "../App.css";
 import { getFormationsCurrent, getFormationsFinish } from '../services/UsersService';
+import { useNavigate } from "react-router-dom"; // Importez useNavigate
 
 const Training = () => {
     const [currentTrainings, setCurrentTrainings] = useState([]);
@@ -9,15 +10,49 @@ const Training = () => {
     const [error, setError] = useState(null);
     const [showAllCurrent, setShowAllCurrent] = useState(false);
     const [showAllFinish, setShowAllFinish] = useState(false);
-
+    const navigate = useNavigate(); // Utilisez le hook useNavigate
     useEffect(() => {
         setLoading(true);
         const fetchData = async () => {
           try {
             const fetchedCurrent = await getFormationsCurrent();
-            setCurrentTrainings(fetchedCurrent || []);
+        const formations = fetchedCurrent.map(course => ({
+          id: course.formation.id,
+          title: course.formation.title,
+          domaine: course.formation.domaine,
+          description: course.formation.description,
+          photo: course.formation.photo,
+          langue: course.formation.langue,
+          localisation: course.formation.localisation,
+          modules: course.formation.modules.map(module => ({
+            id: module.id,
+            title: module.title,
+            stateM: module.stateM,
+            subtitles: module.subtitles
+          })),
+          state: course.state,
+          progress: course.progress
+        }));
+            setCurrentTrainings(formations || []);
             const fetchedFinish = await getFormationsFinish();
-            setFinishedTrainings(fetchedFinish || []);
+            const formations1 = fetchedFinish.map(course => ({
+                id: course.formation.id,
+                title: course.formation.title,
+                domaine: course.formation.domaine,
+                description: course.formation.description,
+                photo: course.formation.photo,
+                langue: course.formation.langue,
+                localisation: course.formation.localisation,
+                modules: course.formation.modules.map(module => ({
+                  id: module.id,
+                  title: module.title,
+                  stateM: module.stateM,
+                  subtitles: module.subtitles
+                })),
+                state: course.state,
+                progress: course.progress
+              }));
+              setFinishedTrainings(formations1 || []);
           } catch (err) {
             console.error("Error fetching courses:", err);
             setError('Failed to fetch courses');
@@ -33,7 +68,13 @@ const Training = () => {
 
     const visibleTrainings = showAllCurrent ? currentTrainings : currentTrainings.slice(0, 3);
     const visibleTrainingsF = showAllFinish ? finishedTrainings : finishedTrainings.slice(0, 3);
-
+    const handleClick = (trainingId)=> {
+        // Stocker l'ID dans le stockage local
+        localStorage.setItem('selectedTrainingId', trainingId);
+        
+        // Rediriger vers une nouvelle page
+        navigate('/modules');
+    };
     return (
         <div className="bg-gray-200 overflow-hidden">
             <div>
@@ -52,7 +93,7 @@ const Training = () => {
                                             <div className='bg-orange-500 h-2' style={{ width: `${training.progress}%` }}></div>
                                         </div>
                                         <div className="flex justify-start mt-3">
-                                            <button className="bg-orange-500 text-black px-3 py-1.5 text-xs lg:text-sm font-bold">Access</button>
+                                            <button className="bg-orange-500 text-black px-3 py-1.5 text-xs lg:text-sm font-bold" onClick={() => handleClick(training.id)}>Access</button>
                                         </div>
                                     </div>
                                 </div>

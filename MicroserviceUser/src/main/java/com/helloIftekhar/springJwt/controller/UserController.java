@@ -35,7 +35,7 @@ public class UserController {
     }
     @PutMapping("/update/{id}")
     public User updateUser(@RequestBody User user, @PathVariable String id){
-
+System.out.println("hello");
         return userService.updateUser(user, id);
     }
     @DeleteMapping("/delete/{id}")

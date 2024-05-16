@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import img from '../images/img.png';
 import { getFormationsCurrent, getFormationsMore} from '../services/UsersService';
 
@@ -12,14 +13,35 @@ const Home1 = () => {
   const [error, setError] = useState(null);
   const [showAllCurrent, setShowAllCurrent] = useState(false);
   const [showAllMore, setShowAllMore] = useState(false);
+<<<<<<< HEAD
   const [userName, setUserName] = useState('');
 
+=======
+  const navigate = useNavigate(); // Utilisez le hook useNavigate
+>>>>>>> 564d61b18d2bc30e44648466e874c71e673df37a
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const fetchedCourses = await getFormationsCurrent();
-        setCourses(fetchedCourses || []);
+        const formations = fetchedCourses.map(course => ({
+          id: course.formation.id,
+          title: course.formation.title,
+          domaine: course.formation.domaine,
+          description: course.formation.description,
+          photo: course.formation.photo,
+          langue: course.formation.langue,
+          localisation: course.formation.localisation,
+          modules: course.formation.modules.map(module => ({
+            id: module.id,
+            title: module.title,
+            stateM: module.stateM,
+            subtitles: module.subtitles
+          })),
+          state: course.state,
+          progress: course.progress
+        }));
+        setCourses(formations || []);
       } catch (err) {
         console.error("An error occurred while fetching courses:", err);
         setError('Failed to fetch courses');
@@ -53,6 +75,14 @@ const Home1 = () => {
   }, []);
   
   
+
+    const handleClick = (trainingId)=> {
+        // Stocker l'ID dans le stockage local
+        localStorage.setItem('selectedTrainingId', trainingId);
+        
+        // Rediriger vers une nouvelle page
+        navigate('/modules');
+    };
   
 
   if (loading) return <div>Loading...</div>;
@@ -84,7 +114,7 @@ const Home1 = () => {
                                               <div className='bg-orange-500 h-2 ' style={{ width: `${training.progress}%` }}></div>
                                             </div>
                                             <div className="flex justify-start mt-3">
-                                                <button className="bg-orange-500 text-black px-3 py-1.5 text-xs font-bold">Continue</button>
+                                                <button className="bg-orange-500 text-black px-3 py-1.5 text-xs font-bold" onClick={() => handleClick(training.id)}>Continue</button>
                                             </div>
                                         </div>
                                     </div>

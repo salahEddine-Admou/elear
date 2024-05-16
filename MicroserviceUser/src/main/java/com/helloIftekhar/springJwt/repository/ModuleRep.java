@@ -12,4 +12,6 @@ import java.util.List;
 public interface ModuleRep extends MongoRepository<MyModule, String> {
     @Query("{'formation.id' : ?0}")
     List<MyModule> findByIdFormation(String id);
+    @Query("{'name' : ?0}")
+    MyModule findByName(String name);
 }

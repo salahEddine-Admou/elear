@@ -39,8 +39,9 @@ public class UserService implements IUserService {
 
     @Override
     public User updateUser(User user, String id) {
-
+System.out.println("hello");
         return userRepository.findById(id).map(st -> {
+            System.out.println(st);
             st.setFullName(user.getFullName());
             st.setEmail(user.getEmail());
             st.setDate(user.getDate());

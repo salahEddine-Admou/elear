@@ -25,7 +25,7 @@ const navLinks = [
   {
     name: "Certificats",
     icon: FaUserGraduate,
-    path: "/Home/certificats"
+    path: "/Home/Certificats"
   },
   {
     name: "Download",

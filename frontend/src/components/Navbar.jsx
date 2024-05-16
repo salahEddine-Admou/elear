@@ -23,6 +23,7 @@ function classNames(...classes) {
 
 export default function NavBar() {
   const navigate = useNavigate(); // Hook for navigation
+  
 
 
      // Récupérer le nom d'utilisateur du stockage local
