@@ -257,13 +257,13 @@ function Register() {
                             </div>
                             <div className="flex flex-col max-md:max-w-full">
                                 <label htmlFor="linkedinUrldent" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                                    <span className="grow text-black">linkedinUrldent</span>
+                                    <span className="grow text-black">LinkedIn URL</span>
                                     <span className="text-orange-500"></span>
                                 </label>
                                 <input
                                     id="linkedinUrldent"
                                     className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="linkedinUrldent"
+                                    type="text"
                                     value={linkedinUrldent}
                                     onChange={handlelinkedinUrldentChange}
                                     required

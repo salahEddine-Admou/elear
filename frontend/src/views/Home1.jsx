@@ -13,12 +13,10 @@ const Home1 = () => {
   const [error, setError] = useState(null);
   const [showAllCurrent, setShowAllCurrent] = useState(false);
   const [showAllMore, setShowAllMore] = useState(false);
-<<<<<<< HEAD
+
   const [userName, setUserName] = useState('');
 
-=======
   const navigate = useNavigate(); // Utilisez le hook useNavigate
->>>>>>> 564d61b18d2bc30e44648466e874c71e673df37a
   useEffect(() => {
     const fetchData = async () => {
       try {
