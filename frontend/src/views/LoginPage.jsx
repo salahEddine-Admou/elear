@@ -8,6 +8,8 @@ function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    localStorage.setItem('username', username);
+
 
     const navigate = useNavigate(); // Utilisez le hook useNavigate
 

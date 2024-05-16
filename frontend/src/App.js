@@ -15,6 +15,8 @@ import Home1 from './views/Home1';
 import Training from './views/Trainings';
 import AjoutFormation from "./views/ajoutFormation";
 import FormationInput from "./views/FormationInput";
+import Settings from './views/Settings';
+
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -47,6 +49,7 @@ function App() {
       <Route path="modules" element={<Parcourirmodules />} />
       <Route path='AjoutModuleFormation' element={<AjoutFormation />} />
       <Route path='FormationInput' element={<FormationInput />} />
+      <Route path="settings" element={<Settings />} />
     </Routes>
   </BrowserRouter>
           

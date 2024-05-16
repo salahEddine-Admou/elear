@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import loginimg from '../images/loginUI.png';
 import alertimg from '../images/alert.svg';
 import axios from 'axios';
@@ -12,8 +12,13 @@ function Register() {
     const [date, setDate] = useState('');
     const [error, setError] = useState('');
     const [address, setAddress] = useState('');
+    const [student, setStudent] = useState('');
+    const [speciality, setSpeciality] = useState('');
+    const [university, setUniversity] = useState('');
+    const [linkedinUrldent, setlinkedinUrldent] = useState('');
+    const [countries, setCountries] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState('');
 
-    const navigate = useNavigate(); // Utilisez le hook useNavigate
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -33,9 +38,42 @@ function Register() {
         setEmail(event.target.value);
     };
 
+    const handleStudentChange = (event) =>{
+        setStudent(event.target.value);
+    };
+
+    const handleSpecialityChange = (event) =>{
+        setSpeciality(event.target.value);
+    };
+    const handleUniversityChange = (event) =>{
+        setUniversity(event.target.value);
+    };
+    const handlelinkedinUrldentChange = (event) =>{
+        setlinkedinUrldent(event.target.value);
+    };
+    const handleCountryChange = (event) => {
+        setSelectedCountry(event.target.value);
+    };
+    
     const handleDateChange = (event) => {
         setDate(event.target.value);
     };
+
+   
+    
+    const navigate = useNavigate(); 
+
+    //Elle permet de parcourir la liste de tous les pays
+    useEffect(() => {
+        axios.get('https://restcountries.com/v3.1/all')
+            .then(response => {
+                const countriesData = Object.values(response.data);
+                setCountries(countriesData);
+            })
+            .catch(error => {
+                console.error('Error fetching countries:', error);
+            });
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -47,7 +85,12 @@ function Register() {
                 password:password,
                 email:email,
                 address:address,
-                date:date,
+                student :student,
+                speciality:speciality,
+                university:university,
+                linkedinUrldent:linkedinUrldent,
+                countries:countries,
+                selectedCountry:selectedCountry,
                 "role":"USER"
             });
     
@@ -56,7 +99,7 @@ function Register() {
                 console.log('Login successful');
                 // Extract the token from the response
                 // Navigate to the home page
-                navigate('/login');
+                navigate('/');
                 return;
             } else if (response.status === 401) {
                 setError('Unauthorized: Invalid username or password');
@@ -143,6 +186,89 @@ function Register() {
                                     />
                                 </div>
                             </div>
+                            <div className="flex flex-col max-md:max-w-full">
+                                <label htmlFor="country" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                        <span className="grow text-black">Countries</span>
+                                        <span className="text-orange-500">*</span>
+                                        </label>
+                                        <select
+                                id="country"
+                                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                value={selectedCountry}
+                                onChange={handleCountryChange}
+                                required
+                            >
+                                <option value="">Sélectionner un pays</option>
+                                {countries.map(country => (
+                                    <option key={country.name.common} value={country.name.common}>
+                                        {country.name.common}
+                                    </option>
+                                ))}
+                            </select>
+                            </div>
+                            <div className="flex flex-col max-md:max-w-full">
+                                <label htmlFor="student" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                    <span className="grow text-black">Student</span>
+                                    <span className="text-orange-500">*</span>
+                                </label>
+                                <select
+                                    id="student"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="student"
+                                    value={student}
+                                    onChange={handleStudentChange}
+                                    required
+                                    >
+                                    <option value="student">Étudiant</option>
+                                    <option value="professional">Professionnel</option>
+                                    <option value="recentGraduate">Jeune diplômé</option>
+                                    <option value="jobSeeker">À la recherche d'opportunité</option>
+                                    <option value="techEnthusiast">Passionné de nouvelles technologies</option>
+                                    <option value="entrepreneur">Entrepreneur</option>
+                                </select>   
+                            </div>
+                            <div className="flex flex-col max-md:max-w-full">
+                                <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                    <span className="grow text-black">Speciality</span>
+                                    <span className="text-orange-500">*</span>
+                                </label>
+                                <input
+                                    id="speciality"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="speciality"
+                                    value={speciality}
+                                    onChange={handleSpecialityChange}
+                                    required
+                                />
+                            </div>
+                            <div className="flex flex-col max-md:max-w-full">
+                                <label htmlFor="university" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                    <span className="grow text-black">University</span>
+                                    <span className="text-orange-500">*</span>
+                                </label>
+                                <input
+                                    id="university"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="university"
+                                    value={university}
+                                    onChange={handleUniversityChange}
+                                    required
+                                />
+                            </div>
+                            <div className="flex flex-col max-md:max-w-full">
+                                <label htmlFor="linkedinUrldent" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                    <span className="grow text-black">linkedinUrldent</span>
+                                    <span className="text-orange-500"></span>
+                                </label>
+                                <input
+                                    id="linkedinUrldent"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="linkedinUrldent"
+                                    value={linkedinUrldent}
+                                    onChange={handlelinkedinUrldentChange}
+                                    required
+                                />
+                            </div>
                             <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
                                 <div className="flex flex-col max-md:max-w-full">
                                     <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
@@ -184,7 +310,6 @@ function Register() {
                             <div className="flex flex-col justify-center mt-6 max-w-full text-sm tracking-normal leading-6 text-center text-black whitespace-nowrap w-[182px] ">
                                 <button type="submit" className="justify-center px-2 py-2 bg-orange-500 max-md:px-2 mt-2">
                                     Register
-
                                 </button>
                             </div>
                         </div>
@@ -194,5 +319,4 @@ function Register() {
         </div>
     );
 }
-
 export default Register;

@@ -12,6 +12,7 @@ const Home1 = () => {
   const [error, setError] = useState(null);
   const [showAllCurrent, setShowAllCurrent] = useState(false);
   const [showAllMore, setShowAllMore] = useState(false);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +45,10 @@ const Home1 = () => {
   
     fetchData();
     fetchData2();
+
+     // Récupérer le nom d'utilisateur depuis le localStorage
+     const userFullName = localStorage.getItem('username');
+    setUserName(userFullName);
  
   }, []);
   
@@ -56,7 +61,7 @@ const Home1 = () => {
   const visibleTrainings2= showAllMore ? coursesM : coursesM.slice(0, 3);
   return (
     <div className='px-4 md:px-12'>
-      <h1 className='font-bold text-xl md:text-3xl mt-12'>Welcome again <span className='text-orange-500'>Aymane Helfa!</span></h1>
+      <h1 className='font-bold text-xl md:text-3xl mt-12'>Welcome again <span className='text-orange-500'>{userName}!</span></h1>
       <div className='mt-12 '>
         <div className='flex flex-row space-x-3 mb-8 '><div className='text-xl font-bold w-56 '>Continue Studying</div>
         <div className='bg-gray-300 h-0.5 m-4 w-full'></div></div>

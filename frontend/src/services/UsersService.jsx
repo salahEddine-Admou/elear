@@ -110,6 +110,8 @@ export const updateUser = async (userId, userData) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+
+
 export const logout = async () => {
     const api = `http://localhost:8080/logOut`; // L'URL pour se déconnecter
 
@@ -239,6 +241,42 @@ export const getFormationsMore = async () => {
     } catch (error) {
         console.error("Failed to fetch data:", error);
         // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+
+
+export const getUserById = async (userId) => {
+    const api = `http://localhost:8080/users/user/${userId}`;
+    const token = localStorage.getItem("userToken");
+
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            // Si le code de statut HTTP n'est pas dans la plage 200-299,
+            // nous lançons une erreur avec le code de statut et le texte de statut
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Supposant que le serveur répond avec des données au format JSON
+        console.log(data);
+        return data;  // Renvoyer les données à utiliser par le composant appelant
+
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Renvoyer l'erreur pour être gérée par le composant appelant
         throw error;
     }
 };
