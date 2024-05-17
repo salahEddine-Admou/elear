@@ -49,31 +49,52 @@ export default function NavBar() {
     }, []);
 
 
+  // const handleSettingsClick = async () => {
+  //   try {
+  //     const token = localStorage.getItem("userToken");
+  //     if (!token) {
+  //       // Gérer le cas où le token est manquant
+  //       console.error("User token is missing");
+  //       return;
+  //     }
+  
+  //     const userId = localStorage.getItem('userId');
+  //     const userData = await getUserById(userId, token);
+  //     setSelectedUser(userData);
+  //     console.log(userData)
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 401) {
+  //       // Gérer le cas où l'utilisateur n'est pas autorisé (token invalide ou expiré)
+  //       console.error("User is not authorized. Please log in again.");
+  //       // Rediriger vers la page de connexion ou afficher un message d'erreur
+  //     } else {
+  //       // Gérer d'autres erreurs
+  //       console.error("Error fetching user data:", error);
+  //     }
+  //   }
+  // };
+  
   const handleSettingsClick = async () => {
     try {
-      const token = localStorage.getItem("userToken");
-      if (!token) {
-        // Gérer le cas où le token est manquant
-        console.error("User token is missing");
-        return;
-      }
-  
-      const userId = localStorage.getItem('userId');
-      const userData = await getUserById(userId, token);
-      setSelectedUser(userData);
-      console.log(userData)
+        const token = localStorage.getItem("userToken");
+        if (!token) {
+            console.error("User token is missing");
+            return;
+        }
+
+        const userId = localStorage.getItem('userId');
+        const userData = await getUserById(userId, token);
+        setSelectedUser(userData);
+        console.log(userData);
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Gérer le cas où l'utilisateur n'est pas autorisé (token invalide ou expiré)
-        console.error("User is not authorized. Please log in again.");
-        // Rediriger vers la page de connexion ou afficher un message d'erreur
-      } else {
-        // Gérer d'autres erreurs
         console.error("Error fetching user data:", error);
-      }
+        if (error.response && error.response.status === 401) {
+            console.error("User is not authorized. Please log in again.");
+            navigate('/login');
+        }
     }
-  };
-  
+};
+
   const logout = async () => {
     const api = `http://localhost:8080/logOut`; // Logout URL
 

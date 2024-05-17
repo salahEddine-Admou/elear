@@ -226,9 +226,11 @@ const Settings = ({ onClose, user: initialUser }) => {
                           id="date"
                           className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                           type="date"
-                          value={userData.date ? new Date(userData.date).toISOString().split('T')[0] : ''}
+                          value={userData.date}
                           onChange={handleChange}
                           required
+                          minDate={new Date('2008-01-01')}
+                          maxDate={new Date('1970-12-31')}
                             />
                         </div>
                       <div className="flex flex-col">

@@ -15,7 +15,6 @@ function Register() {
     const [student, setStudent] = useState('');
     const [speciality, setSpeciality] = useState('');
     const [university, setUniversity] = useState('');
-    const [linkedinUrldent, setlinkedinUrldent] = useState('');
     const [countries, setCountries] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState('');
 
@@ -48,18 +47,23 @@ function Register() {
     const handleUniversityChange = (event) =>{
         setUniversity(event.target.value);
     };
-    const handlelinkedinUrldentChange = (event) =>{
-        setlinkedinUrldent(event.target.value);
-    };
     const handleCountryChange = (event) => {
         setSelectedCountry(event.target.value);
     };
     
-    const handleDateChange = (event) => {
-        setDate(event.target.value);
+    const formatDate = (datestr) => {
+        const date = new Date(datestr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${year}-${month}-${day}`;
     };
+    
 
-   
+    const handleDateChange = (event) => {
+        setDate(formatDate(event.target.value));
+    };
+     
     
     const navigate = useNavigate(); 
 
@@ -77,41 +81,40 @@ function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const token = localStorage.getItem("userToken"); 
+        console.log(token);  
         try {
             const response = await axios.post('http://localhost:8080/users/add', {
-                
-                fullName :fullname,
-                username:username,
-                password:password,
-                email:email,
-                address:address,
-                student :student,
-                speciality:speciality,
-                university:university,
-                linkedinUrldent:linkedinUrldent,
-                countries:countries,
-                selectedCountry:selectedCountry,
-                "role":"USER"
-            });
-    
-            // Check if the login was successful
-            if (response.status === 200) {
-                console.log('Login successful');
-                // Extract the token from the response
-                // Navigate to the home page
-                navigate('/');
-                return;
-            } else if (response.status === 401) {
-                setError('Unauthorized: Invalid username or password');
-                return;
+                fullName: fullname,
+                username: username,
+                password: password,
+                email: email,
+                date: date,
+                address: address,
+                student: student,
+                speciality: speciality,
+                university: university,
+                selectedCountry: selectedCountry,
+                role: "USER"
             }
+        );
     
-            throw new Error('Failed to login');
+            // Check if the registration was successful
+            if (response.status === 200) {
+                console.log('Registration successful');
+                navigate('/');
+            } else {
+                setError('Failed to register, please try again.');
+            }
         } catch (error) {
-            setError('Failed to login, please try again.');
+            if (error.response && error.response.status === 401) {
+                setError('Unauthorized: Please check your credentials and try again.');
+            } else {
+                setError('Failed to register, please try again.');
+                console.error('Error registering:', error);
+            }
         }
     };
-    
 
     return (
         <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0 ">
@@ -183,6 +186,8 @@ function Register() {
                                         value={date}
                                         onChange={handleDateChange}
                                         required
+                                        minDate={new Date('2008-01-01')}
+                                        maxDate={new Date('1970-12-31')}
                                     />
                                 </div>
                             </div>
@@ -256,16 +261,16 @@ function Register() {
                                 />
                             </div>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="linkedinUrldent" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                                    <span className="grow text-black">LinkedIn URL</span>
+                                <label htmlFor="address" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                    <span className="grow text-black">Address</span>
                                     <span className="text-orange-500"></span>
                                 </label>
                                 <input
-                                    id="linkedinUrldent"
+                                    id="address"
                                     className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="text"
-                                    value={linkedinUrldent}
-                                    onChange={handlelinkedinUrldentChange}
+                                    value={address}
+                                    onChange={handleAddressChange}
                                     required
                                 />
                             </div>
