@@ -8,10 +8,9 @@ const Settings = ({ onClose, user: initialUser }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullname: '',
+    fullName: '',
     username: '',
     email: '',
-    password: '',
     date: '',
     student: '',
     speciality: '',
@@ -25,13 +24,57 @@ const Settings = ({ onClose, user: initialUser }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-
   const [profileImage, setProfileImage] = useState("");
-  const [userData, setuserData] = useState({});
 
   useEffect(() => {
     getUser();
-},[]);
+    fetchCountries();
+  }, []);
+
+  const fetchCountries = async () => {
+    try {
+      const response = await axios.get('https://restcountries.com/v3.1/all');
+      const countriesData = response.data.map(country => ({
+        name: country.name.common,
+        code: country.cca2
+      }));
+      setFormData(prevState => ({ ...prevState, countries: countriesData }));
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const token = localStorage.getItem("userToken");
+      if (!token) {
+        console.error("User token is missing");
+        return;
+      }
+
+      const userId = localStorage.getItem('userId');
+      const user = await getUserById(userId, token);
+      setFormData(prevState => ({
+        ...prevState,
+        fullName: user.fullName,
+        username: user.username,
+        email: user.email,
+        date: user.date,
+        student: user.student,
+        speciality: user.speciality,
+        university: user.university,
+        linkedinUrldent: user.linkedinUrldent,
+        selectedCountry: user.country,
+        profileImage: user.profileImage,
+      }));
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        console.error("User is not authorized. Please log in again.");
+      } else {
+        console.error("Error fetching user data:", error);
+      }
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -42,33 +85,6 @@ const Settings = ({ onClose, user: initialUser }) => {
     const { value } = event.target;
     setFormData({ ...formData, selectedCountry: value });
   };
-  
-
-  useEffect(() => {
-
-    axios.get('https://restcountries.com/v3.1/all')
-      .then(response => {
-        const countriesData = Object.values(response.data);
-        setFormData(prevState => ({ ...prevState, countries: countriesData }));
-      })
-      .catch(error => {
-        console.error('Error fetching countries:', error);
-      });
-    
-
-    if (initialUser && initialUser.id) {
-      getUserById(initialUser.id)
-        .then(data => {
-          setFormData({
-            ...data,
-            countries: formData.countries, // Preserve countries data
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching user data:', error);
-        });
-    }
-  }, [initialUser, formData.countries]);
 
   const handleProfileImageChange = (event) => {
     const selectedImage = event.target.files[0];
@@ -83,48 +99,28 @@ const Settings = ({ onClose, user: initialUser }) => {
     }
   };
 
-  async function getUser(){
-    
-  
-    try {
-      const token = localStorage.getItem("userToken");
-      if (!token) {
-        // Gérer le cas où le token est manquant
-        console.error("User token is missing");
-        return;
-      }
-  
-      const userId = localStorage.getItem('userId');
-      const user = await getUserById(userId, token);
-      setuserData(user)
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Gérer le cas où l'utilisateur n'est pas autorisé (token invalide ou expiré)
-        console.error("User is not authorized. Please log in again.");
-        // Rediriger vers la page de connexion ou afficher un message d'erreur
-      } else {
-        // Gérer d'autres erreurs
-        console.error("Error fetching user data:", error);
-      }
-    }
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await updateUser(userData.id, formData);
+    if (!initialUser) {
+      console.error("No user data available to update");
+      return;
+    }
+
+    const response = await updateUser(initialUser.id, formData);
     if (response.status === 'success') {
       navigate('/Home');
     } else {
       alert(`Failed to update user: ${response.message}`);
     }
   };
-  
+
   return (
     <>
       <Navbar />
       <div className="mx-auto max-w-[800px] px-10 py-8">
         <h2 className="text-2xl font-bold mb-4">Settings</h2>
         <form onSubmit={handleSubmit}>  
+<<<<<<< Updated upstream
                        <div className="grid grid-cols-1 lg:grid-cols-2 landscape gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6">
                         <div className="ant-col full-width">
                           <div className='upload-profile-picture'>
@@ -372,21 +368,167 @@ const Settings = ({ onClose, user: initialUser }) => {
               <svg width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* SVG icon */}
               </svg>
+=======
+          <div className="grid grid-cols-1 lg:grid-cols-2 landscape gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6">
+            <div className="ant-col full-width">
+>>>>>>> Stashed changes
             </div>
-            <div className="">
-              <p className="success-text ">The user was modified <span className='font-bold'>successfully!</span></p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 landscape gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6"></div>
+            <div className="flex flex-col max-md:max-w-full">
+              <label htmlFor="fullname" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Full name</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="fullname"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="text"
+                value={formData.fullName}
+                onChange={handleChange}
+                name="fullName"
+                required
+                autoComplete="name"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="username" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">User name</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="username"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="text"
+                value={formData.username}
+                onChange={handleChange}
+                name="username"
+                required
+                autoComplete="username"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="email" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Email</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="email"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                name="email"
+                required
+                autoComplete="email"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="date" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Date of Birth</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="date"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="date"
+                value={formData.date}
+                onChange={handleChange}
+                name="date"
+                required
+                autoComplete="bday"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="student" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Student</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="student"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="text"
+                value={formData.student}
+                onChange={handleChange}
+                name="student"
+                autoComplete="organization-title"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Speciality</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="speciality"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="text"
+                value={formData.speciality}
+                onChange={handleChange}
+                name="speciality"
+                autoComplete="organization-title"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="university" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">University</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="university"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="text"
+                value={formData.university}
+                onChange={handleChange}
+                name="university"
+                autoComplete="organization"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="linkedinUrldent" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">LinkedIn URL</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <input
+                id="linkedinUrldent"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                type="url"
+                value={formData.linkedinUrldent}
+                onChange={handleChange}
+                name="linkedinUrldent"
+                autoComplete="url"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="country" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Country</span>
+                <span className="text-orange-500">*</span>
+              </label>
+              <select
+                id="country"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                value={formData.selectedCountry}
+                onChange={handleChangeCountry}
+                required
+                autoComplete="country"
+              >
+                {formData.countries.map(country => (
+                  <option key={country.code} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-        )}
+          <button
+            type="submit"
+            className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-md shadow-sm"
+          >
+            Save
+          </button>
+        </form>
       </div>
     </>
   );
-}
+};
 
 export default Settings;
-
-
-
-
-
-

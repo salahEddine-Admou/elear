@@ -91,7 +91,7 @@ export const updateUser = async (userId, userData) => {
         const response = await fetch(api, {
             method: 'PUT', // Utilisez 'PUT' ou 'PATCH' selon les besoins de votre API
             headers: {
-                'Authorization': ` Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(userData) // userData contient les informations mises à jour de l'utilisateur
@@ -450,5 +450,9 @@ export const getUserById = async (userId) => {
         // Renvoyer l'erreur pour être gérée par le composant appelant
         throw error;
     }
+<<<<<<< Updated upstream
 };
  
+=======
+};
+>>>>>>> Stashed changes

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"; // Importez useNavigate
 function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [retypePassword, setRetypePassword] = useState('');
     const [email, setEmail] = useState('');
     const [fullname, setFullname] = useState('');
     const [date, setDate] = useState('');
@@ -26,6 +27,10 @@ function Register() {
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
     };
+    const handleRetypePasswordChange = (event) => {
+        setRetypePassword(event.target.value);
+    };
+
     const handleFullnameChange = (event) => {
         setFullname(event.target.value);
     };
@@ -81,8 +86,15 @@ function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+<<<<<<< Updated upstream
         const token = localStorage.getItem("userToken"); 
         console.log(token);  
+=======
+        if (password !== retypePassword) {
+            setError('Passwords do not match');
+            return;
+        }
+>>>>>>> Stashed changes
         try {
             const response = await axios.post('http://localhost:8080/users/add', {
                 fullName: fullname,
@@ -298,16 +310,16 @@ function Register() {
                             </div>}
                             <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
                                 <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
+                                    <label htmlFor="retypepassword" className="flex gap-1.5 self-start text-sm">
                                         <span className="grow text-black">Retype Password</span>
                                         <span className="text-orange-500">*</span>
                                     </label>
                                     <input
-                                        id="password"
+                                        id="retypepassword"
                                         className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                         type="password"
-                                        value={password}
-                                        onChange={handlePasswordChange}
+                                        value={retypePassword}
+                                        onChange={handleRetypePasswordChange}
                                         required
                                     />
                                 </div>

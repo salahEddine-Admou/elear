@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,13 +46,33 @@ public class User implements UserDetails {
     @Field(name = "tokens")
     private List<Token> tokens;
 
+    @Field(name= "speciality")
+    private String speciality;
 
-    public User(String fullName, String username, String email, String date, Role role) {
+    @Field(name= "university")
+    private String university;
+
+    @Field(name="linkedinUrl")
+    private String linkedinUrl;
+
+    @Field(name = "country")
+    private String country;
+
+    @Field(name = "profile_picture")
+    private byte[] profilePicture;
+
+    public User(String fullName, String username, String email, String date, Role role, String speciality, String university,String linkedinUrl,String country,byte[] profilePicture) {
         this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.date = date;
         this.role = role;
+        this.speciality =speciality;
+        this.university = university;
+        this.linkedinUrl = linkedinUrl;
+        this.country = country;
+        this.profilePicture = profilePicture;
+
     }
 
     @Override

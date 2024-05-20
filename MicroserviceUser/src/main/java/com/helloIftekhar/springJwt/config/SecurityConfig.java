@@ -45,10 +45,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req->req.requestMatchers("/login/**","/register/**","/users/add")
                                 .permitAll()
-                                .requestMatchers("/users/**").hasAuthority("ADMIN")
+                                .requestMatchers("/users/**").hasAnyAuthority("ADMIN", "USER")
                                 .requestMatchers("/formations/**").hasAnyAuthority("ADMIN", "USER")
                                 .requestMatchers("/logOut/**").permitAll()
                                 .anyRequest()
+
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)
                 .sessionManagement(session->session
