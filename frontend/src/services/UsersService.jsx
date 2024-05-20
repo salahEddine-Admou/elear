@@ -450,9 +450,5 @@ export const getUserById = async (userId) => {
         // Renvoyer l'erreur pour être gérée par le composant appelant
         throw error;
     }
-<<<<<<< Updated upstream
 };
  
-=======
-};
->>>>>>> Stashed changes

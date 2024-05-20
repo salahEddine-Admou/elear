@@ -86,15 +86,10 @@ function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-<<<<<<< Updated upstream
-        const token = localStorage.getItem("userToken"); 
-        console.log(token);  
-=======
         if (password !== retypePassword) {
             setError('Passwords do not match');
             return;
         }
->>>>>>> Stashed changes
         try {
             const response = await axios.post('http://localhost:8080/users/add', {
                 fullName: fullname,
