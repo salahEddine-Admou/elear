@@ -91,7 +91,7 @@ export const updateUser = async (userId, userData) => {
         const response = await fetch(api, {
             method: 'PUT', // Utilisez 'PUT' ou 'PATCH' selon les besoins de votre API
             headers: {
-                'Authorization': ` Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(userData) // userData contient les informations mises à jour de l'utilisateur
@@ -110,6 +110,8 @@ export const updateUser = async (userId, userData) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+
+
 export const logout = async () => {
     const api = `http://localhost:8080/logOut`; // L'URL pour se déconnecter
 
@@ -242,6 +244,7 @@ export const getFormationsMore = async () => {
         throw error;
     }
 };
+
 export const getModules= async () => {
     const userId = localStorage.getItem("userId");
     const FormationId = localStorage.getItem("selectedTrainingId");
@@ -316,6 +319,11 @@ export const getModulesAdmin= async () => {
         throw error;
     }
 };
+
+
+
+
+
 export const getState= async (moduleId,SubId) => {
     const token = localStorage.getItem("userToken");
     const userId = localStorage.getItem("userId");
@@ -368,6 +376,46 @@ export const changeState= async (SubId, mod) => {
 
     try {
         const response = await fetch(api, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+
+
+export const getUserById = async (userId) => {
+    const api = `http://localhost:8080/users/user/${userId}`;
+    const token = localStorage.getItem("userToken");
+
+
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+
+
             method: 'GET', 
             headers: {
                 'Authorization': `Bearer ${token}`, 
@@ -713,3 +761,7 @@ export const updateSubModule = async (Id, sub) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+
+
+
+

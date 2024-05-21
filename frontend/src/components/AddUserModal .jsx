@@ -85,7 +85,7 @@ const AddUserModal = ({ isOpen, onClose }) => {
               <h2 className="text-lg font-bold mb-4 mt-4">Add New User</h2>
               <form onSubmit={handleSubmit} className='mb-2'>
               <span className='font-bold text-sm'>Full Name</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="fullName"  value={user.fullName } onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
+                <input type="text" name="fullName"  onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
                 <span className='font-bold text-sm '>User name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="username" value={user.username } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold text-sm '>Email</span><span className="text-orange-500">*</span><br />

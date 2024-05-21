@@ -251,16 +251,16 @@ public class FormationService {
                             if (progress != null) {
                                 int progressPercentage = (int) Math.round((double) progress.getCompletedModules() / progress.getTotalModules() * 100);
                                 inscription.setProgress(progressPercentage);
-                                      Certificat c = certificatRepo.findByUserFormation(idUser,inscription.getFormation().getId());
-                                     // System.out.println("helooooooooooooo"+c);
-                                        c.setProgress(progressPercentage);
+                                Certificat c = certificatRepo.findByUserFormation(idUser,inscription.getFormation().getId());
+                                // System.out.println("helooooooooooooo"+c);
+                                c.setProgress(progressPercentage);
                                 if (progressPercentage == 100) {
                                     inscription.setState("finish");
                                     c.setStateCert("finish");
                                     certificatRepo.save(c);
                                 }
                             }
-                           // certificatRepo.save(c);
+                            // certificatRepo.save(c);
                             inscriptionFormationRepository.save(inscription);
                         }
 

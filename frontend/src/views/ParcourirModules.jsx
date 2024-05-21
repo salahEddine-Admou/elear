@@ -3,14 +3,13 @@ import Navbar from '../components/Navbar';
 import { getModules ,changeState} from '../services/UsersService';
 import Side from '../components/sidebarcours';
 import { AiOutlineLeft } from "react-icons/ai";
-import "../styles/sidebarcourse.css";
+
 const ParcourirModules = () => {
  
   const [modules, setModules] = useState([]);
   const [selectedContenu, setSelectedContenu] = useState(null);
   const [selectedContenu2, setSelectedContenu2] = useState(null);
   const [activeTab, setActiveTab] = useState('notes');
-  const [videoDuration, setVideoDuration] = useState(null);
   
   useEffect(() => {
     
@@ -33,13 +32,7 @@ const ParcourirModules = () => {
     setSelectedContenu2(contenu2);
   };
   const handleTabChange = (tab) =>{
-    console.log("hellooooooooooooooooooooooo")
-    console.log(tab)
     setActiveTab(tab);
-  }
-  const handleTabChange2 = (tab) =>{
-    console.log("helloooooooooooooooooooooooMInaaaaa")
- 
   }
   const checkContentType = (url) => {
     if (!url) {
@@ -80,33 +73,12 @@ const ParcourirModules = () => {
       return 'video';
     }
   }
-  const handleVideoLoadedMetadata = (e) => {
-    setVideoDuration(e.target.duration);
-};
  const t = checkContentType("data:application/pdf;base64,JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDIyNz4+c3RyZWFtCnicddC9TsMwEMDx3U9xbLAc/orPWUFkR7LYTT4kt2nTOi68LqvfAidQQEA9WvLP/7sju3PsthEgObiBidogV0CWo7XgOibBRcbRlEPwyq7v+5jCEFqfoOuhmeLOpzDtb9yGPTj2yI5nT5jFk1xjRUCaUOjFKwC030Y/FyeXi32Gt7+I1CuiJWoJxA2S+BFll6AubKMH/xy6cClCWIVFMiRQrg2H6RTBv0whQjvtDmNOGUYPw+VpPkOMQqrAKI5Ev0OeTj1u5n8a7McMGusaqlqdF9HkMbQhrR/OcPX18B2xXmmQCmVuZHN0cmVhbQplbmRvYmoKNCAwIG9iago8PC9Db250ZW50cyA1IDAgUi9NZWRpYUJveFswIDAgNTk1IDg0Ml0vUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0ZvbnQ8PC9GMSA2IDAgUj4+Pj4vVHJpbUJveFswIDAgNTk1IDg0Ml0vVHlwZS9QYWdlPj4KZW5kb2JqCjEgMCBvYmoKPDwvUGFnZXMgMiAwIFIvVHlwZS9DYXRhbG9nPj4KZW5kb2JqCjMgMCBvYmoKPDwvQ3JlYXRpb25EYXRlKEQ6MjAyNDA1MTUxMjAyMTMrMDEnMDAnKS9Nb2REYXRlKEQ6MjAyNDA1MTUxMjAyMTMrMDEnMDAnKS9Qcm9kdWNlcihpVGV4dK4gNy4xLjkgqTIwMDAtMjAxOSBpVGV4dCBHcm91cCBOViBcKEFHUEwtdmVyc2lvblwpKT4+CmVuZG9iago2IDAgb2JqCjw8L0Jhc2VGb250L0hlbHZldGljYS9FbmNvZGluZy9XaW5BbnNpRW5jb2RpbmcvU3VidHlwZS9UeXBlMS9UeXBlL0ZvbnQ+PgplbmRvYmoKMiAwIG9iago8PC9Db3VudCAxL0tpZHNbNCAwIFJdL1R5cGUvUGFnZXM+PgplbmRvYmoKeHJlZgowIDcKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwNDQyIDAwMDAwIG4gCjAwMDAwMDA3MzIgMDAwMDAgbiAKMDAwMDAwMDQ4NyAwMDAwMCBuIAowMDAwMDAwMzA5IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDY0NCAwMDAwMCBuIAp0cmFpbGVyCjw8L0lEIFs8MTQwYzc4ZmEzNDlkMDNhODAxZWYzNTA3M2FmZDIzY2Q+PDE0MGM3OGZhMzQ5ZDAzYTgwMWVmMzUwNzNhZmQyM2NkPl0vSW5mbyAzIDAgUi9Sb290IDEgMCBSL1NpemUgNz4+CiVpVGV4dC03LjEuOQpzdGFydHhyZWYKNzgzCiUlRU9GCg==")
  console.log("yyyyy"+t) 
  const handleClick = async (trainingId)=> {
     const fetch = await changeState(trainingId, selectedContenu2);
     window.location.reload();
     };
-    const formatDuration = (seconds) => {
-      const hrs = Math.floor(seconds / 3600);
-      const mins = Math.floor((seconds % 3600) / 60);
-      const secs = Math.floor(seconds % 60);
-  
-      let result = "";
-      if (hrs > 0) {
-          result += `${hrs}h `;
-      }
-      if (mins > 0) { // Only add minutes if more than 0
-          result += `${mins}min `;
-      }
-      if (secs > 0) { // Only add seconds if more than 0
-          result += `${secs}sec`;
-      }
-      return result.trim(); // Trim to remove any trailing space
-  };
-  
     if (modules === null || modules.length === 0) {
   return(
 <div>loading..</div>
@@ -128,11 +100,6 @@ return (
 <div className="ml-8">
   
     <div className="flex flex-row font-bold py-4 ml-6" style={{ width: '80px', height: '30px' }}><p className='py-2 '><AiOutlineLeft /></p><span className='px-4'>{selectedContenu.title}</span></div>
-    
- 
-                                 
-                                    {videoDuration && <p className="ml-12 mt-3 -mb-6 text-zinc-400 ">{formatDuration(videoDuration)}</p>} {/* Display formatted duration */}
-                               
     <div className="relative ml-6 mt-8" style={{ width: '800px', height: '400px' }}>
       
     {selectedContenu.contenu && (
@@ -140,11 +107,9 @@ return (
     // Si le contenu est un PDF
     <embed src={selectedContenu.contenu} type="application/pdf" width="100%" height="100%" />
   ) : (
-    <>
- 
-    <video src={selectedContenu.contenu} controls className="absolute inset-0 w-full h-full object-cover" onLoadedMetadata={handleVideoLoadedMetadata}/>
-   
-  </>
+    // Si le contenu est une vidéo
+    <video src={selectedContenu.contenu} controls className="absolute inset-0 w-full h-full object-cover" />
+    
   )
 )}
 </div>
@@ -156,10 +121,7 @@ return (
 )}
 
     </div>
-   
-  </div>
-  
-   <div className="bg-white mt-8 " style={{height: '400px'}}>
+    <div className="bg-white mt-8 " style={{height: '400px'}}>
                 <div className="flex ml-8">
                   <button
                     className={`mr-8 focus:outline-none font-bold ${activeTab === 'notes' ? 'text-white-500 border-b-2 border-orange-500 font-bold' : ''}`}
@@ -184,14 +146,15 @@ return (
          className="textarea-lined ml-12 mr-12 mt-2"
        />
                  </div>
-                 )}
-                 {activeTab === 'downloads' && (
-                   <div className='ml-8 mt-8'>
-                     {/* Render downloads content here */}
-                     <p></p>
-                   </div>
-                 )}
+                )}
+                {activeTab === 'downloads' && (
+                  <div className='ml-8 mt-8'>
+                    {/* Render downloads content here */}
+                    <p></p>
+                  </div>
+                )}
               </div>
+  </div>
 </div>
 </div>
 

@@ -99,7 +99,7 @@ public class FormationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @DeleteMapping("DeleteModule/{idModule}/{idFormation}")
+    @DeleteMapping("DeleteModule/{idFormation}/{idModule}")
     public ResponseEntity<Void> deleteModule(@PathVariable String idModule,@PathVariable String idFormation) {
         boolean deleted = formationService.deleteModule(idModule,idFormation);
         if (deleted) {
@@ -138,7 +138,7 @@ public class FormationController {
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
 
-    @PostMapping ("addModule/{idFormation}")
+    @PostMapping ("/{idFormation}/addModule/")
     public ResponseEntity<?> addMod(@PathVariable String idFormation, @RequestBody MyModule module) {
         System.out.println("gggggg");
         MyModule module1 = formationService.addModuleToFormation(idFormation, module);
@@ -159,6 +159,7 @@ public class FormationController {
         }
         return modules2;
     }
+
     @GetMapping ("getModulesAdmin/{idFormation}")
     public List<MyModule> gettt(@PathVariable String idFormation) {
         List<MyModule> modules2 = formationService.getModulesForFormationAdmin(idFormation);
@@ -171,13 +172,13 @@ public class FormationController {
 
        return s;
     }
-    @GetMapping ("changeState/{idFormation}/{idUser}/{idModule}/{idSub}")
+    @GetMapping ("changeState/{idFormation}/{idModule}/{idSub}/{idUser}")
     public  Boolean getttSC(@PathVariable String idFormation, @PathVariable String idUser, @PathVariable String idModule, @PathVariable String idSub) {
         Boolean s = formationService.changeStateM(idFormation,idUser,idModule ,idSub);
 
         return s;
     }
-    @PostMapping("addSubmodule/{idFormation}/{idModule}")
+    @PostMapping("{idFormation}/{idModule}/addSubmodule")
     public ResponseEntity<?> addSub(@RequestBody Submodule submodule,@PathVariable String idModule,@PathVariable String idFormation){
         Submodule submodule1 = formationService.addSubtitleToModule(idFormation,idModule,  submodule);
         if (submodule1 == null) {
@@ -196,14 +197,14 @@ public class FormationController {
 
 
         String userIdFromToken = jwtTokenProvider.getUserIdFromToken(authorizationHeader);
-
+System.out.println(userIdFromToken);
         Formation formation = formationService.getFormationByName(formationName);
-
+        System.out.println(formation);
         if (formation == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La formation spécifiée n'existe pas.");
         }
         User user = userService.getUserById(userIdFromToken);
-
+System.out.println(user);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("L'utilisateur spécifié n'existe pas.");
         }
