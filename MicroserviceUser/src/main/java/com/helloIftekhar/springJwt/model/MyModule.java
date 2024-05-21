@@ -11,7 +11,6 @@ import java.util.List;
 public class MyModule {
     private String id;
     private String name;
-    private Boolean stateM;
     @DocumentReference(collection = "submodule")
     List<Submodule> submodules;
 }

@@ -26,7 +26,7 @@ public class ModuleService {
         return moduleRep.findById(id)
                 .map(existingModule -> {
                     existingModule.setName(module.getName());
-                    existingModule.setStateM(module.getStateM());
+                    //existingModule.setStateM(module.getStateM());
                     existingModule.setSubmodules(module.getSubmodules());
                     return moduleRep.save(existingModule);
 

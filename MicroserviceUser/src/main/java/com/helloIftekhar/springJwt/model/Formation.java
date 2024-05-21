@@ -18,7 +18,7 @@ public class Formation {
     private String domaine;
     private String description;
     private String photo;
-    private String langue;
+    private String date;
     private String localisation;
     @DocumentReference(collection = "module")
     List<MyModule> modules;

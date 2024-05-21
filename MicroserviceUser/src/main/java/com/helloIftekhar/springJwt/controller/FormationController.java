@@ -2,19 +2,26 @@ package com.helloIftekhar.springJwt.controller;
 
 
 import com.helloIftekhar.springJwt.model.*;
+import com.helloIftekhar.springJwt.repository.CertificatRepo;
 import com.helloIftekhar.springJwt.service.FormationService;
 import com.helloIftekhar.springJwt.service.JwtService;
 import com.helloIftekhar.springJwt.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -27,6 +34,8 @@ public class FormationController {
     private UserService userService;
     @Autowired
     private final JwtService jwtTokenProvider;
+    @Autowired
+    private CertificatRepo certificatRepo;
     @PostMapping("/add")
     public ResponseEntity<Object> createFormation(@RequestBody Formation formation) {
         Formation createdFormation = formationService.CreateFormation(formation);
@@ -54,6 +63,28 @@ public class FormationController {
 
         if (formation1 != null) {
             return new ResponseEntity<>(formation1, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+    @PutMapping("/UpdateModule/{idModule}")
+    public ResponseEntity<MyModule> updateModule(@PathVariable String idModule, @RequestBody MyModule module) {
+        MyModule module1 = formationService.updateModule(idModule, module);
+
+        if (module1 != null) {
+            return new ResponseEntity<>(module1, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+    @PutMapping("/UpdateSubModule/{idSubModule}")
+    public ResponseEntity<Submodule> updateModule(@PathVariable String idSubModule, @RequestBody Submodule submodule) {
+        Submodule submodule1 = formationService.updateSub(idSubModule, submodule);
+
+        if (submodule1 != null) {
+            return new ResponseEntity<>(submodule1, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -109,6 +140,7 @@ public class FormationController {
 
     @PostMapping ("addModule/{idFormation}")
     public ResponseEntity<?> addMod(@PathVariable String idFormation, @RequestBody MyModule module) {
+        System.out.println("gggggg");
         MyModule module1 = formationService.addModuleToFormation(idFormation, module);
 
         if (module1 == null) {
@@ -125,6 +157,12 @@ public class FormationController {
         for (FormationModule module : modules) {
             modules2.add(module.getMyModule());
         }
+        return modules2;
+    }
+    @GetMapping ("getModulesAdmin/{idFormation}")
+    public List<MyModule> gettt(@PathVariable String idFormation) {
+        List<MyModule> modules2 = formationService.getModulesForFormationAdmin(idFormation);
+
         return modules2;
     }
     @GetMapping ("getState/{idFormation}/{idUser}/{idModule}/{idSub}")
@@ -178,6 +216,32 @@ public class FormationController {
             String enrollLink = "http://localhost:8080/formations/" + formation + "/enroll?id=" + userId;
             return ResponseEntity.ok(enrollLink);
         }
+    }
+
+    @GetMapping("/getCertificatsFinish/{idUser}")
+    public ResponseEntity<List<Certificat>> getCertificatsFinish(@PathVariable String idUser){
+        List<Certificat> Cerificats = formationService.getCertificatsFinish(idUser);
+        return new ResponseEntity<>(Cerificats,HttpStatus.OK);
+    }
+    @GetMapping("/getCertificatsCurrent/{idUser}")
+    public ResponseEntity<List<Certificat>> getCertificatsCurrent(@PathVariable String idUser){
+        List<Certificat> Cerificats = formationService.getCertificatsCurrent(idUser);
+        return new ResponseEntity<>(Cerificats,HttpStatus.OK);
+    }
+    @GetMapping(value = "/download/{certificatId}")
+    public ResponseEntity<byte[]> downloadCertificate(@PathVariable String certificatId) {
+        Optional<Certificat> certificatOpt = certificatRepo.findById(certificatId);
+        if (certificatOpt.isPresent()) {
+            Certificat certificat = certificatOpt.get();
+            Binary imageData = certificat.getPdfData(); // Assuming this method actually returns image data
+            if (imageData != null) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_PNG) // Ensure this matches your image's format
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"Certificat de " +certificat.getFormation().getTitle() + ".png\"") // Forces download
+                        .body(imageData.getData());
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

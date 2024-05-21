@@ -19,4 +19,9 @@ public interface InscriptionFormationRepository extends MongoRepository<Inscript
     InscriptionFormation findByUserFormation(String user,String formation);
     @Query("{'formation.id' : ?0 }")
     List<InscriptionFormation> findByFormation(String formation);
+
+    // Dans votre InscriptionFormationRepository
+    @Query(value = "{'formation.id': ?0}", delete = true)
+    void deleteByFormationId(String formationId);
+
 }
