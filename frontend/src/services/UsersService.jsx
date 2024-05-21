@@ -761,7 +761,3 @@ export const updateSubModule = async (Id, sub) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
-
-
-
-
