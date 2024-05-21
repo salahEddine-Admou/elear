@@ -6,7 +6,12 @@ module.exports = {
       sans: ['Helvetica Bold', 'Helvetica', 'Arial', 'sans-serif'],
 
     },
-    extend: {},
+    extend: {
+      blur: {
+        'sm': '2px', // example of adding a very large blur
+        'ultra': '5px' // an even more intense blur
+      }
+    },
   },
   plugins: [],
 }

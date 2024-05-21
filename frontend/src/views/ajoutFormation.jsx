@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import ModuleInput from '../components/ModuleInput';
 import FileUploadArea from '../components/FileUploadarea'; 
 import NavBar from '../components/Navbar';
 import axios from 'axios';
-
+import { getModulesAdmin } from '../services/UsersService';
 const AjoutFormation = () => {
   const [modules, setModules] = useState([]);
   const [selectedSubmodule, setSelectedSubmodule] = useState(null);
@@ -39,7 +39,21 @@ const AjoutFormation = () => {
     updatedFileUploads[moduleId][index][fileType] = fileUrl;
     setFileUploads(updatedFileUploads);
   };
+  useEffect(() => {
+    
+    const fetchData2 = async () => {
+      try { 
+        const modules1 = await getModulesAdmin(); // Supposons que getFormationsMore() soit une fonction qui récupère les données des modules depuis l'API
+        setModules(modules1 || []);
+        console.log("hiiii"+modules1);
+      } catch (err) {
+        console.error("Une erreur s'est produite lors de la récupération des modules :", err);
+        
+      } 
+    };
 
+    fetchData2(); 
+  }, []); 
   return (
     <>
       <NavBar />

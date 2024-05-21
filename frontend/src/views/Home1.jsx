@@ -147,7 +147,7 @@ const Home1 = () => {
         <div className='flex flex-col '>
         <div className="flex flex-wrap -mx-2">
     {visibleTrainings2.map((training, i) => (
-        <div key={i} className="p-2 w-full sm:w-1/2 lg:w-2/6">
+        <div key={i} className="p-4 w-full sm:w-1/2 lg:w-3/4">
         <a href="#" className="inline-block w-full h-full bg-white border overflow-hidden">
             <div className="shadow-lg">
                 <img src={training.photo} alt="Training" className="w-full object-cover h-48" loading="lazy" />

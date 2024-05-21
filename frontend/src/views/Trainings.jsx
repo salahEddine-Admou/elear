@@ -75,6 +75,13 @@ const Training = () => {
         // Rediriger vers une nouvelle page
         navigate('/modules');
     };
+    const handleClick2 = ()=> {
+        // Stocker l'ID dans le stockage local
+       
+        
+        // Rediriger vers une nouvelle page
+        navigate('/Home/Certificats');
+    };
     return (
         <div className="bg-gray-200 overflow-hidden">
             <div>
@@ -121,7 +128,7 @@ const Training = () => {
                                             <h3 className="text-md lg:text-xl font-bold">{training.title}</h3>
                                             <p className="font-semibold text-sm lg:text-md text-gray-500">{training.domaine}</p>
                                             <div className="mt-1.5">
-                                                <button className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1">Access</button>
+                                                <button className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1" onClick={() => handleClick2()}>Access</button>
                                             </div>
                                         </div>
                                     </div>

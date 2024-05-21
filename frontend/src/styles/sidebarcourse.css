@@ -43,8 +43,9 @@
   }
   
   .video-title {
-    flex-grow: 1; /* Allow the title to take up remaining space */
 
+    display: block; /* Ensures full width and text goes to next line */
+    cursor: pointer;
   }
   .video-title2 {
     flex-grow: 1; /* Allow the title to take up remaining space */
@@ -91,7 +92,8 @@
   
   .play-icon {
     margin-right: 8px;
-    vertical-align: middle;
+    margin-bottom: 12px;
+    vertical-align: top;
   }
   
   .video-item,
@@ -117,4 +119,6 @@
     resize: none; /* Empêche l'utilisateur de redimensionner le textarea */
 }
 
-  
+.textarea-lined {
+  z-index: 0; /* Ensure this is not negative or covered by another element */
+} 
