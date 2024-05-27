@@ -132,9 +132,14 @@ public class FormationController {
         List<InscriptionFormation> formations = formationService.getAllFormationsFinish(idUser);
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
-    @GetMapping("/getFormations/more")
-    public ResponseEntity<List<Formation>> getAllFormationsMore(){
-        List<Formation> formations = formationService.getAllFormationsMore();
+    @GetMapping("/getFormations/more/{idUser}")
+    public ResponseEntity<List<Formation>> getAllFormationsMore(@PathVariable String idUser){
+        List<Formation> formations = formationService.getAllFormationsMore(idUser);
+        return new ResponseEntity<>(formations,HttpStatus.OK);
+    }
+    @GetMapping("/getFormationsAdmin/more")
+    public ResponseEntity<List<Formation>> getAllFormationsMoreAdmin(){
+        List<Formation> formations = formationService.getAllFormationsMoreAdmin();
         return new ResponseEntity<>(formations,HttpStatus.OK);
     }
 
@@ -147,7 +152,7 @@ public class FormationController {
             String message = "Le module n'a pas été ajouté à la formation avec l'ID : " + idFormation;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(module1);
     }
 
     @GetMapping ("getModules/{idFormation}/{idUser}")
@@ -214,7 +219,7 @@ public class FormationController {
         }
         else {
             String enrollLink = "http://localhost:8080/formations/" + formation + "/enroll?id=" + userId;
-            return ResponseEntity.ok(enrollLink);
+            return ResponseEntity.ok(inscriptionFormation);
         }
     }
 

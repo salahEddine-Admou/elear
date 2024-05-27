@@ -102,7 +102,7 @@ public class FormationService {
         return inscriptionFormations;
     }
 
-    public List<Formation> getAllFormationsMore() {
+    public List<Formation> getAllFormationsMoreAdmin() {
         List<Formation> formations = formationRepository.findAll();
 
         if (formations != null) {
@@ -112,6 +112,33 @@ public class FormationService {
         }
     }
 
+    public List<Formation> getAllFormationsMore(String userId) {
+        // Get all available formations with complete modules and submodules
+        List<Formation> allFormations = getAllFormationsWithModulesAndSubmodules();
+
+        // Get current formations for the user
+        List<Formation> currentFormations = getAllFormationsCurrent(userId).stream()
+                .map(InscriptionFormation::getFormation)
+                .collect(Collectors.toList());
+
+        // Filter out formations that the user is currently registered for
+        return allFormations.stream()
+                .filter(formation -> !currentFormations.contains(formation))
+                .collect(Collectors.toList());
+    }
+    private List<Formation> getAllFormationsWithModulesAndSubmodules() {
+        List<Formation> formations = formationRepository.findAll();
+        return formations.stream()
+                .filter(formation -> formation.getModules() != null && !formation.getModules().isEmpty())
+                .filter(formation -> formation.getModules().stream()
+                        .allMatch(module ->
+                                module.getSubmodules() != null && !module.getSubmodules().isEmpty() &&
+                                        module.getSubmodules().stream()
+                                                .allMatch(submodule -> submodule.getContenu() != null && !submodule.getContenu().isEmpty())
+                        )
+                )
+                .collect(Collectors.toList());
+    }
 
 
 
