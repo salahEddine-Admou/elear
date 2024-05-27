@@ -1,7 +1,9 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import img from '../images/img.png';
-import { getFormationsCurrent, getFormationsMore,getUserFromToken, inscription} from '../services/UsersService';
+import { getFormationsCurrent, getFormationsMore, inscription, getUserFromToken} from '../services/UsersService';
+
+
 
 
 
@@ -148,6 +150,9 @@ const Home1 = () => {
 
 
       <h1 className='font-bold text-xl md:text-3xl mt-12'>Welcome again <span className='text-orange-500'>{loggedInfullName}!</span></h1>
+
+
+
       <div className='mt-12 '>
         <div className='flex flex-row space-x-3 mb-8 '><div className='text-xl font-bold w-56 '>Continue Studying</div>
         <div className='bg-gray-300 h-0.5 m-4 w-full'></div></div>

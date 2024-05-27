@@ -1,6 +1,7 @@
 ﻿import React, { useState, useRef } from 'react';
 import '../App.css';
 import { addFormation} from "../services/UsersService";
+import Swal from 'sweetalert2';
 
 const AddFormationModal = ({ isOpen, onClose }) => {
   const [formation, setFormation] = useState({
@@ -18,37 +19,62 @@ const AddFormationModal = ({ isOpen, onClose }) => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    if (window.confirm('Êtes-vous sûr de vouloir ajouter cette formation ?')) {
     e.preventDefault();
+    onClose();
   
-
-    try {
-      // Appel à votre fonction API pour ajouter un utilisateur
-      const response = await addFormation(formation);
-      if (response.status === 'success') {
-        console.log('formation added successfully');
-        setShowSuccess(true); // Affiche le message de succès
-        setTimeout(() => {
-          setShowSuccess(false);
-          onClose(); // Fermez le modal
-          // Réinitialiser l'état de l'utilisateur après la fermeture
-          window.location.reload();
-          setFormation({
-            title: "",
-            domaine: "",
-            date: "",
-            phot: "",
-          });
-        }, 3000); // Message de succès affiché pendant 3 secondes
-      } else {
-        // Gérez les réponses d'erreur de votre API ici
-        console.error('Failed to add user:', response.message);
+    Swal.fire({
+      title: 'Êtes-vous sûr de vouloir ajouter cette formation ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui, ajouter',
+      cancelButtonText: 'Annuler',
+      customClass: {
+        popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
       }
-    } catch (error) {
-      // Gestion des erreurs de la requête
-      console.error("Error adding user:", error);
-    }
-  }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Appel à votre fonction API pour ajouter une formation
+          const response = await addFormation(formation);
+          if (response.status === 'success') {
+            Swal.fire(
+              'Ajoutée!',
+              'La formation a été ajoutée avec succès.',
+              'success'
+            );
+            setShowSuccess(true); // Affiche le message de succès
+            setTimeout(() => {
+              setShowSuccess(false);
+              onClose(); // Fermez le modal
+              // Réinitialiser l'état de la formation après la fermeture
+              window.location.reload();
+              setFormation({
+                title: "",
+                domaine: "",
+                date: "",
+                phot: "",
+              });
+            }, 3000); // Message de succès affiché pendant 3 secondes
+          } else {
+            // Gérez les réponses d'erreur de votre API ici
+            Swal.fire(
+              'Erreur',
+              `Échec de l'ajout de la formation: ${response.message}`,
+              'error'
+            );
+            console.error('Échec de l\'ajout de la formation:', response.message);
+          }
+        } catch (error) {
+          // Gestion des erreurs de la requête
+          Swal.fire(
+            'Erreur',
+            "Erreur lors de l'ajout de la formation.",
+            'error'
+          );
+          console.error("Erreur lors de l'ajout de la formation:", error);
+        }
+      }
+    });
   };
 
   // Handle closing of the success dialog
@@ -90,50 +116,60 @@ const AddFormationModal = ({ isOpen, onClose }) => {
   };
   return (
     <>
-      {!showSuccess && (
-        <dialog className="modal-backdrop w-[480px]" ref={dialogRef}>
-          <div className="modal-container flex mx-auto  w-11/12 max-w-6xl h-auto">
-            <div className="flex flex-col w-full items-start modal-content px-10 rounded-lg">
-              <span className="modal-close font-black absolute top-0 right-0 h-12 mt-3 mr-4 cursor-pointer text-3xl" onClick={onClose}>&times;</span>
-              <h2 className="text-lg font-bold mb-4 mt-4">Add New Formation</h2>
-              <form onSubmit={handleSubmit} className='mb-2'>
-
-              <span className='font-bold text-sm'>Photo</span><span className="text-orange-500">*</span><br />
-       
-        <label htmlFor="photo-upload" className="upload-photo-label">
-        {!formation.photo && (
-          <>  <span className="svg-icon"><svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C"/>
-</svg></span>  <span>Upload Photo...</span>    
-
-
-          <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }}  />
-          </>  )}
-          {formation.photo && (
-            <>
-            <span className="svg-icon"><svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C"/>
-</svg></span>  <span>Change Photo...</span>  
-             <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }}  />
-                  <img src={formation.photo} alt="Uploaded" className=" ml-16"controls  width="45%" height="50px" />  
-                  </>
-                )}
-          </label>
-          <br/>
+     {!showSuccess && (
+       <dialog className="modal-backdrop w-[900px]" ref={dialogRef}>
+       <div className="modal-container flex mx-auto w-900 h-auto">
+         <div className="w-full items-start modal-content px-6 rounded-lg">
+           <span className="modal-close font-black absolute top-0 right-0 h-12 mt-6 mr-2 cursor-pointer text-3xl" onClick={onClose}>&times;</span>
+           <h2 className="text-lg font-bold mb-4 mt-4">Add New Formation</h2>
+           <form onSubmit={handleSubmit} className='mb-4 w-full'>
+           <span className='font-bold text-sm'>Photo</span><span className="text-orange-500">*</span><br />
           
-              <span className='font-bold text-sm'>Title</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="title"  value={formation.title } onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
-                <span className='font-bold text-sm '>Domaine</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="domaine" value={formation.domaine }  onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
-                <span className='font-bold text-sm '>Date</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="date" value={formation.date }  onChange={handleChange} className="border-2 border-gray-400 px-2 w-full text-sm" /><br /><br />
-                <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 mb-6 px-4 font-bold text-sm" />
-              </form>
-            </div>
-          </div>
-        </dialog>
+            <label htmlFor="photo-upload" className="upload-photo-label mb-12 custom-width" style={{ position: 'relative', overflow: 'hidden','height': '150px', }}>
+              {!formation.photo && (
+                <>  <span className="svg-icon"><svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C"/>
+                </svg></span>  <span>Upload Photo...</span>    
+                          <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }}  />
+                          </>  
+              )}
+              {formation.photo && (
+                <>
+                  <span className="svg-icon mr-2 icon-placeholder invisible">
+                    <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C"/>
+                    </svg>
+                  </span>
+                  <span>Change Photo...</span>
+                  <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }} />
+                  <img src={formation.photo} alt="Uploaded" className="ml-4 uploaded-photo" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} />
+                </>
+              )}
+            </label>
+             <br/>
+             <label className='font-bold text-sm'>
+               Title<span className="text-orange-500">*</span>
+             </label><br />
+             <input type="text" name="title" value={formation.title} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+     
+             <label className='font-bold text-sm'>
+               Domaine<span className="text-orange-500">*</span>
+             </label><br />
+             <input type="text" name="domaine" value={formation.domaine} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" required />
+     
+             <label className='font-bold text-sm'>
+               Durée<span className="text-orange-500">*</span>
+             </label><br />
+             <input type="text" name="duree" value={formation.duree} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+     
+             <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 text-white py-2 px-4 font-bold text-sm w-250" />
+           </form>
+         </div>
+       </div>
+     </dialog>  
       )}
-      {showSuccess && (
+     
+      {/* {showSuccess && (
         <div className="success-dialog px-4 py-4 w-[80%]" onClick={handleSuccessClose}>
           <div className="">
             <svg width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +179,7 @@ const AddFormationModal = ({ isOpen, onClose }) => {
             <p className="success-text ">The formation was added <span className='font-bold'>successfully!</span></p>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 };
