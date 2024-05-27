@@ -1,4 +1,6 @@
-﻿export const getUsers = async () => {
+﻿import {jwtDecode} from 'jwt-decode';
+
+export const getUsers = async () => {
     const api = "http://localhost:8080/users";
     const token = localStorage.getItem("userToken");
     console.log(token);
@@ -82,7 +84,35 @@ export const addUser = async (user) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
-
+export const getUserPhotofromtoken = () => {
+    const userToken = localStorage.getItem('userToken');
+    if (userToken) {
+        try {
+          const decodedToken = jwtDecode(userToken);
+          return decodedToken.profilePicture || 'User';
+        } catch (error) {
+          console.error("Failed to decode token", error);
+          return 'User';
+        }
+      }
+    
+      return 'User';
+  };
+export const getUserFromToken = () => {
+    const userToken = localStorage.getItem('userToken');
+  
+    if (userToken) {
+      try {
+        const decodedToken = jwtDecode(userToken);
+        return decodedToken.fullName || 'User';
+      } catch (error) {
+        console.error("Failed to decode token", error);
+        return 'User';
+      }
+    }
+  
+    return 'User';
+};
 export const updateUser = async (userId, userData) => {
     const api = `http://localhost:8080/users/update/${userId}`; // Incluez l'ID de l'utilisateur dans l'URL
     const token = localStorage.getItem("userToken");

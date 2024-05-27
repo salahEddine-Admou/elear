@@ -3,13 +3,16 @@ package com.helloIftekhar.springJwt.controller;
 
 import com.helloIftekhar.springJwt.model.Formation;
 import com.helloIftekhar.springJwt.model.User;
-import com.helloIftekhar.springJwt.service.IUserService;
 import com.helloIftekhar.springJwt.service.UserAlreadyExistsException;
+import com.helloIftekhar.springJwt.service.UserNotFoundException;
+import com.helloIftekhar.springJwt.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import com.helloIftekhar.springJwt.service.UserService.*;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +23,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final IUserService userService;
+    private final UserService userService;
 
     @GetMapping
 
@@ -35,7 +38,7 @@ public class UserController {
     }
     @PutMapping("/update/{id}")
     public User updateUser(@RequestBody User user, @PathVariable String id){
-    System.out.println("hello");
+        System.out.println("hello");
         return userService.updateUser(user, id);
     }
 
@@ -49,7 +52,8 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-
-
-
 }
+
+
+
+

@@ -1,7 +1,6 @@
+
 package com.helloIftekhar.springJwt.service;
 
-import com.helloIftekhar.springJwt.model.Formation;
-import com.helloIftekhar.springJwt.model.InscriptionFormation;
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.Formationrepository;
 import com.helloIftekhar.springJwt.repository.InscriptionFormationRepository;
@@ -11,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,12 +36,18 @@ public class UserService implements IUserService {
 
     @Override
     public User updateUser(User user, String id) {
-System.out.println("hello");
+        System.out.println("hello");
         return userRepository.findById(id).map(st -> {
             System.out.println(st);
             st.setFullName(user.getFullName());
             st.setEmail(user.getEmail());
             st.setDate(user.getDate());
+            st.setProfession(user.getProfession());
+            st.setSpeciality(user.getSpeciality());
+            st.setUniversity(user.getUniversity());
+            st.setCountry(user.getCountry());
+            st.setLinkedinUrl(user.getLinkedinUrl());
+            st.setProfilePicture(user.getProfilePicture());
             return userRepository.save(st);
         }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found"));
     }
@@ -68,4 +71,6 @@ System.out.println("hello");
     private boolean userAlreadyExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
+
 }
+

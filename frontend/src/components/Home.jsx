@@ -6,7 +6,7 @@ import Search from './Search';
 
 
 function Home() {
-  
+
         const [isMenuOpen, setIsMenuOpen] = useState(false);
         const [sidebarOpen, setSidebarOpen] = useState(false);
         const toggleMenu = () => {

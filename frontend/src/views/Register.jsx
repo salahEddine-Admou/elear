@@ -2,7 +2,7 @@
 import loginimg from '../images/loginUI.png';
 import alertimg from '../images/alert.svg';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom"; // Importez useNavigate
+import { useNavigate } from "react-router-dom";
 
 function Register() {
     const [username, setUsername] = useState('');
@@ -13,12 +13,11 @@ function Register() {
     const [date, setDate] = useState('');
     const [error, setError] = useState('');
     const [address, setAddress] = useState('');
-    const [student, setStudent] = useState('');
+    const [profession, setProfession] = useState(''); 
     const [speciality, setSpeciality] = useState('');
     const [university, setUniversity] = useState('');
-    const [countries, setCountries] = useState([]);
-    const [selectedCountry, setSelectedCountry] = useState('');
-
+    const [country, setCountry] = useState('');
+    const [countries, setCountries] = useState([]); 
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -27,6 +26,7 @@ function Register() {
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
     };
+
     const handleRetypePasswordChange = (event) => {
         setRetypePassword(event.target.value);
     };
@@ -38,24 +38,27 @@ function Register() {
     const handleAddressChange = (event) => {
         setAddress(event.target.value);
     };
+
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
     };
 
-    const handleStudentChange = (event) =>{
-        setStudent(event.target.value);
+    const handleProfessionChange = (event) => {
+        setProfession(event.target.value);
     };
 
-    const handleSpecialityChange = (event) =>{
+    const handleSpecialityChange = (event) => {
         setSpeciality(event.target.value);
     };
-    const handleUniversityChange = (event) =>{
+
+    const handleUniversityChange = (event) => {
         setUniversity(event.target.value);
     };
+
     const handleCountryChange = (event) => {
-        setSelectedCountry(event.target.value);
+        setCountry(event.target.value);
     };
-    
+
     const formatDate = (datestr) => {
         const date = new Date(datestr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -63,20 +66,19 @@ function Register() {
         const year = date.getFullYear();
         return `${year}-${month}-${day}`;
     };
-    
 
     const handleDateChange = (event) => {
         setDate(formatDate(event.target.value));
     };
-     
-    
-    const navigate = useNavigate(); 
 
-    //Elle permet de parcourir la liste de tous les pays
+    const navigate = useNavigate();
+
     useEffect(() => {
         axios.get('https://restcountries.com/v3.1/all')
             .then(response => {
-                const countriesData = Object.values(response.data);
+                const countriesData = response.data.map(country => ({
+                    name: country.name.common
+                }));
                 setCountries(countriesData);
             })
             .catch(error => {
@@ -96,16 +98,15 @@ function Register() {
                 username: username,
                 password: password,
                 email: email,
+                profession: profession,
                 date: date,
                 address: address,
-                student: student,
                 speciality: speciality,
                 university: university,
-                selectedCountry: selectedCountry,
+                country: country,
                 role: "USER"
-            }
-        );
-    
+            });
+
             // Check if the registration was successful
             if (response.status === 200) {
                 console.log('Registration successful');
@@ -124,17 +125,16 @@ function Register() {
     };
 
     return (
-        <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0 ">
+        <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0">
             <div className="w-[45%] max-md:ml-0 max-md:w-full bg-orange-500 items-start">
                 <img src={loginimg} alt="Login" className="max-md:ml-0 max-md:w-full items-start h-full" />
             </div>
             <div className="flex flex-col ml-5 w-[40%] max-md:ml-0 max-md:w-full">
-                <div className="flex flex-col self-stretch px-5  my-auto mt-8 max-md:max-w-full">
-                    <h2 className="text-2xl font-bold tracking-normal leading-8 max-md:mr-2.5 max-md:max-w-full  ">
+                <div className="flex flex-col self-stretch px-5 my-auto mt-8 max-md:max-w-full">
+                    <h2 className="text-2xl font-bold tracking-normal leading-8 max-md:mr-2.5 max-md:max-w-full">
                         <span className="text-black">Register</span>
                     </h2>
                     <form onSubmit={handleSubmit}>
-                        
                         <div className="flex flex-col justify-center font-bold mt-8 max-md:max-w-full mb-6">
                             <div className="flex flex-col max-md:max-w-full">
                                 <label htmlFor="fullname" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
@@ -143,7 +143,7 @@ function Register() {
                                 </label>
                                 <input
                                     id="fullname"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="text"
                                     value={fullname}
                                     onChange={handleFullnameChange}
@@ -152,13 +152,13 @@ function Register() {
                             </div>
                             <br/>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="username" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                <label htmlFor="username" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                                     <span className="grow text-black">User name</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="username"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="text"
                                     value={username}
                                     onChange={handleUsernameChange}
@@ -167,13 +167,13 @@ function Register() {
                             </div>
                             <br/>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="email" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                <label htmlFor="email" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                                     <span className="grow text-black">Email</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="email"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="email"
                                     value={email}
                                     onChange={handleEmailChange}
@@ -193,92 +193,80 @@ function Register() {
                                         value={date}
                                         onChange={handleDateChange}
                                         required
-                                        minDate={new Date('2008-01-01')}
-                                        maxDate={new Date('1970-12-31')}
+                                        min='1970-01-01'
+                                        max='2008-12-31'
                                     />
                                 </div>
                             </div>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="country" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                                        <span className="grow text-black">Countries</span>
-                                        <span className="text-orange-500">*</span>
-                                        </label>
-                                        <select
-                                id="country"
-                                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                value={selectedCountry}
-                                onChange={handleCountryChange}
-                                required
-                            >
-                                <option value="">Sélectionner un pays</option>
-                                {countries.map(country => (
-                                    <option key={country.name.common} value={country.name.common}>
-                                        {country.name.common}
-                                    </option>
-                                ))}
-                            </select>
-                            </div>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="student" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                                    <span className="grow text-black">Student</span>
+                                <label htmlFor="country" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                                    <span className="grow text-black">Country</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <select
-                                    id="student"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="student"
-                                    value={student}
-                                    onChange={handleStudentChange}
+                                    id="country"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    value={country}
+                                    onChange={handleCountryChange}
                                     required
-                                    >
-                                    <option value="student">Étudiant</option>
-                                    <option value="professional">Professionnel</option>
-                                    <option value="recentGraduate">Jeune diplômé</option>
-                                    <option value="jobSeeker">À la recherche d'opportunité</option>
-                                    <option value="techEnthusiast">Passionné de nouvelles technologies</option>
-                                    <option value="entrepreneur">Entrepreneur</option>
-                                </select>   
+                                >
+                                    <option value="">Select a country</option>
+                                    {countries.map(country => (
+                                        <option key={country.name} value={country.name}>
+                                            {country.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                <label htmlFor="profession" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                                    <span className="grow text-black">Profession</span>
+                                    <span className="text-orange-500">*</span>
+                                </label>
+                                <input
+                                    id="profession"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="text"
+                                    value={profession}
+                                    onChange={handleProfessionChange}
+                                />
+                            </div>
+                            <div className="flex flex-col max-md:max-w-full">
+                                <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                                     <span className="grow text-black">Speciality</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="speciality"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="speciality"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="text"
                                     value={speciality}
                                     onChange={handleSpecialityChange}
-                                    required
                                 />
                             </div>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="university" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                <label htmlFor="university" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                                     <span className="grow text-black">University</span>
                                     <span className="text-orange-500">*</span>
                                 </label>
                                 <input
                                     id="university"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="university"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    type="text"
                                     value={university}
                                     onChange={handleUniversityChange}
-                                    required
                                 />
                             </div>
                             <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="address" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+                                <label htmlFor="address" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                                     <span className="grow text-black">Address</span>
-                                    <span className="text-orange-500"></span>
                                 </label>
                                 <input
                                     id="address"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
+                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
                                     type="text"
                                     value={address}
                                     onChange={handleAddressChange}
-                                    required
                                 />
                             </div>
                             <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
@@ -319,7 +307,7 @@ function Register() {
                                     />
                                 </div>
                             </div>
-                            <div className="flex flex-col justify-center mt-6 max-w-full text-sm tracking-normal leading-6 text-center text-black whitespace-nowrap w-[182px] ">
+                            <div className="flex flex-col justify-center mt-6 max-w-full text-sm tracking-normal leading-6 text-center text-black whitespace-nowrap w-[182px]">
                                 <button type="submit" className="justify-center px-2 py-2 bg-orange-500 max-md:px-2 mt-2">
                                     Register
                                 </button>
@@ -331,4 +319,5 @@ function Register() {
         </div>
     );
 }
+
 export default Register;

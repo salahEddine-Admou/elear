@@ -49,6 +49,9 @@ public class User implements UserDetails {
     @Field(name= "speciality")
     private String speciality;
 
+    @Field(name= "profession")
+    private String profession;
+
     @Field(name= "university")
     private String university;
 
@@ -59,9 +62,9 @@ public class User implements UserDetails {
     private String country;
 
     @Field(name = "profile_picture")
-    private byte[] profilePicture;
+    private String profilePicture;
 
-    public User(String fullName, String username, String email, String date, Role role, String speciality, String university,String linkedinUrl,String country,byte[] profilePicture) {
+    public User(String fullName, String username, String email, String date, Role role, String speciality, String university,String linkedinUrl,String profession,String country,String profilePicture) {
         this.fullName = fullName;
         this.username = username;
         this.email = email;
@@ -69,6 +72,7 @@ public class User implements UserDetails {
         this.role = role;
         this.speciality =speciality;
         this.university = university;
+        this.profession = profession;
         this.linkedinUrl = linkedinUrl;
         this.country = country;
         this.profilePicture = profilePicture;

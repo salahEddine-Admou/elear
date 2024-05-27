@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { updateUser, getUserById } from '../services/UsersService';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
+import DefaultProfilePicture from '../images/13392061.jpg'; // Import the default image
 
 const Settings = ({ onClose, user: initialUser }) => {
   const navigate = useNavigate();
-
+  
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
     email: '',
     date: '',
-    student: '',
+    profession: '',
     speciality: '',
     university: '',
-    linkedinUrldent: '',
+    linkedinUrl: '',
     countries: [],
-    selectedCountry: '',
-    profileImage: '',
+    country: '',
+    profilePicture: '', // Add this line
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(true);
 
   useEffect(() => {
     getUser();
@@ -42,6 +42,19 @@ const Settings = ({ onClose, user: initialUser }) => {
     }
   };
 
+  const getUserById = async (userId, token) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/users/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const getUser = async () => {
     try {
       const token = localStorage.getItem("userToken");
@@ -58,12 +71,12 @@ const Settings = ({ onClose, user: initialUser }) => {
         username: user.username,
         email: user.email,
         date: user.date,
-        student: user.student,
+        profession: user.profession,
         speciality: user.speciality,
         university: user.university,
-        linkedinUrldent: user.linkedinUrldent,
-        selectedCountry: user.country,
-        profileImage: user.profileImage,
+        linkedinUrl: user.linkedinUrl,
+        country: user.country,
+        profilePicture: user.profilePicture || DefaultProfilePicture, // Use default image if no profile picture is set
       }));
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -81,34 +94,36 @@ const Settings = ({ onClose, user: initialUser }) => {
 
   const handleChangeCountry = (event) => {
     const { value } = event.target;
-    setFormData({ ...formData, selectedCountry: value });
+    setFormData({ ...formData, country: value });
   };
 
   const handleProfileImageChange = (event) => {
-    const selectedImage = event.target.files[0];
+    const file = event.target.files[0];
     const reader = new FileReader();
-
+    reader.readAsDataURL(file);
     reader.onload = () => {
-      setFormData(prevState => ({ ...prevState, profileImage: reader.result }));
+      setFormData(prevState => ({ ...prevState, profilePicture: reader.result })); // Update profilePicture
     };
-
-    if (selectedImage) {
-      reader.readAsDataURL(selectedImage);
-    }
+    reader.onerror = (error) => {
+      console.error('Error uploading profile image:', error);
+    };
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!initialUser) {
-      console.error("No user data available to update");
-      return;
-    }
-
-    const response = await updateUser(initialUser.id, formData);
-    if (response.status === 'success') {
-      navigate('/Home');
-    } else {
-      alert(`Failed to update user: ${response.message}`);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const token = localStorage.getItem("userToken");
+      const userId = localStorage.getItem('userId');
+      const response = await axios.put(`http://localhost:8080/users/update/${userId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log('User info updated successfully:', response.data);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000); // Hide success message after 3 seconds
+    } catch (error) {
+      console.error('Error updating user info:', error);
     }
   };
 
@@ -117,61 +132,37 @@ const Settings = ({ onClose, user: initialUser }) => {
       <Navbar />
       <div className="mx-auto max-w-[800px] px-10 py-8">
         <h2 className="text-2xl font-bold mb-4">Settings</h2>
-        <form onSubmit={handleSubmit}>  
-          <div className="grid grid-cols-1 lg:grid-cols-2 landscape gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6">
+        
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6">
             <div className="ant-col full-width">
-              <div className='upload-profile-picture'>
-                <input 
-                  accept="image/*" 
-                  type="file" 
-                  autoComplete="off"  
-                  tabIndex="-1" 
-                  style={{ display: 'none' }} 
-                  onChange={handleProfileImageChange}
-                  disabled={!isEditMode} 
-                />
-                <img 
-                  src={formData.profileImage || "https://www.orangedigitalcenters.com:12345/api/v1/odcCountry/MA/627e3de1691a42003b5698ac/IMG-20220506-WA0071.jpg"} 
-                  style={{ 
-                    maxWidth: '180px', 
-                    maxHeight: '180px', 
-                    width: '180px', 
-                    height: '180px', 
-                    objectFit: 'cover', 
-                    outline: 'none' 
-                  }} 
+              <div className="upload-profile-picture">
+                <img
+                  src={formData.profilePicture || DefaultProfilePicture} // Use default profile picture if none is set
                   alt="Profile Picture"
+                  className="w-18 h-18 rounded-full object-cover"
                 />
-              </div>  
-              {!isEditMode && (
-                <button type="button" className="ant-btn full-width profile-button mt-20 mr-20" onClick={() => setIsEditMode(true)}>
-                  <span>Editer profil</span>
-                </button>
-              )}
-              {isEditMode && (
-                <div>
-                  <label htmlFor="profileImage" className="text-sm text-black">
-                    Profile Image
+                {isEditMode && (
+                  <label htmlFor="profile-image-upload" className="upload-button cursor-pointer inline-block px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">
+                    <input
+                      type="file"
+                      id="profile-image-upload"
+                      accept="image/*"
+                      onChange={handleProfileImageChange}
+                      className="sr-only"
+                    />
+                    Change Photo
                   </label>
-                  <input
-                    id="profileImage"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfileImageChange}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                  />
-                </div>
-              )}
+                )}
+              </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 landscape gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6">
-            </div>
-            <div className="flex flex-col max-md:max-w-full">
-              <label htmlFor="fullname" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Full name</span>
+            <div className="flex flex-col">
+              <label htmlFor="fullName" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Full Name</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
-                id="fullname"
+                id="fullName"
                 className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="text"
                 value={formData.fullName}
@@ -181,13 +172,13 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="username" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                <span className="grow text-black">User name</span>
+              <label htmlFor="username" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Username</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
                 id="username"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="text"
                 value={formData.username}
                 onChange={handleChange}
@@ -196,13 +187,13 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="email" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+              <label htmlFor="email" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                 <span className="grow text-black">Email</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
                 id="email"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -211,13 +202,13 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="date" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                <span className="grow text-black">Date de naissance</span>
+              <label htmlFor="date" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Date of Birth</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
                 id="date"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
@@ -226,14 +217,14 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="country" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                <span className="grow text-black"> Countries </span>
+              <label htmlFor="country" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Country</span>
                 <span className="text-orange-500">*</span>
               </label>
               <select
-                id="countries"
+                id="country"
                 className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
-                value={formData.selectedCountry}
+                value={formData.country}
                 onChange={handleChangeCountry}
                 required
               >
@@ -245,74 +236,79 @@ const Settings = ({ onClose, user: initialUser }) => {
                 ))}
               </select>
             </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full">
             <div className="flex flex-col">
-              <label htmlFor="student" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                <span className="grow text-black">Statut étudiant</span>
+              <label htmlFor="profession" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">Profession</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
-                id="student"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                id="profession"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="text"
-                value={formData.student}
+                value={formData.profession}
                 onChange={handleChange}
-                name="student"
-                required
+                name="profession"
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+              <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                 <span className="grow text-black">Speciality</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
                 id="speciality"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="text"
                 value={formData.speciality}
                 onChange={handleChange}
                 name="speciality"
-                required
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="university" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
+              <label htmlFor="university" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
                 <span className="grow text-black">University</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
                 id="university"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="text"
                 value={formData.university}
                 onChange={handleChange}
                 name="university"
-                required
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="linkedinUrl" className="flex gap-1.5 self-start text-sm  whitespace-nowrap">
-                <span className="grow text-black">Linkedin</span>
+              <label htmlFor="linkedinUrl" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
+                <span className="grow text-black">LinkedIn URL</span>
                 <span className="text-orange-500">*</span>
               </label>
               <input
                 id="linkedinUrl"
-                className="justify-center px-4 py-2.5 mt-3 text-sm  text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
                 type="url"
                 value={formData.linkedinUrl}
                 onChange={handleChange}
                 name="linkedinUrl"
-                required
               />
             </div>
           </div>
-          <button
-            type="submit"
-            className="text-sm font-bold flex items-center justify-center h-12 px-6 rounded-md border border-transparent bg-orange-500 text-white hover:bg-orange-400 transition duration-200 ease-in-out mt-4"
-          >
-            Save Changes
-          </button>
+          <div className="mt-8">
+            <button type="submit" className="px-4 py-2 rounded-md bg-orange-500 hover:bg-blue-600 text-white">
+              Save
+            </button>
+            <button type="button" className="ml-4 px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-600 text-white" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
         </form>
+        {showSuccess && (
+          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-md">
+            Settings updated successfully!
+          </div>
+        )}
       </div>
     </>
   );
