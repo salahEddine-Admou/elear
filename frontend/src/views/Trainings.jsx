@@ -63,7 +63,7 @@ const Training = () => {
         fetchData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    
     if (error) return <div>Error: {error}</div>;
 
     const visibleTrainings = showAllCurrent ? currentTrainings : currentTrainings.slice(0, 3);
@@ -88,7 +88,8 @@ const Training = () => {
                 <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 mt-6">
                     <h2 className="text-lg sm:text-xl font-bold mb-4">Current Trainings</h2>
                     <div className="flex flex-wrap -mx-2">
-                        {visibleTrainings.map((training, i) => (
+                    {visibleTrainings.length > 0 ? (
+                        visibleTrainings.map((training, i) => (
                             <div key={i} className="p-4 w-full sm:w-1/2 lg:w-1/3">
                                 <div className="shadow-lg">
                                     <img src={training.photo} alt="Training" className="w-full object-cover h-48" loading="lazy" />
@@ -105,7 +106,12 @@ const Training = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                         ))
+                        ) : (
+                          <div className="w-full text-center w-1/3 p-8">
+                            <p className='font-bold'>No Current Trainings</p>
+                          </div>
+                        )}
                     </div>
                     {currentTrainings.length > 3 && (
                         <div className="flex justify-center mt-4">
@@ -119,7 +125,8 @@ const Training = () => {
                 <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 mt-8 mb-8">
                     <h2 className="text-lg sm:text-xl font-bold mb-4">Finished Trainings</h2>
                     <div className="flex flex-wrap -mx-2">
-                        {visibleTrainingsF.map((training, i) => (
+                    {visibleTrainingsF.length > 0 ? (
+                        visibleTrainingsF.map((training, i) => (
                             <div key={i} className="p-4 w-full sm:w-1/2 lg:w-1/3">
                                 <a href="#" className="inline-block w-full h-full bg-white border overflow-hidden">
                                     <div className="shadow-lg">
@@ -134,7 +141,12 @@ const Training = () => {
                                     </div>
                                 </a>
                             </div>
-                        ))}
+                       ))
+                    ) : (
+                      <div className="w-full text-center w-1/3 p-8">
+                        <p className='font-bold'>No Current Trainings</p>
+                      </div>
+                    )}
                     </div>
                     {finishedTrainings.length > 3 && (
                         <div className="flex justify-center mt-4">

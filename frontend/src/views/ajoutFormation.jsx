@@ -57,7 +57,7 @@ const AjoutFormation = () => {
   return (
     <>
       <NavBar />
-      <div className="flex my-16">
+      <div className="flex mt-16 h-full">
         <ModuleInput
           modules={modules}
           setModules={setModules}

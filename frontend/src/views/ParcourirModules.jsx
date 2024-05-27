@@ -37,7 +37,7 @@ const ParcourirModules = () => {
   const checkContentType = (url) => {
     if (!url) {
       console.log("URL is null or undefined, defaulting to 'video'.");
-      return 'video';  // Default to 'video' when the URL is not provided.
+      return 'null';  // Default to 'video' when the URL is not provided.
     }
   
     // Check for data URL and extract MIME type
@@ -56,35 +56,14 @@ const ParcourirModules = () => {
       return 'video';
     }
   };
-  const checkContentType1 = (url) => {
-    if (!url) {
-      console.log("URL is null or undefined, defaulting to 'video'.");
-      return 'yrl';  // Default to 'video' when the URL is not provided.
-    }
-    const extension = url.split('.').pop().toLowerCase();
-    console.log(extension)
-    const parties = extension.split("/");
-    const dernierElement = parties[parties.length - 1];
-    const mot_pdf = dernierElement.split("?")[0];
-    console.log(mot_pdf)
-    if (mot_pdf === 'pdf') {
-      return 'pdf';
-    } else {
-      return 'video';
-    }
-  }
- const t = checkContentType("data:application/pdf;base64,JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDIyNz4+c3RyZWFtCnicddC9TsMwEMDx3U9xbLAc/orPWUFkR7LYTT4kt2nTOi68LqvfAidQQEA9WvLP/7sju3PsthEgObiBidogV0CWo7XgOibBRcbRlEPwyq7v+5jCEFqfoOuhmeLOpzDtb9yGPTj2yI5nT5jFk1xjRUCaUOjFKwC030Y/FyeXi32Gt7+I1CuiJWoJxA2S+BFll6AubKMH/xy6cClCWIVFMiRQrg2H6RTBv0whQjvtDmNOGUYPw+VpPkOMQqrAKI5Ev0OeTj1u5n8a7McMGusaqlqdF9HkMbQhrR/OcPX18B2xXmmQCmVuZHN0cmVhbQplbmRvYmoKNCAwIG9iago8PC9Db250ZW50cyA1IDAgUi9NZWRpYUJveFswIDAgNTk1IDg0Ml0vUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0ZvbnQ8PC9GMSA2IDAgUj4+Pj4vVHJpbUJveFswIDAgNTk1IDg0Ml0vVHlwZS9QYWdlPj4KZW5kb2JqCjEgMCBvYmoKPDwvUGFnZXMgMiAwIFIvVHlwZS9DYXRhbG9nPj4KZW5kb2JqCjMgMCBvYmoKPDwvQ3JlYXRpb25EYXRlKEQ6MjAyNDA1MTUxMjAyMTMrMDEnMDAnKS9Nb2REYXRlKEQ6MjAyNDA1MTUxMjAyMTMrMDEnMDAnKS9Qcm9kdWNlcihpVGV4dK4gNy4xLjkgqTIwMDAtMjAxOSBpVGV4dCBHcm91cCBOViBcKEFHUEwtdmVyc2lvblwpKT4+CmVuZG9iago2IDAgb2JqCjw8L0Jhc2VGb250L0hlbHZldGljYS9FbmNvZGluZy9XaW5BbnNpRW5jb2RpbmcvU3VidHlwZS9UeXBlMS9UeXBlL0ZvbnQ+PgplbmRvYmoKMiAwIG9iago8PC9Db3VudCAxL0tpZHNbNCAwIFJdL1R5cGUvUGFnZXM+PgplbmRvYmoKeHJlZgowIDcKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwNDQyIDAwMDAwIG4gCjAwMDAwMDA3MzIgMDAwMDAgbiAKMDAwMDAwMDQ4NyAwMDAwMCBuIAowMDAwMDAwMzA5IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDY0NCAwMDAwMCBuIAp0cmFpbGVyCjw8L0lEIFs8MTQwYzc4ZmEzNDlkMDNhODAxZWYzNTA3M2FmZDIzY2Q+PDE0MGM3OGZhMzQ5ZDAzYTgwMWVmMzUwNzNhZmQyM2NkPl0vSW5mbyAzIDAgUi9Sb290IDEgMCBSL1NpemUgNz4+CiVpVGV4dC03LjEuOQpzdGFydHhyZWYKNzgzCiUlRU9GCg==")
- console.log("yyyyy"+t) 
+
+
  const handleClick = async (trainingId)=> {
     const fetch = await changeState(trainingId, selectedContenu2);
     window.location.reload();
     };
-    if (modules === null || modules.length === 0) {
-  return(
-<div>loading..</div>
-  );
-}
-else{
+   
+
 return (
   <>
   <div> 
@@ -162,7 +141,7 @@ return (
     </div>
   </>
 );
-}
+
 }
 
 export default ParcourirModules;

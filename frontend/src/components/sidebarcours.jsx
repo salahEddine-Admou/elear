@@ -20,6 +20,7 @@ const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2}) => {
           setSelectedSubmodule(firstSubmodule.title); 
           selectContenu(firstSubmodule, module.id);
           toggleModule(module.id);
+          setActiveTab(firstSubmodule.title)
           break; 
         }
       }
@@ -48,7 +49,7 @@ const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2}) => {
    const checkContentType = (url) => {
     if (!url) {
       console.log("URL is null or undefined, defaulting to 'video'.");
-      return 'video';  // Default to 'video' when the URL is not provided.
+      return 'null';  // Default to 'video' when the URL is not provided.
     }
   
     // Check for data URL and extract MIME type
@@ -87,15 +88,21 @@ const initializeSubmoduleBoldStatus = async () => {
 const [submoduleBoldStatus, setSubmoduleBoldStatus] = useState({});
 
   useEffect(() => {
+    
     const fetchDurations = async () => {
+
+      
       const promises = modules.flatMap(module =>
-          module.submodules.map(submodule =>
-              fetchDuration(submodule.contenu).then(duration => ({
-                  key: `${module.id}_${submodule.id}`,
-                  duration
-              }))
-          )
-      );
+        module.submodules
+            .filter(submodule => checkContentType(submodule.contenu) === 'video')
+            .map(submodule =>
+                fetchDuration(submodule.contenu).then(duration => ({
+                    key: `${module.id}_${submodule.id}`,
+                    duration
+                }))
+            )
+    );
+    
 
       const results = await Promise.all(promises);
       const newDurations = results.reduce((acc, { key, duration }) => {
@@ -159,8 +166,8 @@ const formatDuration = (seconds) => {
             {openModules.has(module.id) && (
               <ul>
  {module.submodules && module.submodules.map((submodule, vIndex) => (
-  <li key={vIndex}>
-    <div className="video-clickable " >
+  <li key={vIndex} >
+    <div className="video-clickable "  onClick={() => selectContenu(submodule, module.id)}>
       <div className="video-clickable " onClick={() => selectContenu(submodule, module.id)}>
                       <div  className={`  p-1 h-9 ${
     activeTab === submodule.title
@@ -171,7 +178,7 @@ const formatDuration = (seconds) => {
   }}></div>
   {checkContentType(submodule.contenu) === 'pdf' ? (
       // Si le contenu est un PDF
-      <FaReadme className={`play-icon ${
+      <FaReadme className={`play-icon mt-4 ${
         submoduleBoldStatus[getSubmoduleKey(module.id, submodule.id)] ? 'video-title text-gray-400 font-bold' : ''}`} />
     ) : (
       // Si le contenu est une vidéo
@@ -188,13 +195,16 @@ const formatDuration = (seconds) => {
   }}
 >
 {checkContentType(submodule.contenu) === 'pdf' ? (
-  <p>PDF:  <span>{submodule.title}</span></p>  // Assuming you want to label it as "PDF" when it's a PDF
+  <p>PDF :  <span>{submodule.title}</span></p>  // Assuming you want to label it as "PDF" when it's a PDF
 ) : (
-  <p>Video:  <span>{submodule.title}</span></p>  // And as "Video" otherwise
+  <>
+  <p>Video :  <span>{submodule.title}</span></p>
+  <small className='text-zinc-400'>{submoduleDurations[`${module.id}_${submodule.id}`] ? formatDuration(submoduleDurations[`${module.id}_${submodule.id}`]) : 'Loading...'}</small>
+  </>
 )}
 
   
-  <small className='text-zinc-400'>{submoduleDurations[`${module.id}_${submodule.id}`] ? formatDuration(submoduleDurations[`${module.id}_${submodule.id}`]) : 'Loading...'}</small>
+  
 </span>
 
                     </div>

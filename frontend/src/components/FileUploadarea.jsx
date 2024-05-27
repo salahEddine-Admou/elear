@@ -139,8 +139,8 @@ if (file) {
       title: submodule.title,
       contenu: submodule.contenu,
     });
-  
-      window.location.reload();
+  setVal("false")
+     
     
   };
   const getUploadState = (type) => {
@@ -148,11 +148,12 @@ if (file) {
   };
 
   return (
-    <div className="bg-gray-200 overflow-hidden p-6 h-full w-full flex">
+    
+    <div className="bg-gray-200 overflow-hidden p-10 h-full w-full flex">
       <div className="bg-white p-8 shadow-md w-full flex flex-col items-center">
       <div className=" w-full mb-6">
       {val === 'true' && (
-          <div className="w-full py-6 px-4 bg-gray-100 rounded-md border-2 border-gray-100 focus-within:ring-1 focus-within:ring-blue-500 flex flex-col items-start cursor-pointer">
+          <div className="w-full py-6 px-4 bg-gray-100 rounded-md border-2 border-gray-100 focus-within:ring-1 focus-within:ring-blue-500 flex flex-col items-start ">
             <p className="font-bold mb-4">Save the <span className='text-orange-500'>changes</span></p>
             <div className="flex">
             <button
@@ -174,18 +175,21 @@ if (file) {
           
           className="w-full bg-gray-100 px-3 py-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <div className="mt-6 w-full">
-          <label className={`w-full bg-gray-100 ${getUploadState('videoUploaded') ? 'p-2' : 'p-20'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
+
+        <div className="mt-8 mb-8 w-full">
+          <label className={`w-full bg-gray-100 ${getUploadState('pdfUploaded') ? 'p-2' : 'p-24'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
            
              
-         
+          {!submodulupdate.contenu && (  
               <>
-               
-                
-                {!submodulupdate.contenu && (   
-                  <>  
-               
-                   <input
+              <input type="file" accept="application/pdf"  style={{ display: 'none' }} />
+                 <label htmlFor="fileInput">
+        <LuUpload className="text-2xl ml-6 mb-2" />
+      
+          <span className="font-bold mr-8">Upload PDF</span>
+        
+      </label>
+       <input
         type="file"
         style={{ display: 'none' }}
         id="fileInput"
@@ -197,13 +201,14 @@ if (file) {
           <span className="font-bold">Upload Video</span>
         
       </label>
-       </>
-                )}
-      {submodulupdate.contenu && (
-        <>
+                
+              </>
+            
+          )}
+            {submodulupdate.contenu && (
 
-       
-<span className="font-bold mr-8" >
+              <>
+               <span className="font-bold mr-8" >
         Change to video
       </span>
       <input
@@ -212,44 +217,19 @@ if (file) {
         id="fileInput"
         onChange={handleVideoUpload}
       />
-     { checkContentType(submodulupdate.contenu) === 'video'&& (
-      <ReactPlayer url={submodulupdate.contenu} controls width="100%" height="400px" />
-     )}
-     
-        </>
-      )}
-    </>   
-          </label>
-        </div>
-
-        <div className="mt-8 mb-8 w-full">
-          <label className={`w-full bg-gray-100 ${getUploadState('pdfUploaded') ? 'p-2' : 'p-24'} rounded-md border-2 border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 border-dashed cursor-pointer flex justify-center items-center`}>
-           
-             
-          {!submodulupdate.contenu && (  
-              <>
-              <input type="file" accept="application/pdf"  style={{ display: 'none' }} />
-                 <label htmlFor="fileInput">
-        <LuUpload className="text-2xl ml-8 mb-2" />
-      
-          <span className="font-bold">Upload PDF</span>
-        
-      </label>
-                
-              </>
-            
-          )}
-            {submodulupdate.contenu && (
-              <>
          <span className="font-bold mr-6">Change to PDF</span>
                 <input type="file" accept="application/pdf"  style={{ display: 'none' }} onChange={handleVideoUpload} />
+         
+        { checkContentType(submodulupdate.contenu) === 'video'&& (
+      <ReactPlayer url={submodulupdate.contenu} controls width="100%" height="400px" />
+     )}
                 { checkContentType(submodulupdate.contenu) === 'pdf'&& (
                 <object 
   className="bg-black" 
   data={submodulupdate.contenu} 
   type="application/pdf" 
   width="100%" 
-  height="200px" 
+  height="300px" 
   style={{ border: 'none' }}
 >
   <p>Your browser does not support PDFs. <a href={submodulupdate.contenu}>Download the PDF</a>.</p>

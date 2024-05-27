@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import img from '../images/img.png';
-import { getFormationsCurrent, getFormationsMore} from '../services/UsersService';
+import { getFormationsCurrent, getFormationsMoreAdmin} from '../services/UsersService';
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import AddFormationModal from '../components/AddFormationModal';
 const Formation = () => {
@@ -49,7 +49,7 @@ const Formation = () => {
     const fetchData2 = async () => {
       try {
         setLoading(true);
-        const fetchedCoursesM = await getFormationsMore();
+        const fetchedCoursesM = await getFormationsMoreAdmin();
         setCoursesM(fetchedCoursesM || []);
       } catch (err) {
         console.error("An error occurred while fetching courses:", err);
@@ -78,7 +78,6 @@ const Formation = () => {
     setSelected(true)
     openModal();
   };
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   const visibleTrainings = showAllCurrent ? courses : courses.slice(0, 3);
   const visibleTrainings2= showAllMore ? coursesM : coursesM.slice(0, 2);

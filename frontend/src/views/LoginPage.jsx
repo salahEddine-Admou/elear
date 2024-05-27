@@ -37,12 +37,19 @@ function LoginPage() {
                 const { token } = response.data;
                 const { message } = response.data;
                const { id } = response.data;
+               const { fullName } = response.data;
+               console.log(response.data)
                 // Store the token in local storage
                 localStorage.setItem('userToken', token);
                 localStorage.setItem('userRole', message);
                 localStorage.setItem('userId', id);
+                localStorage.setItem('fullName', fullName);
                 // Navigate to the home page
-                navigate('/Home');
+                if (message === 'ADMIN') {
+                    navigate('/Home/dashbord');
+                } else {
+                    navigate('/Home/home1'); 
+                }
                 return;
             } else if (response.status === 401) {
                 setError('Unauthorized: Invalid username or password');

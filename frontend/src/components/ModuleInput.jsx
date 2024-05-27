@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { RiEditLine } from 'react-icons/ri';
 import { addModule, addSubmodule, deleteModule, deleteSubmodule, updateModule } from '../services/UsersService';
@@ -14,8 +14,16 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
   const [editableModuleId, setEditableModuleId] = useState(null);
   const [module, setModule] = useState({ name: '' });
   const [module2, setModule2] = useState({ name2: '' });
+
   const [submodule, setSubmodule] = useState({ title: ''
    });
+   const [showAllMore, setShowAllMore] = useState(false);
+   useEffect(() => {
+    // Trigger onSubmoduleSelect for the first submodule of the first module
+    if (modules.length > 0 && modules[0].submodules.length > 0) {
+        onSubmoduleSelect(modules[0].id, 0);
+    }
+}, [modules]);
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();  // Prevent the default action of the enter key
@@ -211,10 +219,10 @@ console.log(module2)
       console.error('Deletion failed');
     }
   };
-
+  const visibleTrainings= showAllMore ? modules : modules.slice(0, 3);
   return (
     <div className="w-64 h-full bg-white-100 p-4 border-r">
-      {modules.map((module) => (
+      {visibleTrainings.map((module) => (
         <div key={module.id} className="mb-4">
           <div className="font-bold relative">
             {editableModuleId === module.id ? (
@@ -255,7 +263,7 @@ console.log(module2)
                 {submodule.title}
                 <RiEditLine
                   className="absolute top-1/2 right-6 transform -translate-y-1/2 cursor-pointer text-gray-500"
-                  onClick={() => handleEditSubmoduleName(module.id, index)}
+                  onClick={() => onSubmoduleSelect(module.id, index)}
                 />
                 <IoMdClose
                   className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer text-gray-500"
@@ -290,7 +298,15 @@ console.log(module2)
           className="w-full border border-gray-300 bg-gray-200 rounded px-4 py-2"
         />
       </div>
+      {modules.length > 3 && (
+    <div className="flex justify-center mt-4">
+      <button onClick={() => setShowAllMore(!showAllMore)} className="bg-orange-500 text-white px-4 py-2 text-sm font-bold">
+        {showAllMore ? 'Show Less' : 'Show All'}
+      </button>
     </div>
+  )}
+    </div>
+    
   );
 };
 
