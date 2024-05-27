@@ -647,6 +647,45 @@ export const addFormation = async (formation) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 };
+
+export const deleteFormation = async (formationId) => {
+    const api = `http://localhost:8080/formations/${formationId}`;
+    const token = localStorage.getItem("userToken");
+
+    // Vérifiez si le token est présent dans le localStorage
+    if (!token) {
+        console.error("Token not found in localStorage");
+        return { status: 'error', message: 'Token not found' };
+    }
+
+    try {
+        // Effectuez la requête DELETE
+        const response = await fetch(api, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Vérifiez si la réponse est correcte
+        if (response.ok) {
+            console.log('Formation deleted successfully');
+            return { status: 'success', message: 'Formation deleted successfully' };
+        } else {
+            console.error('HTTP-Error:', response.status, response.statusText);
+            return { status: 'error', message: `HTTP-Error: ${response.status} ${response.statusText}` };
+        }
+    } catch (error) {
+        // Gérer les erreurs de récupération
+        console.error("Error fetching data:", error.message);
+        return { status: 'error', message: `Error fetching data: ${error.message}` };
+    }
+};
+
+
+
+
 export const addModule= async (module) => {
     const idf = localStorage.getItem("selectedTrainingId");
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente

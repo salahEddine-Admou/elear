@@ -117,9 +117,9 @@
   display: flex;
   align-items: center;
   background-color: #e0e3e9;
-height: 20%;
+  height: 50%;
   width: 100%;
-  padding: 12px;
+  padding: 20px;
   margin-top: 10px;
   border: 2px dashed #8f8787;
   border-radius: 5px;
@@ -136,4 +136,27 @@ height: 20%;
 .svg-icon svg {
   fill: #9C9C9C; /* SVG color */
 }
+.custom-width {
+  width: 850px; /* ou la largeur souhaitée */
+}
+.photo-container {
+  position: relative;
+  overflow: hidden;
+  width: 300px; /* Ajustez la largeur selon vos besoins */
+  height: 200px; /* Ajustez la hauteur selon vos besoins */
+  border: 1px solid #ddd; /* Optionnel : ajouter une bordure pour délimiter le conteneur */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
+.uploaded-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* Ajustez la largeur de l'image */
+  height: 100%; /* Ajustez la hauteur de l'image */
+  object-fit: cover; /* Assure que l'image couvre entièrement le conteneur */
+  pointer-events: none;
+}

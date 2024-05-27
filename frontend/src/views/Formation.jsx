@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import img from '../images/img.png';
-import { getFormationsCurrent, getFormationsMoreAdmin} from '../services/UsersService';
+import { getFormationsCurrent, getFormationsMoreAdmin,deleteFormation} from '../services/UsersService';
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import AddFormationModal from '../components/AddFormationModal';
 const Formation = () => {
@@ -78,6 +78,43 @@ const Formation = () => {
     setSelected(true)
     openModal();
   };
+
+  const handleDeleteClick = async (id) => {
+    try {
+        setLoading(true);
+        console.log(`Deleting formation with id: ${id}`);
+  
+        // Assurez-vous que deleteFormation est une fonction asynchrone et qu'elle retourne une réponse correcte
+        const response = await deleteFormation(id);
+  
+        if (response.status === 'success') {
+            console.log(`Formation with id: ${id} deleted successfully`);
+  
+            // Rafraîchir la liste des formations après la suppression
+            const updatedCourses = courses.filter(course => course.id !== id);
+            setCourses(updatedCourses);
+        } else {
+            console.error(`Failed to delete formation with id: ${id}: ${response.message}`);
+            setError(`Failed to delete formation: ${response.message}`);
+        }
+    } catch (err) {
+        console.error("An error occurred while deleting the formation:", err);
+  
+        // Afficher plus de détails sur l'erreur
+        if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+            console.error("This is likely a network or CORS issue.");
+            setError('Network or CORS error: Failed to delete the formation');
+        } else {
+            setError('Failed to delete the formation');
+        }
+    } finally {
+        setLoading(false);
+    }
+  };
+
+
+
+
   if (error) return <div>Error: {error}</div>;
   const visibleTrainings = showAllCurrent ? courses : courses.slice(0, 3);
   const visibleTrainings2= showAllMore ? coursesM : coursesM.slice(0, 2);
@@ -99,6 +136,7 @@ const Formation = () => {
                     <p className="font-semibold text-sm lg:text-md text-gray-500">{training.domaine}</p>
                     <div className="mt-1.5">
                         <button  onClick={() => handleButtonClick(training.id)} className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1">Edit</button>
+                        <button onClick={() => handleDeleteClick(training.id)} className="bg-red-500 text-white text-xs lg:text-sm font-bold w-20 py-1 ml-2">Delete</button>
                     </div>
                 </div>
             </div>
