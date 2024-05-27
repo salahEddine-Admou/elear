@@ -74,15 +74,15 @@ export default function NavBar() {
     try {
       const token = localStorage.getItem("userToken");
       const response = await fetch(api, {
-        method: 'GET',
+        method: 'GET', // Use 'GET' for logout requests
         headers: {
-          'Authorization': `Bearer {token}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
       if (response.ok) {
         console.log('Logout successful');
-        localStorage.removeItem("userToken"); 
+        localStorage.removeItem("userToken"); // Remove token on successful logout
         navigate('/'); // Redirect to login
       } else {
         console.error('HTTP-Error:', response.status);
