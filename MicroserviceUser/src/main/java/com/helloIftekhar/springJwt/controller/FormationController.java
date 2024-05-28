@@ -248,5 +248,16 @@ public class FormationController {
         }
         return ResponseEntity.notFound().build();
     }
+    @PostMapping("addNote/{idUser}")
+    public ResponseEntity<?> addNote(@RequestBody Note note,@PathVariable String idUser){
+        System.out.println(note);
+        Note note1 = formationService.addNote(idUser,note);
+        System.out.println(note1);
+        if (note1 == null) {
+            String message = "note n'a pas été ajouté " ;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 
 }

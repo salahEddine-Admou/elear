@@ -38,6 +38,8 @@ public class FormationService {
     private ModuleSubRep moduleSubRep;
     @Autowired
     private CertificatRepo certificatRepo;
+    @Autowired
+    private NoteRepository noteRepository;
 
     //// formations
     public Formation CreateFormation(Formation formation) {
@@ -121,11 +123,22 @@ public class FormationService {
                 .map(InscriptionFormation::getFormation)
                 .collect(Collectors.toList());
 
-        // Filter out formations that the user is currently registered for
+        // Get finished formations for the user
+        List<Formation> finishedFormations = getAllFormationsFinish(userId).stream()
+                .map(InscriptionFormation::getFormation)
+                .collect(Collectors.toList());
+
+        // Combine the lists of current and finished formations to filter them out
+        Set<Formation> excludedFormations = new HashSet<>();
+        excludedFormations.addAll(currentFormations);
+        excludedFormations.addAll(finishedFormations);
+
+        // Filter out formations that the user is currently registered for or has finished
         return allFormations.stream()
-                .filter(formation -> !currentFormations.contains(formation))
+                .filter(formation -> !excludedFormations.contains(formation))
                 .collect(Collectors.toList());
     }
+
     private List<Formation> getAllFormationsWithModulesAndSubmodules() {
         List<Formation> formations = formationRepository.findAll();
         return formations.stream()
@@ -513,7 +526,7 @@ public class FormationService {
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("organised by Orange Digital Center Rabat", 160, 420);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
-        g2d.drawString(date, 160, 460);
+        g2d.drawString("in duration"+date, 160, 460);
         g2d.drawString("Mm.Nadia Mrabi", 640, 540);
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("Senior Manager PSE et Orange Digital Center", 640, 580);
@@ -581,6 +594,15 @@ public class FormationService {
         return formationRepository.findByTitle(NameF);
     }
 
+    public Note addNote(String idUser, Note note) {
+        User user = userRepo.findById(idUser).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Note note1 = new Note();
+        note1.setUser(user);
+        System.out.println(note.getText());
+        note1.setText(note.getText());
+        noteRepository.save(note1);
+        return note1;
+    }
 
 
 
