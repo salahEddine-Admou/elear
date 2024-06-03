@@ -83,7 +83,7 @@ const Training = () => {
         navigate('/Home/Certificats');
     };
     return (
-        <div className="bg-gray-200 overflow-hidden">
+        <div className="bg-gray-200 overflow-hidden ">
             <div>
                 <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 mt-6">
                     <h2 className="text-lg sm:text-xl font-bold mb-4">Current Trainings</h2>
@@ -108,7 +108,7 @@ const Training = () => {
                             </div>
                          ))
                         ) : (
-                          <div className="w-full text-center w-1/3 p-8">
+                          <div className="w-full text-center w-1/3 p-14">
                             <p className='font-bold'>No Current Trainings</p>
                           </div>
                         )}
@@ -143,8 +143,8 @@ const Training = () => {
                             </div>
                        ))
                     ) : (
-                      <div className="w-full text-center w-1/3 p-8">
-                        <p className='font-bold'>No Current Trainings</p>
+                      <div className="w-full text-center w-1/3 p-14">
+                        <p className='font-bold'>No Finished Trainings</p>
                       </div>
                     )}
                     </div>

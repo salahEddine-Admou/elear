@@ -339,7 +339,8 @@ export const getModules= async () => {
         }
 
         const data = await response.json();  // Assuming the server responds with JSON-formatted data
-        console.log(data);
+
+        console.log("moiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"+data);
         return data;  // Return the data to be used by the calling component
         
     } catch (error) {
@@ -704,9 +705,10 @@ export const addModule= async (module) => {
 
         if (response.ok) { // Vérifie si le statut de la réponse est 2xx
             // Succès de l'ajout
-            console.log('Module added successfully');
-           // Optionnel, dépend de si vous avez besoin de la réponse
-            return { status: 'success', message: 'Module added successfully', data : response.data};
+            const responseData = await response.json(); // Read the JSON response once
+            console.log(responseData); // Log the parsed JSON response
+           // console.log('Module added successfully');
+            return { status: 'success', message: 'Module added successfully', data: responseData };
         } else {
             // Gestion des réponses non réussies
             console.error('HTTP-Error:', response.status);
@@ -720,6 +722,7 @@ export const addModule= async (module) => {
 }
 export const addSubmodule= async (sub, id) => {
     const idf = localStorage.getItem("selectedTrainingId");
+    console.log(idf);
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
     const api = `http://localhost:8080/formations/addSubmodule/${idf}/${id}`;
     const token = localStorage.getItem("userToken");
@@ -736,9 +739,10 @@ export const addSubmodule= async (sub, id) => {
 
         if (response.ok) { // Vérifie si le statut de la réponse est 2xx
             // Succès de l'ajout
-            console.log('Submodule added successfully');
+            const responseData = await response.json(); // Read the JSON response once
+            console.log(responseData); 
            // Optionnel, dépend de si vous avez besoin de la réponse
-            return { status: 'success', message: 'Submodule added successfully' };
+            return { status: 'success', message: 'Submodule added successfully', data : responseData };
         } else {
             // Gestion des réponses non réussies
             console.error('HTTP-Error:', response.status);
@@ -796,8 +800,9 @@ export const deleteSubmodule = async (subid, moduleId) => {
 
         if (response.ok) { // Vérifie si le statut de la réponse est 2xx
             // Succès de la suppression
+            const responseData = await response.json();
             console.log('submodule deleted successfully');
-            return { status: 'success', message: 'submodule deleted successfully' };
+            return { status: 'success', message: 'submodule deleted successfully' , data: responseData};
         } else {
             // Gestion des réponses non réussies
             console.error('HTTP-Error:', response.status);
@@ -867,7 +872,7 @@ export const updateSubModule = async (Id, sub) => {
     }
 }
 export const inscription = async (nameFormation) => {
-    const id = localStorage.getItem("idUser");
+    const id = localStorage.getItem("userId");
 
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
     const api = `http://localhost:8080/formations/${nameFormation}/enroll?id=${id}`;
@@ -897,5 +902,76 @@ export const inscription = async (nameFormation) => {
         // Gestion des erreurs de la requête
         console.error("Error fetching data:", error);
         return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+};
+export const addNote = async (note) => {
+    console.log("hello"+note)
+    const FormationId = localStorage.getItem("selectedTrainingId");
+    const id = localStorage.getItem("userId");
+    // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
+    const api = `http://localhost:8080/formations/addNote/${id}/${FormationId}`;
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+    try {
+        const response = await fetch(api, {
+            method: 'POST', // Méthode HTTP pour ajouter des données
+            headers: {
+                'Authorization': `Bearer ${token}`, // En-tête d'autorisation avec le token
+                'Content-Type': 'application/json' // Spécifier le type de contenu des données envoyées
+            },
+            body: JSON.stringify(note) // Convertit l'objet utilisateur en chaîne JSON pour l'envoi
+        });
+
+        if (response.ok) { // Vérifie si le statut de la réponse est 2xx
+            // Succès de l'ajout
+            console.log('Note added successfully');
+          //  const data = await response.json(); // Optionnel, dépend de si vous avez besoin de la réponse
+            return { status: 'success', message: 'Note added successfully' };
+        } else {
+            // Gestion des réponses non réussies
+            console.error('HTTP-Error:', response.status);
+            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+        }
+    } catch (error) {
+        // Gestion des erreurs de la requête
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+};
+export const getNotes= async () => {
+    const userId = localStorage.getItem("userId");
+    const FormationId = localStorage.getItem("selectedTrainingId");
+    const api = `http://localhost:8080/formations/getNotes/${FormationId}/${userId}`;
+    const token = localStorage.getItem("userToken");
+    
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.text(); // Assuming the server responds with JSON-formatted data
+        console.log("yamina abidi"+data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
     }
 };

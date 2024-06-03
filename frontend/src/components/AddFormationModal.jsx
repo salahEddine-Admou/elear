@@ -2,8 +2,8 @@
 import '../App.css';
 import { addFormation} from "../services/UsersService";
 import Swal from 'sweetalert2';
-
-const AddFormationModal = ({ isOpen, onClose }) => {
+import  '../styles/CustomAlert.css';
+const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
   const [formation, setFormation] = useState({
     title: '',
     domaine: '',
@@ -37,6 +37,7 @@ const AddFormationModal = ({ isOpen, onClose }) => {
           // Appel à votre fonction API pour ajouter une formation
           const response = await addFormation(formation);
           if (response.status === 'success') {
+            onAddFormation(response.data); 
             Swal.fire(
               'Ajoutée!',
               'La formation a été ajoutée avec succès.',
@@ -47,7 +48,8 @@ const AddFormationModal = ({ isOpen, onClose }) => {
               setShowSuccess(false);
               onClose(); // Fermez le modal
               // Réinitialiser l'état de la formation après la fermeture
-              window.location.reload();
+              
+              //window.location.reload();
               setFormation({
                 title: "",
                 domaine: "",
@@ -57,11 +59,15 @@ const AddFormationModal = ({ isOpen, onClose }) => {
             }, 3000); // Message de succès affiché pendant 3 secondes
           } else {
             // Gérez les réponses d'erreur de votre API ici
-            Swal.fire(
-              'Erreur',
-              `Échec de l'ajout de la formation: ${response.message}`,
-              'error'
-            );
+            Swal.fire({
+              title: 'Erreur',
+              text: 'already exists',
+              icon: 'error',
+              confirmButtonText: 'OK',
+              customClass: {
+                  confirmButton: 'custom-ok-button' // Applying custom class to the confirm button
+              }
+          });
             console.error('Échec de l\'ajout de la formation:', response.message);
           }
         } catch (error) {

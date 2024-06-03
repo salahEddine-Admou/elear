@@ -14,7 +14,8 @@ import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
 import Certificats from './views/Certificats';
-import AjoutFormation from "./views/ajoutFormation";
+import AjoutFormation from "./views/AjoutFormation";
+import Par from "./views/UserCours"
 import FormationInput from "./views/FormationInput";
 import Settings from './views/Settings';
 
@@ -47,7 +48,7 @@ function App() {
       </Route>
       <Route path="/" element={<LoginPage />} />
       <Route path="register" element={<Register />} />
-      <Route path="modules" element={<Parcourirmodules />} />
+      <Route path="modules" element={<Par />} />
       <Route path='AjoutModuleFormation' element={<AjoutFormation />} />
       <Route path='FormationInput' element={<FormationInput />} />
       <Route path="settings" element={<Settings />} />

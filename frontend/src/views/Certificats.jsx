@@ -66,9 +66,9 @@ console.log(certificats)
   const visibleCertificatsF = showAllFinish ? certificats : certificats.slice(0, 3);
   
     return (
-      <section className="py-4 overflow-hidden bg-gray-200">
+      <section className="py-8 overflow-hidden bg-gray-200">
       <div className="container px-4 mx-auto">
-        <div className="bg-white p-6 mb-4 w-full max-w-[10000px] mt-2">
+        <div className="bg-white p-6 mb-4 w-full max-w-[10000px] ">
           <div className="flex flex-wrap items-center justify-between  -m-2">
             <div className="w-auto p-2">
               <h2 className="text-lg sm:text-xl font-bold mb-4 ml-2">Certificats</h2>
@@ -100,7 +100,7 @@ console.log(certificats)
       </div>
     ))
   ) : (
-    <div className="w-full text-center sm:text-center">
+    <div className="w-full text-center sm:text-center p-16">
       <p className='font-bold'>No Finished Certificates</p>
     </div>
   )}
@@ -181,7 +181,7 @@ visibleCertificats.map((training1, i) => (
     </div>
     </>  ))
                     ) : (
-                      <div className="w-full text-center sm:text-center">
+                      <div className="w-full text-center sm:text-center p-14">
                         <p className='font-bold'>No Current Cerificates</p>
                       </div>
                     )}

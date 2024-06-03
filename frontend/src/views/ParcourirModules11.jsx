@@ -1,12 +1,15 @@
-﻿import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import Navbar from '../components/Navbar'; 
-import { getModules ,changeState, addNote, getNotes} from '../services/UsersService';
+import { getModules ,changeState, addNote} from '../services/UsersService';
 import Side from '../components/sidebarcours';
 import { AiOutlineLeft } from "react-icons/ai";
 import "../App.css";
 
-const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,handleClick}) => {
-  const [duration, setDuration] = useState('');
+const ParcourirModules11 = () => {
+ 
+  const [modules, setModules] = useState([]);
+  const [selectedContenu, setSelectedContenu] = useState(null);
+  const [selectedContenu2, setSelectedContenu2] = useState(null);
   const [activeTab, setActiveTab] = useState('notes');
    const [note, setNote] = useState(
     {
@@ -21,51 +24,42 @@ const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,hand
     const fetchData = async () => {
       try {
         const fetchedModules = await getModules();
-       // console.log("Modules fetched:", fetchedModules); // Affiche les modules récupérés pour le débogage
+        console.log("Modules fetched:", fetchedModules); // Affiche les modules récupérés pour le débogage
     
         // Collecte tous les sous-modules qui contiennent des PDFs
         const pdfs = fetchedModules.flatMap(module =>
           module.submodules.filter(submodule => {
             const contentType = checkContentType(submodule.contenu);
-           // console.log("Submodule content:", submodule.contenu); // Affiche le contenu du sous-module
-          //  console.log("Content type:", contentType); // Affiche le type de contenu détecté
+            console.log("Submodule content:", submodule.contenu); // Affiche le contenu du sous-module
+            console.log("Content type:", contentType); // Affiche le type de contenu détecté
             return contentType === 'pdf';
           })
         );
     
-       // console.log("PDF submodules:", pdfs); // Affiche les sous-modules qui contiennent des PDFs
+        console.log("PDF submodules:", pdfs); // Affiche les sous-modules qui contiennent des PDFs
         setPdfFiles(pdfs); // Stocke les sous-modules PDF dans l'état
       } catch (error) {
         console.error("Error fetching modules:", error);
       }
     };
     
-      const fetchData2 = async () => {
-        try {
-          const fetchedNotes = await getNotes();
-          console.log("Notes fetched:", fetchedNotes); // Affiche les modules récupérés pour le débogage
-          setNote({
-            text:fetchedNotes,
-                    });
-         
-        } catch (error) {
-          console.error("Error fetching modules:", error);
-        }
-      };
 
     fetchData();
-    fetchData2();
   }, []);
   
    const handleClickNote = async() => {
     try {
       // Wait until the state is updated before making an API call
       await new Promise(resolve => setTimeout(resolve, 0));
-      //console.log(note)
+      console.log(note)
       const response = await addNote(note);
       if (response.status === 'success') {
-      //  console.log('Note added successfully');
-  
+        console.log('Note added successfully');
+        setNote({
+text:"",
+        });
+        //) Reload the window or redirect as needed
+        //window.location.reload();  // Consider using React Router for navigation instead
         setShowSuccess(true); // Affiche le message de succès
         setTimeout(() => {
           setShowSuccess(false);
@@ -83,8 +77,26 @@ const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,hand
   const handleSuccessClose = () => {
     setShowSuccess(false);
   };
+  useEffect(() => {
+    
+    const fetchData2 = async () => {
+      try { 
+        const modules1 = await getModules(); // Supposons que getFormationsMore() soit une fonction qui récupère les données des modules depuis l'API
+        setModules(modules1 || []);
+      } catch (err) {
+        console.error("Une erreur s'est produite lors de la récupération des modules :", err);
+        
+      } 
+    };
 
- 
+    fetchData2(); 
+  }, []); 
+  const handleContenuSelect = (contenu) => {
+    setSelectedContenu(contenu);
+  };
+  const handleModuleSelect = (contenu2) => {
+    setSelectedContenu2(contenu2);
+  };
   const handleTabChange = (tab) =>{
     setActiveTab(tab);
   }
@@ -97,13 +109,13 @@ const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,hand
     // Check for data URL and extract MIME type
     if (url.startsWith("data:")) {
       const mimeType = url.substring(5, url.indexOf(';'));
-    //  console.log("MIME Type:", mimeType);
+      console.log("MIME Type:", mimeType);
       return mimeType.includes('pdf') ? 'pdf' : 'video';
     }
   
     // Fallback for non-data URLs
     const extension = url.split('.').pop().toLowerCase();
-    //console.log("File extension:", extension);
+    console.log("File extension:", extension);
     if (extension === 'pdf') {
       return 'pdf';
     } else {
@@ -111,75 +123,34 @@ const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,hand
     }
   };
 
-//  const setBoldStatus1 = (moduleId, submoduleId) => {
-//    const key = `${moduleId}_${submoduleId}`;
-//    setSubmoduleBoldStatus(prev => ({ ...prev, [key]: true }));
-//  };
-useEffect(() => {
-  const fetchDuration = (url) => {
+
+ const handleClick = async (trainingId)=> {
+    const fetch = await changeState(trainingId, selectedContenu2);
+    window.location.reload();
+    };
    
-    return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      video.src = url;
-      video.addEventListener('loadedmetadata', () => {
-        resolve(video.duration);
-      });
-      video.addEventListener('error', (e) => {
-        reject(new Error("Error loading video: " + e.message));
-      });
-    });
-  };
- // console.log("voila"+selectedContenu)
-if(selectedContenu !== null){
-  fetchDuration(selectedContenu.contenu)
-    .then(duration => setDuration(formatDuration(duration)))
-    .catch(error => console.error(error));
-}
-}, [selectedContenu]);  // Dependency array to ensure effect runs when URL changes
 
-const formatDuration = (seconds) => {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-
-  let result = "";
-  if (hrs > 0) {
-      result += `${hrs}h `;
-  }
-  if (mins > 0) {
-      result += `${mins}min `;
-  }
-  if (secs > 0) {
-      result += `${secs}sec`;
-  }
-  return result.trim();
-};
-
-const [showAllDown, setShowAllDown] = useState(false);
-
-const visiblePdfFiles = showAllDown ? pdfFiles : pdfFiles.slice(0, 9);
 return (
   <>
- 
+  <div> 
+          <Navbar />
+    <div className="course-container">
+      < Side
+       modules={modules} onVideoSelect={handleContenuSelect} onVideoSelect2={handleModuleSelect} />
       <div className="bg-gray-200 overflow-hidden">
-<div className="sm:mx-6 md:ml-60 md:mr-4 md:mt-14 p-6">
+<div className="sm:mx-6 md:ml-60 md:mr-6 md:mt-14 p-6">
   <div>
-  <div className="bg-white  mb-2 ml-6" style={{height: '600px'}}>
+  <div className="bg-white  mb-2 ml-4" style={{height: '600px'}}>
   {selectedContenu && (
 <div className="ml-8">
   
-    <div className="flex flex-row font-bold py-4 ml-6 " style={{ width: '80px', height: '30px' }}><p className='py-2 '><AiOutlineLeft /></p><span className='px-4'>{selectedContenu.title}</span>
-    </div>
-    {selectedContenu?.contenu && (
-      checkContentType(selectedContenu.contenu) === 'video' && (
- <div className='ml-14 mt-4  text-zinc-400 text-xs font-bold'>{duration}</div>  // Assuming you want to label it as "PDF" when it's a PDF
-))}
-    <div className="relative sm:ml-6 ml-6 sm:mt-6 mt-6 mr-10 sm:mr-10" style={{  height: '400px' }}>
+    <div className="flex flex-row font-bold py-4 ml-6" style={{ width: '80px', height: '30px' }}><p className='py-2 '><AiOutlineLeft /></p><span className='px-4'>{selectedContenu.title}</span></div>
+    <div className="relative ml-6 mt-8" style={{ width: '800px', height: '400px' }}>
       
     {selectedContenu.contenu && (
   checkContentType(selectedContenu.contenu) === 'pdf' ? (
     // Si le contenu est un PDF
-    <embed src={selectedContenu.contenu} type="application/pdf"  height="100%" width="100%" />
+    <embed src={selectedContenu.contenu} type="application/pdf" width="100%" height="100%" />
   ) : (
     // Si le contenu est une vidéo
     <video src={selectedContenu.contenu} controls className="absolute inset-0 w-full h-full object-cover" />
@@ -195,7 +166,7 @@ return (
 )}
 
     </div>
-    <div className="bg-white mt-8 ml-4 overflow-auto " style={{height: '520px'}}>
+    <div className="bg-white mt-8 ml-4" style={{height: '500px'}}>
                 <div className="flex ml-8 ">
                   <button
                     className={`mr-8 mt-4 focus:outline-none font-bold ${activeTab === 'notes' ? 'text-white-500 border-b-2 border-orange-500 font-bold' : ''}`}
@@ -220,7 +191,7 @@ return (
                    value={note.text}
         onChange={(e) => setNote({ text: e.target.value })}
          
-         className="textarea-lined ml-12 sm:mr-12 mt-2 mr-12"
+         className="textarea-lined ml-12 mr-12 mt-2"
        />
      
                  </div>
@@ -241,37 +212,25 @@ return (
                    </>
                 )}
                {activeTab === 'downloads' && (
-  <div className='ml-8 mt-8 '>
+  <div className='ml-8 mt-8'>
     {pdfFiles.length > 0 ? (
-      <div className="" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2px' }}>
-        {visiblePdfFiles.map((pdf, index) => (
-          <div key={index} className="pdf-download-card bg-gray-100 mb-4" style={{ border: '1px solid #ccc', padding: '10px', width:'250px' }}>
+      <div className="" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+        {pdfFiles.map((pdf, index) => (
+          <div key={index} className="pdf-download-card bg-gray-100 " style={{ border: '1px solid #ccc', padding: '10px', width:'20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/3cc9808be90b75229a4e16ddfd08add63e361c7c7b1a717290534d0c6994e380?apiKey=a39938f6ec5e4acebececfa422789e63&" alt="Download" style={{ width: '50px', marginRight: '10px' }} />
             <p className='font-bold' style={{ flexGrow: 1, margin: 0 }}>{pdf.title}.pdf</p>
           </div>
-          <a href={pdf.contenu} download={`${pdf.title}.pdf`} style={{ color: '#ff4500', textDecoration: 'none' }}>
+          <a href={pdf.contenu} download style={{ color: '#ff4500', textDecoration: 'none' }}>
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c4faab2725f48d9f4916c0f7ee7ae0f5ef3cb7fc2b0f639b4a878f05a2598abb?apiKey=a39938f6ec5e4acebececfa422789e63&" alt="Download icon" style={{ width: '24px', verticalAlign: 'middle' }} />
           </a>
         </div>
+        
         ))}
-          
       </div>
-      
     ) : (
-      <p className='font-bold '>No PDFs available for download.</p>
+      <p>No PDFs available for download.</p>
     )}
-   
-       {pdfFiles.length > 9 && (
-     
-          <div className="flex justify-center mb-4">
-              <button onClick={() => setShowAllDown(!showAllDown)} className="bg-orange-500 text-white px-4 py-2 text-sm font-bold ">
-                  {showAllDown ? 'Show Less' : 'Show All'}
-              </button>
-          </div>
-         
-      )}
-      
   </div>
 )}
 
@@ -282,11 +241,11 @@ return (
 </div>
 </div>
 
-    
-   
+    </div>
+    </div>
   </>
 );
 
 }
 
-export default ParcourirModules;
+export default ParcourirModules11;

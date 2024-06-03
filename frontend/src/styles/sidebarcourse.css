@@ -1,4 +1,6 @@
 .sidebarcours {
+  max-height: 90vh;  
+  overflow-y: auto; 
     position: fixed;
     top: 60px; /* Ensure it starts after the navbar */
     left: 0;

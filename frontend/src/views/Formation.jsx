@@ -3,7 +3,7 @@ import img from '../images/img.png';
 import { getFormationsCurrent, getFormationsMoreAdmin,deleteFormation} from '../services/UsersService';
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import AddFormationModal from '../components/AddFormationModal';
-const Formation = () => {
+const Formation = (onAdd) => {
   const [courses, setCourses] = useState([]);
   const [coursesM, setCoursesM] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,7 +112,12 @@ const Formation = () => {
     }
   };
 
-
+  const handleAddFormation = async (newFormation) => {
+  
+    setCoursesM(prevFormations => [...prevFormations, newFormation]);
+     
+    
+  };
 
 
   if (error) return <div>Error: {error}</div>;
@@ -120,10 +125,10 @@ const Formation = () => {
   const visibleTrainings2= showAllMore ? coursesM : coursesM.slice(0, 2);
 
   return (
-      <div className="bg-gray-200 overflow-hidden ">
-          <div>
+      <div className="bg-gray-200 ">
+          <div className='py-16 '>
 
-              <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 mt-8  mb-8 by-12">
+              <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 h-full  mb-8 py-16 ">
               <h2 className="text-lg sm:text-xl font-bold mb-4">Formation</h2>
                     <div className="flex flex-wrap -mx-2">
                     {visibleTrainings2.map((training, i) => (
@@ -174,6 +179,7 @@ const Formation = () => {
         <AddFormationModal
           isOpen={isModalOpen}
           onClose={closeModal}
+          onAddFormation={handleAddFormation}
         />
       )}
       </div>

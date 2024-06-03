@@ -1,15 +1,17 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/sidebarcourse.css";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { BsFillPlayCircleFill } from "react-icons/bs";
 import { FaReadme } from "react-icons/fa6";
-const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2,submoduleBoldStatus }) => {
-    const [selectedVideo, setSelectedVideo] = useState(null);
+import { getState} from '../services/UsersService';
+
+
+const Sidebarcours11 = ({ modules, onVideoSelect , onVideoSelect2}) => {
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const [activeTab, setActiveTab] = useState('notes');
   const [selectedSubmodule, setSelectedSubmodule] = useState(null);
   const [openModules, setOpenModules] = useState(new Set());
   const [submoduleDurations, setSubmoduleDurations] = useState({});  
- 
   useEffect(() => {
     if (modules.length > 0) {
       for (const module of modules) {
@@ -39,17 +41,11 @@ const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2,submoduleBoldSta
       return newOpenModules;
     });
   };
-
-
-
-
  const selectContenu = (submodule, module) => {
     setSelectedVideo(submodule);
     onVideoSelect(submodule);
     onVideoSelect2(module);
    };
-
-
    const checkContentType = (url) => {
     if (!url) {
       console.log("URL is null or undefined, defaulting to 'video'.");
@@ -74,9 +70,22 @@ const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2,submoduleBoldSta
   };
   const getSubmoduleKey = (moduleId, submoduleId) => `${moduleId}_${submoduleId}`;
 
+const initializeSubmoduleBoldStatus = async () => {
+  const status = {};
 
+  for (const module of modules) {
+    for (const submodule of module.submodules || []) {
+      const isBold = await getState(module.id, submodule.id);
+      const key = getSubmoduleKey(module.id, submodule.id);
+      status[key] = isBold;  
+    }
+  }
 
-//const [submoduleBoldStatus, setSubmoduleBoldStatus] = useState({});
+  setSubmoduleBoldStatus(status);
+  console.log("hellooocomment"+submoduleBoldStatus)
+};
+
+const [submoduleBoldStatus, setSubmoduleBoldStatus] = useState({});
 
   useEffect(() => {
     
@@ -107,7 +116,7 @@ const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2,submoduleBoldSta
   if (modules.length > 0) {
       fetchDurations();
   }
- 
+    initializeSubmoduleBoldStatus();
   }, [ modules]);
   const fetchDuration = (url) => {
     return new Promise((resolve, reject) => {
@@ -141,7 +150,7 @@ const formatDuration = (seconds) => {
 };
 
   return (
-    <div className="sidebarcours overflow-auto sm:w-3/4 ">
+    <div className="sidebarcours">
       <ul>
         {modules.map((module, index) => (
           <li key={index}>
@@ -190,7 +199,7 @@ const formatDuration = (seconds) => {
 ) : (
   <>
   <p>Video :  <span>{submodule.title}</span></p>
-  <small className='text-zinc-400'>{submoduleDurations[`${module.id}_${submodule.id}`] ? formatDuration(submoduleDurations[`${module.id}_${submodule.id}`]) : '0min 0sec'}</small>
+  <small className='text-zinc-400'>{submoduleDurations[`${module.id}_${submodule.id}`] ? formatDuration(submoduleDurations[`${module.id}_${submodule.id}`]) : 'Loading...'}</small>
   </>
 )}
 
@@ -211,7 +220,4 @@ const formatDuration = (seconds) => {
     </div>
   );
 };
-export default Sidebarcours;
-
-
- 
+export default Sidebarcours11;

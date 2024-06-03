@@ -15,18 +15,29 @@ const AjoutFormation = () => {
     setSelectedSubmodule({ moduleId, index, name: submodule });
   };
 
-  const handleSubmoduleNameChange = (moduleId, index, newName) => {
+
+
+  const handleSubmoduleNameChange = (moduleId, index, newName, newContenu) => {
     const updatedModules = modules.map(module => {
-      if (module.id === moduleId) {
-        const updatedSubmodules = [...module.submodules];
-        updatedSubmodules[index] = newName;
-        return { ...module, submodules: updatedSubmodules };
-      }
-      return module;
+        if (module.id === moduleId) {
+            const updatedSubmodules = module.submodules.map((submodule, idx) => {
+                if (idx === index) {
+                    // Update both title and contenu for the submodule at the specified index
+                    return { ...submodule, title: newName, contenu: newContenu };
+                }
+                return submodule;
+            });
+            // Return the updated module with the newly modified submodules array
+            return { ...module, submodules: updatedSubmodules };
+        }
+        return module;
     });
-    setModules(updatedModules);
-    setSelectedSubmodule(prev => ({ ...prev, name: newName }));
-  };
+
+    setModules(updatedModules);  // Update the main modules state
+    // Update the selected submodule with the whole submodule object
+    const updatedSubmodule = updatedModules.find(m => m.id === moduleId).submodules[index];
+    setSelectedSubmodule({ moduleId, index, name: updatedSubmodule });
+};
 
   const handleFileUpload = (moduleId, index, fileType, fileUrl) => {
     const updatedFileUploads = { ...fileUploads };
@@ -54,10 +65,11 @@ const AjoutFormation = () => {
 
     fetchData2(); 
   }, []); 
+  console.log(selectedSubmodule)
   return (
     <>
       <NavBar />
-      <div className="flex mt-16 h-full">
+      <div className="flex mt-16 h-full overflow-auto">
         <ModuleInput
           modules={modules}
           setModules={setModules}

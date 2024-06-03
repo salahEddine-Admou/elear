@@ -1,0 +1,19 @@
+﻿/* Style for the popup */
+.sweetalert-popup {
+    background-color: #dfdfe8; /* Light grey background */
+    border: 2px solid #dbd5d2; /* Adding a border */
+  }
+  
+ /* Style for the confirm button */
+.confirm-button-class {
+    background-color: rgb(226, 78, 14) !important; /* Red background with higher specificity */
+    color: #060606 !important; /* Ensuring text color is white */
+    border: 2px solid rgb(226, 78, 14) !important; /* White border, change color as needed */
+  }
+  
+  /* Style for the cancel button */
+  .cancel-button-class {
+    background-color: #aaa !important; /* Grey background with higher specificity */
+    color: #060606 !important; /* Ensuring text color is white */
+  }
+  
