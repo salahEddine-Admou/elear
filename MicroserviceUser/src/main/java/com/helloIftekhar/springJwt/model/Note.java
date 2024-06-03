@@ -13,6 +13,8 @@ public class Note {
     private String id;
     @DocumentReference(collection = "User")
     private User user;
+    @DocumentReference(collection = "formation")
+    private Formation formation;
     private String Text;
 
 }

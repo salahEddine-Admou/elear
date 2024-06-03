@@ -41,6 +41,7 @@ public class FormationService {
     @Autowired
     private NoteRepository noteRepository;
 
+
     //// formations
     public Formation CreateFormation(Formation formation) {
         Formation existingFormation = formationRepository.findByTitle(formation.getTitle());
@@ -180,7 +181,7 @@ public class FormationService {
 
         uniqueUserIds.forEach(userId -> updateUserFormationModule(userId, formation, savedModule));
 
-        return module;
+        return savedModule;
     }
     private void updateUserFormationModule(String userId, Formation formation, MyModule module) {
         Optional<User> userOptional = userRepo.findById(userId);
@@ -194,19 +195,27 @@ public class FormationService {
         }
     }
     public MyModule updateModule(String moduleId, MyModule updatedModule) {
-        Optional<MyModule> optionalExistingModule = moduleRep.findById(moduleId);
+        MyModule ModuleName = moduleRep.findByName(updatedModule.getName());
+        if(ModuleName == null) {
+            Optional<MyModule> optionalExistingModule = moduleRep.findById(moduleId);
+            System.out.println(optionalExistingModule.get().getName());
+            System.out.println(updatedModule.getName());
+            if (optionalExistingModule.isPresent()) {
+                MyModule existingModule = optionalExistingModule.get();
+                if (!updatedModule.getName().isEmpty()) {
+                    existingModule.setName(updatedModule.getName());
+                }
+                if (updatedModule.getSubmodules() != null) {
+                    existingModule.setSubmodules(updatedModule.getSubmodules());
+                }
 
-        if (optionalExistingModule.isPresent()) {
-            MyModule existingModule = optionalExistingModule.get();
-            if(!updatedModule.getName().isEmpty()) {
-                existingModule.setName(updatedModule.getName());
-            }
-            if(updatedModule.getSubmodules() != null) {
-                existingModule.setSubmodules(updatedModule.getSubmodules());
-            }
+                return moduleRep.save(existingModule);
 
-            return moduleRep.save(existingModule);
-        } else {
+            } else {
+                return null;
+            }
+        }
+        else {
             return null;
         }
     }
@@ -248,7 +257,8 @@ public class FormationService {
 
 
 
-    public boolean deleteSubmodule(String idModule,String idSubmodule){
+    public Submodule deleteSubmodule(String idModule,String idSubmodule){
+        Optional<Submodule> h = subtitleRep.findById(idSubmodule);
         subtitleRep.deleteById(idSubmodule);
         List<ModuleSubModule> list =  moduleSubRep.findBySub(idSubmodule);
         for(ModuleSubModule i : list){
@@ -257,7 +267,7 @@ public class FormationService {
         Optional<MyModule> f = moduleRep.findById(idModule);
         f.get().getSubmodules().remove(idSubmodule);
         moduleRep.save(f.get());
-        return true;
+        return h.get();
     }
 
     public Boolean getStateM(String idFormation, String idUser, String idModule, String idSub) {
@@ -287,19 +297,35 @@ public class FormationService {
                         List<InscriptionFormation> inscriptionFormations = inscriptionFormationRepository.findByUserAndState(userOptional.get().getId(), "current");
 
                         for (InscriptionFormation inscription : inscriptionFormations) {
-                            ProgressDTO progress = formationModuleRep.getFormationProgress(userOptional.get().getId(), inscription.getFormation().getId());
-                            if (progress != null) {
-                                int progressPercentage = (int) Math.round((double) progress.getCompletedModules() / progress.getTotalModules() * 100);
+                            //ProgressDTO progress = formationModuleRep.getFormationProgress(userOptional.get().getId(), inscription.getFormation().getId());
+                            List<FormationModule> modules = formationModuleRep.gett(userOptional.get().getId(), inscription.getFormation().getId());
+
+// Count the number of FormationModules
+                            long countSubmodules = modules.stream()
+                                    .mapToLong(modulee -> modulee.getModuleSubModules().size()) // Map each FormationModule to its number of ModuleSubmodules
+                                    .sum();
+
+// Count the number of ModuleSubmodules with state true using streams
+                            long countSubmodulesTrue = modules.stream()
+                                    .flatMap(mmodule -> mmodule.getModuleSubModules().stream()) // Flatten all submodules into a single stream
+                                    .filter(submodule -> "true".equals(submodule.getStateM())) // Filter to include only those submodules where stateM is "true"
+                                    .count(); // Count them
+
+                            System.out.println("Total number of FormationModules: " + countSubmodules);
+                            System.out.println("Total number of ModuleSubmodules with state true: " + countSubmodulesTrue);
+
+                                int progressPercentage = (int) Math.round((double) countSubmodulesTrue / countSubmodules * 100);
                                 inscription.setProgress(progressPercentage);
                                 Certificat c = certificatRepo.findByUserFormation(idUser,inscription.getFormation().getId());
                                 // System.out.println("helooooooooooooo"+c);
                                 c.setProgress(progressPercentage);
+
                                 if (progressPercentage == 100) {
                                     inscription.setState("finish");
                                     c.setStateCert("finish");
-                                    certificatRepo.save(c);
+                                    //certificatRepo.save(c);
                                 }
-                            }
+                            certificatRepo.save(c);
                             // certificatRepo.save(c);
                             inscriptionFormationRepository.save(inscription);
                         }
@@ -369,7 +395,7 @@ public class FormationService {
 
         submodules.add(submodule);
         module.setSubmodules(submodules);
-        subtitleRep.save(submodule);
+        Submodule hh = subtitleRep.save(submodule);
 
         List<FormationModule> users = formationModuleRep.findByFormationModule(formation.getId(), module.getId());
         System.out.println(users);
@@ -389,30 +415,33 @@ public class FormationService {
         }
 
         moduleRep.save(module);
-        return submodule;
+        return hh;
     }
 
 
     public Submodule updateSub(String subId, Submodule updatedSubmodule) {
+        Submodule Sub = subtitleRep.findByName(updatedSubmodule.getTitle());
         Optional<Submodule> optionalExistingSub = subtitleRep.findById(subId);
-
-        if (optionalExistingSub.isPresent()) {
-            Submodule existingSub = optionalExistingSub.get();
-
-            if (!updatedSubmodule.getTitle().isEmpty()) {
-                existingSub.setTitle(updatedSubmodule.getTitle());
-            }
-            if (!updatedSubmodule.getContenu().isEmpty()) {
+        if(Sub == null || updatedSubmodule.getTitle().equals(optionalExistingSub.get().getTitle())) {
 
 
-                if (updatedSubmodule.getContenu() == null) {
-                    existingSub.setContenu("");
-                } else {
-                    existingSub.setContenu(updatedSubmodule.getContenu());
+            if (optionalExistingSub.isPresent()) {
+                Submodule existingSub = optionalExistingSub.get();
+
+                if (!updatedSubmodule.getTitle().isEmpty()) {
+                    existingSub.setTitle(updatedSubmodule.getTitle());
                 }
+                if (updatedSubmodule.getContenu() != null && !updatedSubmodule.getContenu().isEmpty()) {
+                    existingSub.setContenu(updatedSubmodule.getContenu());
+                } else {
+                    existingSub.setContenu(""); // Assuming you want to set empty string if null or empty input is found
+                }
+
+                return subtitleRep.save(existingSub);
+            } else {
+                return null;
             }
-            return subtitleRep.save(existingSub);
-        } else {
+        }else{
             return null;
         }
     }
@@ -439,33 +468,40 @@ public class FormationService {
     private void initializeFormationModules(User user, Formation formation, MyModule module) {
         List<Submodule> submodules = Optional.ofNullable(module.getSubmodules()).orElse(new ArrayList<>());
         if (!submodules.isEmpty()) {
-            submodules.forEach(submodule -> processSubmodule(user, formation, module, submodule));
+            FormationModule f = createAndSaveFormationModule0(user, formation, module);
+            submodules.forEach(submodule -> processSubmodule(f,submodule));
         } else {
-            createAndSaveFormationModule(user, formation, module, null);
+            createAndSaveFormationModule0(user, formation, module);
         }
     }
 
-    private void processSubmodule(User user, Formation formation, MyModule module, Submodule submodule) {
+    private void processSubmodule(FormationModule f,Submodule submodule) {
         ModuleSubModule moduleSub = new ModuleSubModule();
         moduleSub.setSubmodule(submodule);
         moduleSub.setStateM("false");
         moduleSubRep.save(moduleSub);
 
-        createAndSaveFormationModule(user, formation, module, moduleSub);
+        createAndSaveFormationModule(f ,moduleSub);
     }
 
-    private void createAndSaveFormationModule(User user, Formation formation, MyModule module, ModuleSubModule moduleSub) {
+    private void createAndSaveFormationModule(FormationModule f, ModuleSubModule moduleSub) {
+
+        if (moduleSub != null) {
+            if (f.getModuleSubModules() == null) {
+                f.setModuleSubModules(new ArrayList<>());
+                formationModuleRep.save(f);
+            }
+            f.getModuleSubModules().add(moduleSub);
+        }
+        formationModuleRep.save(f);
+    }
+    private FormationModule createAndSaveFormationModule0(User user, Formation formation, MyModule module) {
         FormationModule formationModule = new FormationModule();
         formationModule.setUser(user);
         formationModule.setFormation(formation);
         formationModule.setMyModule(module);
         formationModule.setState("false");
-        if (moduleSub != null) {
-            formationModule.setModuleSubModules(new ArrayList<>(List.of(moduleSub)));
-        } else {
-            formationModule.setModuleSubModules(new ArrayList<>());
-        }
-        formationModuleRep.save(formationModule);
+        return  formationModuleRep.save(formationModule);
     }
 
     private void validateUserAuthentication(User user) {
@@ -594,16 +630,29 @@ public class FormationService {
         return formationRepository.findByTitle(NameF);
     }
 
-    public Note addNote(String idUser, Note note) {
+    public Note addNote(String idUser,String idFormation, Note note) {
         User user = userRepo.findById(idUser).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Note note1 = new Note();
-        note1.setUser(user);
-        System.out.println(note.getText());
-        note1.setText(note.getText());
-        noteRepository.save(note1);
-        return note1;
-    }
+        Formation formation = formationRepository.findById(idFormation).orElseThrow(() -> new IllegalArgumentException("Formation not found"));
+        Note n = noteRepository.findByNotes(idUser, idFormation);
+        if(n==null) {
+            Note note1 = new Note();
+            note1.setUser(user);
+            note1.setFormation(formation);
+            System.out.println(note.getText());
+            note1.setText(note.getText());
+            noteRepository.save(note1);
+        }else{
+            String nn = n.getText() + note.getText();
+            n.setText(nn);
+            noteRepository.save(n);
+        }
 
+        return note;
+    }
+    public String getNotes(String userId,String formationId) {
+        Note n = noteRepository.findByNotes(userId, formationId);
+        return n.getText();
+    }
 
 
 }

@@ -80,7 +80,7 @@ public class FormationController {
 
     }
     @PutMapping("/UpdateSubModule/{idSubModule}")
-    public ResponseEntity<Submodule> updateModule(@PathVariable String idSubModule, @RequestBody Submodule submodule) {
+    public ResponseEntity<Submodule> updateSubModule(@PathVariable String idSubModule, @RequestBody Submodule submodule) {
         Submodule submodule1 = formationService.updateSub(idSubModule, submodule);
 
         if (submodule1 != null) {
@@ -109,12 +109,12 @@ public class FormationController {
         }
     }
     @DeleteMapping("DeleteSubModule/{idModule}/{idSub}")
-    public ResponseEntity<Void> deleteSub(@PathVariable String idModule,@PathVariable String idSub) {
-        boolean deleted = formationService.deleteSubmodule(idModule,idSub);
-        if (deleted) {
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> deleteSub(@PathVariable String idModule,@PathVariable String idSub) {
+        Submodule deleted = formationService.deleteSubmodule(idModule,idSub);
+        if (deleted != null) {
+            return  ResponseEntity.status(HttpStatus.OK).body(deleted);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
     @GetMapping("/getFormations/current/{idUser}")
@@ -145,9 +145,9 @@ public class FormationController {
 
     @PostMapping ("addModule/{idFormation}")
     public ResponseEntity<?> addMod(@PathVariable String idFormation, @RequestBody MyModule module) {
-        System.out.println("gggggg");
+       // System.out.println("gggggg");
         MyModule module1 = formationService.addModuleToFormation(idFormation, module);
-
+System.out.println(module1);
         if (module1 == null) {
             String message = "Le module n'a pas été ajouté à la formation avec l'ID : " + idFormation;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
@@ -162,6 +162,7 @@ public class FormationController {
         for (FormationModule module : modules) {
             modules2.add(module.getMyModule());
         }
+        System.out.println(modules2);
         return modules2;
     }
     @GetMapping ("getModulesAdmin/{idFormation}")
@@ -176,6 +177,7 @@ public class FormationController {
 
         return s;
     }
+
     @GetMapping ("changeState/{idFormation}/{idUser}/{idModule}/{idSub}")
     public  Boolean getttSC(@PathVariable String idFormation, @PathVariable String idUser, @PathVariable String idModule, @PathVariable String idSub) {
         Boolean s = formationService.changeStateM(idFormation,idUser,idModule ,idSub);
@@ -189,7 +191,7 @@ public class FormationController {
             String message = "Le subModule n'a pas été ajouté à la formation avec l'ID : " + idModule;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(submodule1);
     }
     @GetMapping ("getSubmodules/{idModule}")
     public List<Submodule> gett(@PathVariable String idModule) {
@@ -248,10 +250,10 @@ public class FormationController {
         }
         return ResponseEntity.notFound().build();
     }
-    @PostMapping("addNote/{idUser}")
-    public ResponseEntity<?> addNote(@RequestBody Note note,@PathVariable String idUser){
+    @PostMapping("addNote/{idUser}/{idFormation}")
+    public ResponseEntity<?> addNote(@RequestBody Note note,@PathVariable String idUser,@PathVariable String idFormation){
         System.out.println(note);
-        Note note1 = formationService.addNote(idUser,note);
+        Note note1 = formationService.addNote(idUser,idFormation,note);
         System.out.println(note1);
         if (note1 == null) {
             String message = "note n'a pas été ajouté " ;
@@ -260,4 +262,10 @@ public class FormationController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @GetMapping ("getNotes/{idFormation}/{idUser}")
+    public  String getNote(@PathVariable String idFormation, @PathVariable String idUser) {
+        String s = formationService.getNotes(idUser,idFormation);
+        System.out.println(s);
+        return s;
+    }
 }
