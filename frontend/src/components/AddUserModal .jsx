@@ -47,11 +47,13 @@ const handleSubmit = async (e) => {
         .then(response => {
           if (response.status === 'success') {
             Add(response.data);  // Update parent component state
-            Swal.fire(
-              'Added!',
-              'User has been added.',
-              'success'
-            )
+            Swal.fire({
+              title: 'Added!',
+              text: 'User has been added.',
+              icon: 'success',
+              confirmButtonColor: '#ea520b' // This sets the confirm button color to orange
+          });
+          
             onClose();  // Close the modal
             // Reset the user state after adding
             setUser({
@@ -66,11 +68,12 @@ const handleSubmit = async (e) => {
             });
           } else {
             // Handle API error responses
-            Swal.fire(
-              'Failed!',
-              'Failed to add user: ' + response.message,
-              'error'
-            );
+            Swal.fire({
+              title : 'Failed!',
+             text : 'Failed to add user: ' + response.message,
+             icon: 'error',
+              confirmButtonColor: '#3085d6'
+          });
           }
         })
         .catch(error => {
@@ -152,7 +155,7 @@ const handleSubmit = async (e) => {
               <h2 className="text-lg font-bold mb-4 mt-4">Add New User</h2>
               <form onSubmit={handleSubmit} className='mb-2'>
               <span className='font-bold text-sm'>Full Name</span><span className="text-orange-500">*</span><br />
-                <input type="text" name="fullName"  onChange={handleChange} className="mr-12 border-2 border-gray-400 px-2 w-full" /><br /><br />
+                <input type="text" name="fullName" value={user.fullName } onChange={handleChange} placeholder="" className="mr-12 border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold text-sm '>User name</span><span className="text-orange-500">*</span><br />
                 <input type="text" name="username" value={user.username } onChange={handleChange} placeholder="" className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold text-sm '>Email</span><span className="text-orange-500">*</span><br />
@@ -160,7 +163,7 @@ const handleSubmit = async (e) => {
                 <span className='font-bold text-sm '>password</span><span className="text-orange-500">*</span><br />
                 <input type="password" name="password" value={user.password } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full" required /><br /><br />
                 <span className='font-bold text-sm '>Date of birth</span><span className="text-orange-500">*</span><br />
-                <input type="date" name="date" value={user.date } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full text-sm" /><br /><br />
+                <input type="date" name="date" value={user.date } onChange={handleChange} className="border-2 border-gray-400 px-2 w-full text-sm" required/><br /><br />
                 <span className='font-bold text-sm '>Role</span><span className="text-orange-500">*</span><br />
                 <select
                 name="role"
