@@ -3,16 +3,29 @@ import { Table } from 'antd';
 import { getUsers, deleteUser } from '../services/UsersService';
 import ModifyUserModal from './ModifyUserModal';
 import "../styles/table.css"
-const UserTable = ({ searchValue }) => {
+import Swal from 'sweetalert2';
+const UserTable = ({ searchValue , user}) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
   const [checkedIndices, setCheckedIndices] = useState(new Set());
-  
+  useEffect(() => {
+    if (user) { 
+      setData(prevData => {
+        const exists = prevData.some(u => u.id === user.id);
+        if (!exists) {
+          const newUser = { ...user, key: user.id }; 
+          return [...prevData, newUser];
+        }
+        return prevData; 
+      });
+    }
+  }, [user]); 
   useEffect(() => {
     
     const fetchData = async () => {
       try {
+        
         const response = await getUsers();
         // Vérifiez si la réponse existe et a une propriété length avant de continuer
         if (response && response.length > 0) {
@@ -36,12 +49,40 @@ const UserTable = ({ searchValue }) => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+ 
   const handleEditClick = (user) => {
     setSelectedUser(user);
     openModal();
   };
+ 
+  const UpdateUser = (id, formData) => {
+    Swal.fire({
+      title: 'Are you sure you want to update this user?',
+      icon: 'question',
+      iconColor: 'rgb(226, 78, 14)',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Update it',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
+        confirmButton: 'confirm-button-class', // Custom class for the confirm button
+    cancelButton: 'cancel-button-class' // Custom class for the cancel button
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+    setData(prevData => {
+      return prevData.map(user => {
+        if (user.id === id) {
+          // Spread the existing user and overwrite with updated formData
+          return { ...user, ...formData };
+        }
+        return user;
+      });
+    });
+  }
 
+}); 
+  };
   const handleCheckboxChange = (record) => {
     const updatedIndices = new Set(checkedIndices);
     if (updatedIndices.has(record.key)) {
@@ -53,12 +94,31 @@ const UserTable = ({ searchValue }) => {
   };
 
   const handleDeleteUser = async (userId) => {
+    Swal.fire({
+      title: 'Are you sure you want to delete this user?',
+      icon: 'question',
+      iconColor: 'rgb(226, 78, 14)',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Delete it',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
+        confirmButton: 'confirm-button-class', // Custom class for the confirm button
+    cancelButton: 'cancel-button-class' // Custom class for the cancel button
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setData(data.filter(user => user.id !== userId));
     const response = await deleteUser(userId);
     if (response.status === 'success') {
-      setData(data.filter(user => user.id !== userId));
+      
     } else {
       console.error('Deletion failed');
     }
+
+  }
+
+}); 
   };
 
   const columns = [
@@ -128,9 +188,8 @@ const UserTable = ({ searchValue }) => {
           
           onClick={(e) => {
             e.preventDefault(); // Pour empêcher la navigation
-            if (window.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
               handleDeleteUser(record.key); // Appel à la fonction de suppression si l'utilisateur confirme
-            }
+            
           }}
           style={{ marginLeft: '10px' }}><svg
             width="28"
@@ -181,6 +240,7 @@ const UserTable = ({ searchValue }) => {
           isOpen={isModalOpen}
           onClose={closeModal}
           user={selectedUser}
+          Update={UpdateUser}
         />
       )}
     </div>

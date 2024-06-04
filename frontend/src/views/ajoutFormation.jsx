@@ -11,9 +11,26 @@ const AjoutFormation = () => {
 
   const handleSubmoduleSelect = (moduleId, index) => {
     const module = modules.find(m => m.id === moduleId);
-    const submodule = module.submodules[index];
+
+    // First, check if the module exists
+    if (!module) {
+        console.error('No module found with id:', moduleId);
+        setSelectedSubmodule({ moduleId, index, name: null });
+        return;  // Exit the function if no module is found
+    }
+
+    // Use optional chaining to check if submodules exist and the specific index is valid
+    const submodule = module.submodules?.[index];
+    if (!submodule) {
+        console.error('No submodule found at index:', index);
+        setSelectedSubmodule({ moduleId, index, name: null });
+        return;  // Exit the function if no submodule is found at the specified index
+    }
+
+    // Set the selected submodule if everything is valid
     setSelectedSubmodule({ moduleId, index, name: submodule });
-  };
+};
+
 
 
 

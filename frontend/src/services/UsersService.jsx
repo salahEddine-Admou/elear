@@ -55,7 +55,7 @@ export const deleteUser = async (userId) => {
 }
 export const addUser = async (user) => {
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
-    const api = `http://localhost:8080/users/add2`;
+    const api = `http://localhost:8080/users/add`;
     const token = localStorage.getItem("userToken");
     console.log(token);
     try {

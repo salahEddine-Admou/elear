@@ -7,6 +7,7 @@ import { updateSubModule } from '../services/UsersService';
 import CustomAlert from '../components/CustomAlert ';
 import Swal from 'sweetalert2';
 const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameChange, onFileUpload, fileUploads }) => {
+ 
   const [uploads, setUploads] = useState({});
   const [statePdf, setStatePdf] = useState('false');
   const [stateVideo, setStateVideo] = useState('false');
@@ -23,14 +24,15 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
   
   
   useEffect(() => {
+    if (submodule) {
+      setsubmodulupdate({
+          title: submodule.title || '',
+          contenu: submodule.contenu || null,
+      });
+  }
     
-    setsubmodulupdate({
-      title: submodule.title,
-      contenu: submodule.contenu,
-      //contenu: "C:/Users/mina/Downloads/MINUTES.mp4",
-    });
-    console.log(submodule.contenu)
-    console.log(submodulupdate.contenu)
+   
+ 
   }, []);
 
   const handlerSubmoduleName = (moduleId, submoduleIndex,e) => {
@@ -42,10 +44,15 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
   setVal('true')
   };
   useEffect(() => {
-    setsubmodulupdate({
-      title: submodule.title,
-      contenu: submodule.contenu,
-    });
+   
+    if (submodule) {
+      setsubmodulupdate({
+        title: submodule.title,
+        contenu: submodule.contenu,
+      });
+    
+   
+    
    const h = checkContentType(submodule.contenu) 
    if(h==='pdf'){
     setStatePdf('true')
@@ -53,6 +60,7 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
    if(h==='video'){
     setStateVideo('true')
    }
+  } 
   }, [submodule]);
   useEffect(() => {
     // Cette fonction s'exécutera chaque fois que submodulUpdate est modifié.
@@ -79,6 +87,7 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
     } else {
       return 'video';
     }
+    
   };
   const handleVideoUpload = (e) => {
     
@@ -111,6 +120,23 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
  
 
   const handleClick = async (id,title, contenu) => {
+    const trimmedValue = title.trim();
+        if (trimmedValue === '') {
+          setsubmodulupdate({
+            title: submodule.title,
+            contenu: submodule.contenu,
+          });
+          Swal.fire({
+            title: 'Invalid Input',
+            text: 'The Submodule name cannot be empty.',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'confirm-button-class'
+            }
+          });
+          return;  // Do not proceed with adding the module
+        }
     onSubmoduleNameChange(moduleId, submoduleIndex, title, contenu);
     try {
       await new Promise(resolve => setTimeout(resolve, 0));  // Petite astuce pour attendre la mise à jour de l'état
@@ -153,7 +179,12 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
   const getUploadState = (type) => {
     return uploads[submoduleIndex] ? uploads[submoduleIndex][type] : false;
   };
-  console.log(submodule.contenu)
+  //console.log(submodule.contenu)
+ 
+  if (!moduleId || submoduleIndex == null || !submodule) {
+    // If critical information is missing, don't render the component
+    return null;
+}
   return (
     
     <div className="bg-gray-200 overflow-hidden p-10 h-[1100px] w-full flex">

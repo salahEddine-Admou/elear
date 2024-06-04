@@ -10,7 +10,7 @@ const Search = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredValue, setFilteredValue] = useState('');
-
+  const [user, setUser] = useState();
 
   
   const openModal = () => {
@@ -19,6 +19,9 @@ const Search = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+  const AddUs = (user) => {
+    setUser(user);
   };
   const handleSearch = () => {
     setFilteredValue(searchValue); // Set the filtered value to the current search value
@@ -54,8 +57,8 @@ const Search = () => {
         </button>
         </div>
       </div>
-      <UserTable searchValue={filteredValue} />
-      <AddUserModal isOpen={isModalOpen} onClose={closeModal} />
+      <UserTable searchValue={filteredValue} user={user} />
+      <AddUserModal isOpen={isModalOpen} onClose={closeModal} Add={AddUs} />
     </div>
   );
 };

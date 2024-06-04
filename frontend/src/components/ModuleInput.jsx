@@ -32,39 +32,37 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
     setEditableModuleId(null);
   };
   const handleChange1 = async (e, id) => {
-    const { value } = e.target;  // Grab value from the event's target
-    // Update the submodule title in your state
+    const { value } = e.target;  
     setModuleEdits(prev => ({
       ...prev,
-      [id]: value // Store input by moduleId
+      [id]: value 
       
     }));
-   // setSubmodule(prev => ({ ...prev, title: value }));
- // console.log(value)
   setMessage(value)
   };
-  const handleSubmoduleChange = (e, moduleId) => {
-    const value = e.target.value;
-    //console.log(value)
-    setModuleEdits(prev => ({
-      ...prev,
-      [moduleId]: value // Store input by moduleId
-      
-    }));
-    //console.log(value)
-    setMessage(value)
-   // console.log(moduleEdits[moduleId])
-  };
-  
    useEffect(() => {
        if (!initialSelectDone && typeof onSubmoduleSelect === 'function' && modules.length > 0 && modules[0].submodules.length > 0) {
            onSubmoduleSelect(modules[0].id, 0);
-           setInitialSelectDone(true); // Set the flag so it won't run again
+           setInitialSelectDone(true); 
        }
    }, [modules, onSubmoduleSelect, initialSelectDone]);
 
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
+      const trimmedValue = module2.name.trim();
+      if (trimmedValue === '') {
+        console.error('The module name cannot be empty.');
+        Swal.fire({
+          title: 'Invalid Input',
+          text: 'The module name cannot be empty.',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'confirm-button-class'
+          }
+        });
+        return;  
+      }
       Swal.fire({
         title: 'Are you sure you want to add this Module?',
         icon: 'question',
@@ -88,15 +86,11 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
         await new Promise(resolve => setTimeout(resolve, 0));  // A trick to wait for the state to update
         const response = await addModule(module2);
         if (response.status === 'success') {
-          //console.log('Module added successfully');
-          // Reload the window or redirect as needed
-          //console.log(response.data)
           setModules(prevCourses => [...prevCourses, {...response.data, submodules: response.data.submodules || []}]);
           setModule2({
             name:""
           })
-          e.target.blur();
-        //  window.location.reload();  
+          e.target.blur(); 
         } else {
           Swal.fire({
             title: 'Erreur',
@@ -104,7 +98,7 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
             icon: 'error',
             confirmButtonText: 'OK',
             customClass: {
-                confirmButton: 'custom-ok-button' // Applying custom class to the confirm button
+                confirmButton: 'custom-ok-button'
             }
         });
           setModule2({
@@ -129,7 +123,25 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
     }
   };
   const handleKeyPressModify = async (e, id) => {
+
     if (e.key === 'Enter') {
+      
+        const trimmedValue = module2.name.trim();
+        if (trimmedValue === '') {
+          setModules(modules.map(mod => mod.id === id ? { ...mod, name: currentName } : mod));
+          console.error('The module name cannot be empty.');
+          // Optionally, show an alert or a message to the user
+          Swal.fire({
+            title: 'Invalid Input',
+            text: 'The module name cannot be empty.',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'confirm-button-class'
+            }
+          });
+          return;  // Do not proceed with adding the module
+        }
 
     Swal.fire({
       title: 'Are you sure you want to Update this Module?',
@@ -195,8 +207,23 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
     };
     //  console.log(message)
 //console.log(me.title)
-  if (e.key === 'Enter') {
+ 
     if (e.key === 'Enter') {
+      const trimmedValue = me.title.trim();
+      if (trimmedValue === '') {
+        console.error('The Submodule name cannot be empty.');
+        // Optionally, show an alert or a message to the user
+        Swal.fire({
+          title: 'Invalid Input',
+          text: 'The Submodule name cannot be empty.',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'confirm-button-class'
+          }
+        });
+        return;  // Do not proceed with adding the module
+      }
       Swal.fire({
         title: 'Are you sure you want to add this SuModule?',
         icon: 'question',
@@ -263,7 +290,7 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
  }
    });
  
-  }}
+  }
 };
 
 
@@ -339,15 +366,44 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
       }
     }).then(async (result) => {
       if (result.isConfirmed) {
-    setModules(prevModules => prevModules.map(module => {
-      if (module.id === moduleid) {
-          // Filter out the deleted submodule
-          const updatedSubmodules = module.submodules.filter(submodule => submodule.id !== subId);
-          return { ...module, submodules: updatedSubmodules };
-      }
-      return module;
-  }));
-  onSubmoduleSelect(modules[0].id, 0);
+        setModules(prevModules => {
+          let nextSelection = { moduleId: null, index: null }; // To store the next selection
+          const newModules = prevModules.map((module, idx) => {
+            if (module.id === moduleid) {
+              const updatedSubmodules = module.submodules.filter(sub => sub.id !== subId);
+              if (updatedSubmodules.length > 0) {
+                // If there are still submodules left in the current module
+                let nextIndex = module.submodules.findIndex(sub => sub.id === subId);
+                if (nextIndex >= updatedSubmodules.length) {
+                  nextIndex = updatedSubmodules.length - 1; // Select the last one if it was the last
+                }
+                nextSelection = { moduleId: moduleid, index: nextIndex };
+              } else {
+                // No submodules left in this module, find the last submodule of the previous module
+                for (let j = idx - 1; j >= 0; j--) {
+                  if (prevModules[j].submodules.length > 0) {
+                    nextSelection = { 
+                      moduleId: prevModules[j].id, 
+                      index: prevModules[j].submodules.length - 1  // Select the last submodule of the previous module
+                    };
+                    break;
+                  }
+                }
+              }
+              return { ...module, submodules: updatedSubmodules };
+            }
+            return module;
+          });
+  
+          // Set the next selection if any submodule or previous module is available
+          if (nextSelection.moduleId !== null) {
+            onSubmoduleSelect(nextSelection.moduleId, nextSelection.index);
+          } else {
+            onSubmoduleSelect(null, null);  // No submodules at all in the project
+          }
+          return newModules;
+        });
+  
     const response = await deleteSubmodule(subId,moduleid);
     if (response.status === 'success') {
       

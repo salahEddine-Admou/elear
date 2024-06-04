@@ -1,10 +1,10 @@
 ﻿import React, { useState, useRef } from 'react';
 import '../App.css';
 import { addUser} from "../services/UsersService";
-
-const AddUserModal = ({ isOpen, onClose }) => {
+import Swal from 'sweetalert2';
+const AddUserModal = ({ isOpen, onClose, Add }) => {
   const [user, setUser] = useState({
-  
+    
     fullName: '',
     username: '',
     email: '',
@@ -23,24 +23,88 @@ const AddUserModal = ({ isOpen, onClose }) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
+// Handle form submission
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  onClose(); 
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, add it!',
+    customClass: {
+      popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
+      confirmButton: 'confirm-button-class', // Custom class for the confirm button
+  cancelButton: 'cancel-button-class' // Custom class for the cancel button
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // If confirmed, proceed to add user
+      addUser(user)
+        .then(response => {
+          if (response.status === 'success') {
+            Add(response.data);  // Update parent component state
+            Swal.fire(
+              'Added!',
+              'User has been added.',
+              'success'
+            )
+            onClose();  // Close the modal
+            // Reset the user state after adding
+            setUser({
+              fullName: "",
+              username: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+              date: "",
+              address: "",
+              role: "",
+            });
+          } else {
+            // Handle API error responses
+            Swal.fire(
+              'Failed!',
+              'Failed to add user: ' + response.message,
+              'error'
+            );
+          }
+        })
+        .catch(error => {
+          // Handle errors in request
+          Swal.fire(
+            'Error!',
+            'Error adding user: ' + error.message,
+            'error'
+          );
+        });
+        
+    }
+  });
+};
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    if (window.confirm('Êtes-vous sûr de vouloir ajouter cet utilisateur ?')) {
+  const handleSubmit2 = async (e) => {
+
     e.preventDefault();
-    console.log(user);
+ 
 
     try {
+      
       // Appel à votre fonction API pour ajouter un utilisateur
       const response = await addUser(user);
       if (response.status === 'success') {
+        Add(user);
         console.log('User added successfully');
-        setShowSuccess(true); // Affiche le message de succès
-        setTimeout(() => {
-          setShowSuccess(false);
+       // setShowSuccess(true); // Affiche le message de succès
+      //  setTimeout(() => {
+         // setShowSuccess(false);
           onClose(); // Fermez le modal
           // Réinitialiser l'état de l'utilisateur après la fermeture
-          window.location.reload();
+        //  window.location.reload();
           setUser({
             fullName: "",
             username: "",
@@ -49,7 +113,7 @@ const AddUserModal = ({ isOpen, onClose }) => {
             date: "",
             role: "",
           });
-        }, 3000); // Message de succès affiché pendant 3 secondes
+       // }, 3000); // Message de succès affiché pendant 3 secondes
       } else {
         // Gérez les réponses d'erreur de votre API ici
         console.error('Failed to add user:', response.message);
@@ -58,7 +122,10 @@ const AddUserModal = ({ isOpen, onClose }) => {
       // Gestion des erreurs de la requête
       console.error("Error adding user:", error);
     }
-  }
+
+
+
+  
   };
 
   // Handle closing of the success dialog

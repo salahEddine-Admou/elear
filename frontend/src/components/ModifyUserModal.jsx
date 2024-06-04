@@ -2,7 +2,7 @@
 import '../App.css';
 import { updateUser } from "../services/UsersService";
 
-const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
+const ModifyUserModal = ({ isOpen, onClose, user: initialUser,Update }) => {
   
   // Initialisation de l'état du formulaire avec les données de l'utilisateur initial
   const [formData, setFormData] = useState({
@@ -40,24 +40,24 @@ const ModifyUserModal = ({ isOpen, onClose, user: initialUser }) => {
   // Mise à jour de l'état du formulaire lors de la saisie de l'utilisateur
 
   const handleSubmit = async (e) => {
-    if (window.confirm('Êtes-vous sûr de vouloir modifier cet utilisateur ?')) {
+   
    e.preventDefault();
     // Utilisez `formData` pour la mise à jour car il contient les données modifiées
     console.log(initialUser)
     if (initialUser && initialUser.id) {
       const response = await updateUser(initialUser.id, formData);
       if (response.status === 'success') {
-        setShowSuccess(true);
-        setTimeout(() => {
-          setShowSuccess(false);
-          onClose(); // Fermez la boîte de dialogue après l'affichage du message de succès
-          window.location.reload();
-        }, 3000);
+        Update(initialUser.id, formData)
+      // setShowSuccess(true);
+       // setTimeout(() => {
+          //setShowSuccess(false);
+          onClose(); 
+      //  }, 3000);
       } else {
         alert(`Failed to update user: ${response.message}`);
       }
     }
-  }
+  
   };
 
 
