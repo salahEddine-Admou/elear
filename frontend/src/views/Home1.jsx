@@ -18,7 +18,7 @@ const Home1 = () => {
   const [showAllMore, setShowAllMore] = useState(false);
   const [name, setName] = useState('');
   const [showSuccess, setShowSuccess] = useState(false); 
-  const navigate = useNavigate(); // Utilisez le hook useNavigate
+  const navigate = useNavigate();
   useEffect(() => {
     const fullName = localStorage.getItem("fullName")
     if (fullName) {
