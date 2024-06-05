@@ -50,6 +50,7 @@ public class FormationService {
             return null;
         }
         return formationRepository.save(formation);
+
     }
     public Formation getFormationById(String id){
 
