@@ -83,6 +83,8 @@ public class FormationService {
             existingFormation.setDate(updatedFormation.getDate());
             existingFormation.setLocalisation(updatedFormation.getLocalisation());
             existingFormation.setModules(updatedFormation.getModules());
+            existingFormation.setInstructor(updatedFormation.getInstructor());
+            existingFormation.setLevel(updatedFormation.getLevel());
             return formationRepository.save(existingFormation);
         } else {
             return null;
