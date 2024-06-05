@@ -1,8 +1,11 @@
 ﻿import React, { useState, useEffect } from 'react';
 import img from '../images/img.png';
-import { getFormationsCurrent, getFormationsMoreAdmin,deleteFormation} from '../services/UsersService';
+import { getFormationsCurrent, getFormationsMoreAdmin,deleteFormation,getFormation } from '../services/UsersService';
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import AddFormationModal from '../components/AddFormationModal';
+import ModifyFormationModal from '../components/ModifyFormationModal';
+import Swal from 'sweetalert2';
+
 const Formation = (onAdd) => {
   const [courses, setCourses] = useState([]);
   const [coursesM, setCoursesM] = useState([]);
@@ -12,6 +15,12 @@ const Formation = (onAdd) => {
   const [error, setError] = useState(null);
   const [showAllCurrent, setShowAllCurrent] = useState(false);
   const [showAllMore, setShowAllMore] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [formationId, setFormationId] = useState(null);
+  const [formationDetails, setFormationDetails] = useState({}); 
+  const [formations, setFormations] = useState([]);
+  const [selectedFormation, setSelectedFormation] = useState(null);
+
  
   const navigate = useNavigate(); // Utilisez le hook useNavigate
   useEffect(() => {
@@ -72,52 +81,122 @@ const Formation = (onAdd) => {
         // Rediriger vers une nouvelle page
         navigate('/AjoutModuleFormation');
   };
+
+  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const handleAddClick = () => {
     setSelected(true)
     openModal();
   };
-
+  
   const handleDeleteClick = async (id) => {
     try {
-        setLoading(true);
-        console.log(`Deleting formation with id: ${id}`);
-  
-        // Assurez-vous que deleteFormation est une fonction asynchrone et qu'elle retourne une réponse correcte
+      setLoading(true);
+      console.log(`Deleting formation with id: ${id}`);
+    
+      // Affichage de la boîte de dialogue de confirmation
+      const confirmation = await Swal.fire({
+        title: 'Êtes-vous sûr(e) de vouloir supprimer cette formation ?',
+        text: "Cette action est irréversible !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e24e0e', // Couleur orange
+        cancelButtonColor: '#808080', // Couleur grise
+        confirmButtonText: 'Oui, supprimer !',
+        cancelButtonText: 'Annuler'
+      });
+    
+      if (confirmation.isConfirmed) {
+        // Suppression de la formation (assurez-vous que deleteFormation est asynchrone et retourne une réponse correcte)
         const response = await deleteFormation(id);
-  
+    
         if (response.status === 'success') {
-            console.log(`Formation with id: ${id} deleted successfully`);
-  
-            // Rafraîchir la liste des formations après la suppression
-            const updatedCourses = courses.filter(course => course.id !== id);
-            setCourses(updatedCourses);
+          console.log(`Formation with id: ${id} deleted successfully`);
+    
+          // Rafraîchir la liste des formations après la suppression
+          const updatedCourses = courses.filter(course => course.id !== id);
+          setCourses(updatedCourses);
+    
+          Swal.fire({
+            title: 'Supprimé !',
+            text: 'La formation a été supprimée avec succès.',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 3000
+          });
+    
+          // Actualiser automatiquement la page après la suppression
+          setTimeout(() => {
+            window.location.reload();
+          }, 30);
         } else {
-            console.error(`Failed to delete formation with id: ${id}: ${response.message}`);
-            setError(`Failed to delete formation: ${response.message}`);
+          console.error(`Failed to delete formation with id: ${id}: ${response.message}`);
+          setError(`Failed to delete formation: ${response.message}`);
+          Swal.fire({
+            title: 'Erreur !',
+            text: `Échec de la suppression de la formation : ${response.message}`,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 3000
+          });
         }
+      }
     } catch (err) {
-        console.error("An error occurred while deleting the formation:", err);
-  
-        // Afficher plus de détails sur l'erreur
-        if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
-            console.error("This is likely a network or CORS issue.");
-            setError('Network or CORS error: Failed to delete the formation');
-        } else {
-            setError('Failed to delete the formation');
-        }
+      console.error("An error occurred while deleting the formation:", err);
+    
+      // Afficher plus de détails sur l'erreur
+      if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+        console.error("This is likely a network or CORS issue.");
+        setError('Network or CORS error: Failed to delete the formation');
+      } else {
+        setError('Failed to delete the formation');
+      }
+    
+      Swal.fire({
+        title: 'Erreur !',
+        text: 'Une erreur est survenue lors de la suppression de la formation.',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 3000
+      });
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
-
+  
+  
   const handleAddFormation = async (newFormation) => {
   
     setCoursesM(prevFormations => [...prevFormations, newFormation]);
      
     
   };
+
+  const handleOpenModal = async (id) => {
+    setFormationId(id);
+    setIsOpen(true);
+    // Récupérer les détails de la formation à partir de son ID
+    try {
+      const token = localStorage.getItem("userToken");
+      if (!token) {
+        console.error("User token is missing");
+        return;
+      }
+      const formation = await getFormation(id); // Correction ici
+      setFormationDetails(formation);
+    } catch (error) {
+      console.error("Error fetching formation details:", error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setFormationId();
+    setFormationDetails({});
+  };
+
 
 
   if (error) return <div>Error: {error}</div>;
@@ -141,7 +220,9 @@ const Formation = (onAdd) => {
                     <p className="font-semibold text-sm lg:text-md text-gray-500">{training.domaine}</p>
                     <div className="mt-1.5">
                         <button  onClick={() => handleButtonClick(training.id)} className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1">Edit</button>
-                        <button onClick={() => handleDeleteClick(training.id)} className="bg-red-500 text-white text-xs lg:text-sm font-bold w-20 py-1 ml-2">Delete</button>
+                        <button  onClick={() => handleOpenModal(training.id)} className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1 ml-2">Modify</button>
+                        <button onClick={() => handleDeleteClick(training.id)} className="bg-red-500 text-black text-xs lg:text-sm font-bold w-20 py-1 ml-2">Delete</button>
+                    
                     </div>
                 </div>
             </div>
@@ -182,8 +263,16 @@ const Formation = (onAdd) => {
           onAddFormation={handleAddFormation}
         />
       )}
+      {isOpen && (
+        <ModifyFormationModal
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+        formationDetails={formationDetails}     
+        />
+      )}
       </div>
   );
 }
 
 export default Formation
+    

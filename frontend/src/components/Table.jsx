@@ -4,11 +4,14 @@ import { getUsers, deleteUser } from '../services/UsersService';
 import ModifyUserModal from './ModifyUserModal';
 import "../styles/table.css"
 import Swal from 'sweetalert2';
+
 const UserTable = ({ searchValue , user}) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
   const [checkedIndices, setCheckedIndices] = useState(new Set());
+
+
   useEffect(() => {
     if (user) { 
       setData(prevData => {
@@ -21,6 +24,7 @@ const UserTable = ({ searchValue , user}) => {
       });
     }
   }, [user]); 
+  
   useEffect(() => {
     
     const fetchData = async () => {
@@ -64,16 +68,16 @@ const UserTable = ({ searchValue , user}) => {
       confirmButtonText: 'Yes, Update it',
       cancelButtonText: 'Cancel',
       customClass: {
-        popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
-        confirmButton: 'confirm-button-class', // Custom class for the confirm button
-    cancelButton: 'cancel-button-class' // Custom class for the cancel button
+        popup: 'sweetalert-popup', 
+        confirmButton: 'confirm-button-class', 
+    cancelButton: 'cancel-button-class' 
       }
     }).then(async (result) => {
       if (result.isConfirmed) {
     setData(prevData => {
       return prevData.map(user => {
         if (user.id === id) {
-          // Spread the existing user and overwrite with updated formData
+         
           return { ...user, ...formData };
         }
         return user;

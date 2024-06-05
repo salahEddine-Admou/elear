@@ -53,6 +53,34 @@ export const deleteUser = async (userId) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+export const deleteSelectedUsers = async (userIds) => {
+    const api = `http://localhost:8080/users/delete/${userIds}`; // API URL
+    const token = localStorage.getItem("userToken");
+    
+    try {
+        const response = await fetch(api, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify({ userIds }) // Sending the user IDs in the body
+        });
+
+        if (response.ok) {
+            // Succès de la suppression
+            console.log('User deleted successfully');
+            return { status: 'success', message: 'User deleted successfully' };
+        } else {
+            console.error('HTTP-Error:', response.status);
+            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+};
+
 export const addUser = async (user) => {
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
     const api = `http://localhost:8080/users/add`;
@@ -166,10 +194,78 @@ export const logout = async () => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+export const updateFormation = async (id,dataa) => {
+    // const id = localStorage.getItem("userId");
+    const api = `http://localhost:8080/formations/${id}`;
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+    try {
+        const response = await fetch(api, {
+            method: 'PUT', // Méthode HTTP pour mettre à jour des données
+            headers: {
+                'Authorization': `Bearer ${token}`, // En-tête d'autorisation avec le token
+                'Content-Type': 'application/json' // Spécifier le type de contenu des données envoyées
+            },
+             body: JSON.stringify(dataa) // Convertit l'objet formation en chaîne JSON pour l'envoi
+        });
+
+        if (response.ok) { // Vérifie si le statut de la réponse est 2xx
+            const data = await response.json(); // Convertit la réponse JSON en objet JavaScript
+            console.log('Formation updated successfully');
+            
+            return { status: 'success', message: 'formation updated successfully' };
+
+        }     
+                // Succès de la mise à jour
+
+           
+    } catch (error) {
+        // Gestion des erreurs de la requête
+        console.error("Error fetching dataa:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+};
+
 
 export const getFormationsCurrent = async () => {
     const id = localStorage.getItem("userId");
     const api = `http://localhost:8080/formations/getFormations/current/${id}`;
+    const token = localStorage.getItem("userToken");
+    
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+export const getFormation = async (id) => {
+  //  const id = localStorage.getItem("userId");
+    const api = `http://localhost:8080/formations/getById/${id}`;
     const token = localStorage.getItem("userToken");
     
     if (!token) {
