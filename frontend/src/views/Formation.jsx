@@ -207,7 +207,7 @@ const Formation = (onAdd) => {
       <div className="bg-gray-200 ">
           <div className='py-16 '>
 
-              <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 h-full  mb-8 py-16 ">
+              <div className="bg-white p-4 sm:p-6 mx-2 sm:mx-6 h-full  mb-8 py-16 overflow-hidden ">
               <h2 className="text-lg sm:text-xl font-bold mb-4">Formation</h2>
                     <div className="flex flex-wrap -mx-2">
                     {visibleTrainings2.map((training, i) => (

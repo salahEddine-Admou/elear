@@ -204,25 +204,23 @@ const Home1 = () => {
     <div className='bg-gray-300 h-0.5 flex-grow m-4'></div>
   </div>
   {visibleTrainings2.length > 0 ? (
-      visibleTrainings2.map((training, index) => (
-  <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4 '>
-   
-        <div key={index} className="bg-white border shadow-lg overflow-hidden">
-          <img src={training.photo} alt="Training" className="w-full object-cover h-48" loading="lazy" />
-          <div className="p-3">
-            <h3 className="text-md lg:text-xl font-bold">{training.title}</h3>
-            <p className="font-semibold text-sm lg:text-md text-gray-500">{training.domaine}</p>
-            <button className="mt-1.5 bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1" onClick={() => handleClickAcces(training.title)}>Access</button>
-          </div>
-        </div>
-        </div>
-      ))
-    ) : (
-      <div className="w-full text-center py-12">
-        <p className='font-bold'>No Trainings  available</p>
-      </div>
-    )}
-  
+    <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4'>
+        {visibleTrainings2.map((training, index) => (
+            <div key={index} className="bg-white border shadow-lg overflow-hidden">
+                <img src={training.photo} alt="Training" className="w-full object-cover h-48" loading="lazy" />
+                <div className="p-3">
+                    <h3 className="text-md lg:text-xl font-bold">{training.title}</h3>
+                    <p className="font-semibold text-sm lg:text-md text-gray-500">{training.domaine}</p>
+                    <button className="mt-1.5 bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1" onClick={() => handleClickAcces(training.title)}>Access</button>
+                </div>
+            </div>
+        ))}
+    </div>
+) : (
+    <div className="w-full text-center py-12">
+        <p className='font-bold'>No Trainings available</p>
+    </div>
+)}
   {coursesM.length > 3 && (
     <div className="flex justify-center mt-4">
       <button onClick={() => setShowAllMore(!showAllMore)} className="bg-orange-500 text-white px-4 py-2 text-sm font-bold">
