@@ -142,11 +142,11 @@ function Register() {
                             </button>
                         </form>
                     <div className="mt-1 text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-black-900">
                             Already have an account?{" "}
                             <button 
                                 onClick={() => navigate('/')}
-                                className="text-orange-500 hover:text-orange-700 font-bold"
+                                className="text-orange-500 hover:underline hover:text-orange-700 font-bold"
                             >
                                 Login
                             </button>
