@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 
 
-const ModifyFormationModal = ({ isOpen, onClose,formationDetails }) => {
+const ModifyFormationModal = ({ isOpen, onClose,formationDetails,onUpdate }) => {
    
   console.log(formationDetails)
     const [formData, setFormData] = useState({
@@ -51,6 +51,7 @@ const ModifyFormationModal = ({ isOpen, onClose,formationDetails }) => {
         const response = await updateFormation(formationDetails.id, formData);
   
         if (response.status === 'success') {
+          onUpdate(response.data);
           // Afficher un message de succès
           Swal.fire({
             title: 'Mise à jour réussie !',
