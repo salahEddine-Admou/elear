@@ -13,4 +13,6 @@ public class MyModule {
     private String name;
     @DocumentReference(collection = "submodule")
     List<Submodule> submodules;
+    @DocumentReference(collection = "Quiz")
+    Quiz quiz;
 }

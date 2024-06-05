@@ -40,7 +40,12 @@ public class FormationService {
     private CertificatRepo certificatRepo;
     @Autowired
     private NoteRepository noteRepository;
-
+    @Autowired
+    private QuizRepository quizRepository ;
+    @Autowired
+    private QuestionRepository questionRepository ;
+    @Autowired
+    private OptionRepository optionRepository ;
 
     //// formations
     public Formation CreateFormation(Formation formation) {
@@ -653,6 +658,116 @@ public class FormationService {
         Note n = noteRepository.findByNotes(userId, formationId);
         return n.getText();
     }
+
+
+
+
+
+
+
+
+
+
+    public Quiz createQuiz(Quiz quiz,String ModuleId) {
+
+        Optional<MyModule> module1 = moduleRep.findById(ModuleId);
+        System.out.println(module1.isPresent());
+        if (module1.isPresent()) {
+            Quiz quiz2 = quizRepository.findByTitle(quiz.getTitle());
+            System.out.println(quiz2);
+            if (quiz2 == null) {
+            MyModule existingModule = module1.get();
+                Quiz quiz1 = quizRepository.save(quiz);
+            existingModule.setQuiz(quiz1);
+
+            moduleRep.save(existingModule);
+            return quiz1;}
+            else{
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+
+
+    }
+
+    @Transactional
+    public Question createQuestion(String text, List<String> optionsTexts, String quizId) {
+        // Créer la question
+        Question question = new Question();
+        question.setQuestionText(text);
+
+        // Créer et sauvegarder chaque option
+        List<Option> options = new ArrayList<>();
+        for (String optionText : optionsTexts) {
+            Option option = new Option();
+            option.setText(optionText);
+            option = optionRepository.save(option);
+            options.add(option);
+        }
+        question.setOptions(options);
+        question = questionRepository.save(question);
+
+        // Associer la question au quiz
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new RuntimeException("Quiz not found with id: " + quizId));
+        List<Question> questions = quiz.getQuestions();
+        if (questions == null) {
+            questions = new ArrayList<>();
+        }
+        questions.add(question);
+        quiz.setQuestions(questions);
+        quizRepository.save(quiz);
+
+        return question;
+    }
+
+
+    public Quiz getQuiz(String id)  {
+        Optional<Quiz> quiz = quizRepository.findById(id);
+        if (quiz.isPresent()) {
+            return quiz.get();
+        } else {
+            return null;
+        }
+    }
+
+    // Mettre à jour un quiz
+    public Quiz updateQuiz(String id, Quiz updatedQuiz) {
+        Quiz quiz = getQuiz(id);
+        quiz.setTitle(updatedQuiz.getTitle());
+        quiz.setQuestions(updatedQuiz.getQuestions());
+        return quizRepository.save(quiz);
+    }
+
+    // Supprimer un quiz
+    public void deleteQuiz(String id) {
+        quizRepository.deleteById(id);
+    }
+
+    // Calculer le score pour un quiz
+    public int calculateScore(String quizId, List<Integer> answers)  {
+        Quiz quiz = getQuiz(quizId);
+        List<Question> questions = quiz.getQuestions();
+
+        if (answers.size() != questions.size()) {
+            return -1;
+        }
+
+        int score = 0;
+        for (int i = 0; i < questions.size(); i++) {
+            Question question = questions.get(i);
+            if (answers.get(i) == question.getCorrectOption()) {
+                score++;
+            }
+        }
+
+        // Calculate percentage
+        double percentage = ((double) score / questions.size()) * 100;
+        return (int)percentage;
+    }
+
 
 
 }
