@@ -20,6 +20,8 @@ public class Formation {
     private String photo;
     private String date;
     private String localisation;
+    private String instructor;
+    private String level;
     @DocumentReference(collection = "module")
     List<MyModule> modules;
 
