@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import img from '../images/img.png';
 import { getFormationsCurrent, getFormationsMore, inscription, getUserFromToken} from '../services/UsersService';
-
+  import Swal from 'sweetalert2';
 
 
 
@@ -89,53 +89,70 @@ const Home1 = () => {
         // Rediriger vers une nouvelle page
         navigate('/modules');
     };
-    const handleClickAcces = async(trainingTitle)=> {
-      // Stocker l'ID dans le stockage local
+
+    const handleClickAcces = async (trainingTitle) => {
       try {
-        // Appel à votre fonction API pour ajouter un utilisateur
+        // Appel à la fonction inscription pour tenter d'inscrire l'utilisateur au cours
         const response = await inscription(trainingTitle);
         if (response.status === 'success') {
-          console.log('successfully');
-          setShowSuccess(true); // Affiche le message de succès
-          setTimeout(() => {
-            setShowSuccess(false);
-            console.log("hiiii hello"+response.data)
-
-            const formation = {
-              id: response.data.formation.id,
-              title: response.data.formation.title,
-              domaine: response.data.formation.domaine,
-              description: response.data.formation.description,
-              photo: response.data.formation.photo,
-              langue: response.data.formation.langue,
-              localisation: response.data.formation.localisation,
-              modules: response.data.formation.modules.map(module => ({
-                id: module.id,
-                title: module.title,
-                stateM: module.stateM,
-                subtitles: module.subtitles
-              })),
-              state: response.data.state,
-              progress: response.data.progress
-            };
-
-
-
-
-            setCourses(prevCourses => [...prevCourses, formation]);
-            setCoursesM(prevCoursesM => prevCoursesM.filter(course => course.title !== trainingTitle));
-            // Réinitialiser l'état de l'utilisateur après la fermeture
-            //window.location.reload();
-          }, 1000);
+          const { formation, state, progress } = response.data;
+          // Affichage d'une boîte de dialogue avec les détails du cours
+          Swal.fire({
+            title: `Cours: ${formation.title}`,
+            html: `
+              <a>${formation.description}</a>
+              <div style="text-align: left;">
+                <p><strong>Détails du cours:</strong></p>
+                <li><strong>- Domaine:</strong> ${formation.domaine}</li>
+                <li><strong>- Langue:</strong> ${formation.langue}</li>
+                <li><strong>- Localisation:</strong> ${formation.localisation}</li>
+              </div>
+            `,
+            confirmButtonText: 'Enroll Now',
+            showCloseButton: true
+          }).then((result) => {
+            // Vérification si l'utilisateur a cliqué sur "Enroll Now"
+            if (result.isConfirmed) {
+              // L'utilisateur a confirmé l'inscription
+              const formationData = {
+                id: formation.id,
+                title: formation.title,
+                domaine: formation.domaine,
+                description: formation.description,
+                photo: formation.photo,
+                langue: formation.langue,
+                localisation: formation.localisation,
+                modules: formation.modules.map(module => ({
+                  id: module.id,
+                  title: module.title,
+                  stateM: module.stateM,
+                  subtitles: module.subtitles
+                })),
+                state: state,
+                progress: progress
+              };
+              // Mise à jour des états pour ajouter le cours et supprimer le cours en cours de l'affichage des cours disponibles
+              setCourses(prevCourses => [...prevCourses, formationData]);
+              setCoursesM(prevCoursesM => prevCoursesM.filter(course => course.title !== trainingTitle));
+            } else if (result.dismiss === Swal.DismissReason.close) {
+              // L'utilisateur a annulé l'inscription en cliquant sur le bouton de fermeture
+              console.log('Inscription annulée par l\'utilisateur.');
+              // Vous pouvez ajouter ici toute logique supplémentaire pour annuler l'inscription
+              // Par exemple, envoyer une demande au serveur pour annuler l'inscription enregistrée.
+              // Ou simplement ne rien faire, si aucune action n'est requise pour annuler l'inscription.
+            }
+          });
         } else {
-          // Gérez les réponses d'erreur de votre API ici
-          console.error('Failed :', response.message);
+          console.error('Failed:', response.message);
         }
       } catch (error) {
-        // Gestion des erreurs de la requête
         console.error("Error:", error);
       }
-  };
+    };
+    
+
+    
+    
   
   const handleSuccessClose = () => {
     setShowSuccess(false);

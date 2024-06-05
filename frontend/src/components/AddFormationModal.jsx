@@ -9,6 +9,10 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
     domaine: '',
     date: '',
     photo: '',
+    level: '',
+    description:'',
+    instructor:''
+
   });
   const [showSuccess, setShowSuccess] = useState(false); // État pour afficher la boîte de dialogue de succès
 
@@ -128,57 +132,86 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
   };
   return (
     <>
-     {!showSuccess && (
-       <dialog className="modal-backdrop w-[900px]" ref={dialogRef}>
-       <div className="modal-container flex mx-auto w-900 h-auto">
-         <div className="w-full items-start modal-content px-6 rounded-lg">
-           <span className="modal-close font-black absolute top-0 right-0 h-12 mt-6 mr-2 cursor-pointer text-3xl" onClick={onClose}>&times;</span>
-           <h2 className="text-lg font-bold mb-4 mt-4">Add New Formation</h2>
-           <form onSubmit={handleSubmit} className='mb-4 w-full'>
-           <span className='font-bold text-sm'>Photo</span><span className="text-orange-500">*</span><br />
-          
-            <label htmlFor="photo-upload" className="upload-photo-label mb-12 custom-width" style={{ position: 'relative', overflow: 'hidden','height': '150px', }}>
-              {!formation.photo && (
-                <>  <span className="svg-icon"><svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C"/>
-                </svg></span>  <span>Upload Photo...</span>    
-                          <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }}  />
-                          </>  
-              )}
-              {formation.photo && (
-                <>
-                  <span className="svg-icon mr-2 icon-placeholder invisible">
-                    <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C"/>
-                    </svg>
-                  </span>
-                  <span>Change Photo...</span>
-                  <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }} />
-                  <img src={formation.photo} alt="Uploaded" className="ml-4 uploaded-photo" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} />
-                </>
-              )}
-            </label>
-             <br/>
-             <label className='font-bold text-sm'>
-               Title<span className="text-orange-500">*</span>
-             </label><br />
-             <input type="text" name="title" value={formation.title} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
-     
-             <label className='font-bold text-sm'>
-               Domaine<span className="text-orange-500">*</span>
-             </label><br />
-             <input type="text" name="domaine" value={formation.domaine} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" required />
-     
-             <label className='font-bold text-sm'>
-               Durée<span className="text-orange-500">*</span>
-             </label><br />
-             <input type="text" name="date" value={formation.date} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
-     
-             <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 text-white py-2 px-4 font-bold text-sm w-250" />
-           </form>
-         </div>
-       </div>
-     </dialog>  
+     {!showSuccess && ( 
+        <dialog className="modal-backdrop w-[900px]" ref={dialogRef}>
+      <div className="modal-container flex mx-auto w-700 h-auto">
+        <div className="w-full items-start modal-content px-6 rounded-lg">
+          <span className="modal-close font-black absolute top-0 right-0 h-12 mt-6 mr-2 cursor-pointer text-3xl" onClick={onClose}>&times;</span>
+          <h2 className="text-lg font-bold mb-4 mt-4">Add New Formation</h2>
+          <form onSubmit={handleSubmit} className="mb-1 w-full">
+            <span className="font-bold text-sm">Photo</span><span className="text-orange-500">*</span><br />
+
+            <label htmlFor="photo-upload" className="upload-photo-label custom-width" style={{ position: 'relative', overflow: 'hidden', height: '150px' }}>
+  {!formation.photo && (
+    <>
+      <span className="svg-icon">
+        <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C" />
+        </svg>
+      </span>
+      <span>Upload Photo...</span>
+      <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }} />
+    </>
+  )}
+  {formation.photo && (
+    <>
+      <span className="svg-icon mr-2 icon-placeholder invisible">
+        <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.10605 20.1161H22.3061V11.5605H24.7061V21.3383C24.7061 22.0134 24.1688 22.5605 23.5061 22.5605H1.90605C1.24332 22.5605 0.706055 22.0134 0.706055 21.3383V11.5605H3.10605V20.1161ZM13.9061 7.89388V16.4494H11.5061V7.89388H5.50605L12.7061 0.560547L19.9061 7.89388H13.9061Z" fill="#9C9C9C" />
+        </svg>
+      </span>
+      <span>Change Photo...</span>
+      <input type="file" id="photo-upload" name="photo" accept="image/*" onChange={handleChange} style={{ display: 'none' }} />
+      <img src={formation.photo} alt="Uploaded" className="ml-4 uploaded-photo" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
+    </>
+  )}
+</label>
+
+            <br />
+            <div className="flex flex-wrap">
+              <div className="w-1/2 pr-2">
+                <label className="font-bold text-sm">
+                  Title<span className="text-orange-500">*</span>
+                </label><br />
+                <input type="text" name="title" value={formation.title} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+              </div>
+              <div className="w-1/2 pl-2">
+                <label className="font-bold text-sm">
+                  Domaine<span className="text-orange-500">*</span>
+                </label><br />
+                <input type="text" name="domaine" value={formation.domaine} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" required />
+              </div>
+              <div className="w-1/2 pr-2">
+                <label className="font-bold text-sm">
+                  Instructor<span className="text-orange-500">*</span>
+                </label><br />
+                <input type="text" name="instructor" value={formation.instructor} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" required />
+              </div>
+              <div className="w-1/2 pl-2">
+                <label className="font-bold text-sm">
+                  Durée<span className="text-orange-500">*</span>
+                </label><br />
+                <input type="text" name="date" value={formation.date} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+              </div>
+              <div className="w-1/2 pr-2">
+                <label className="font-bold text-sm">
+                  Level<span className="text-orange-500">*</span>
+                </label><br />
+                <input type="text" name="level" value={formation.level} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+              </div>
+              <div className="w-1/2 pl-2">
+                <label className="font-bold text-sm">
+                  Description<span className="text-orange-500">*</span>
+                </label><br />
+                <input type="text" name="description" value={formation.description} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+              </div>
+            </div>
+            <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 text-white py-2 px-4 font-bold text-sm w-250" />
+          </form>
+        </div>
+      </div>
+</dialog>
+
       )}
      
       {/* {showSuccess && (
