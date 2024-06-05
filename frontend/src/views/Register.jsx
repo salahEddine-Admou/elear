@@ -68,18 +68,19 @@ function Register() {
     };
 
     return (
-        <div className="flex bg-white">
-            <div className="w-1/3 h-full">
-                <img src={loginimg} alt="Login" className="w-full h-fit object-cover" />
+        <div className="flex bg-white h-screen overflow-hidden">
+            <div className="w-1/3">
+                <img src={loginimg} alt="Login" className="w-full object-cover" />
             </div>
-            <div className="w-1/3 flex items-center justify-center p-8">
+            <div className="w-2/3 h-fit flex items-center justify-center p-1">
                 <div className="w-full max-w-md">
                     <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
-                    <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
-                        <div>
+                    <div>
                             <label htmlFor="fullname" className="block text-sm font-medium text-gray-700">Full Name <span className="text-red-500">*</span></label>
                             <input id="fullname" type="text" value={fullname} onChange={e => setFullname(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
                         </div>
+                    <form className="grid grid-cols-2 gap-2">
+
                         <div>
                             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username <span className="text-red-500">*</span></label>
                             <input id="username" type="text" value={username} onChange={e => setUsername(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
@@ -104,15 +105,15 @@ function Register() {
                             </select>
                         </div>
                         <div>
-                            <label htmlFor="profession" className="block text-sm font-medium text-gray-700">Profession <span className="text-red-500">*</span></label>
+                            <label htmlFor="profession" className="block text-sm font-medium text-gray-700">Profession </label>
                             <input id="profession" type="text" value={profession} onChange={e => setProfession(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
                         </div>
                         <div>
-                            <label htmlFor="speciality" className="block text-sm font-medium text-gray-700">Speciality <span className="text-red-500">*</span></label>
-                            <input id="speciality" type="text" value={speciality} onChange={e => setSpeciality(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                            <label htmlFor="speciality" className="block text-sm font-medium text-gray-700">Speciality </label>
+                            <input id="speciality" type="text" value={speciality} onChange={e => setSpeciality(e.target.value)}  className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
                         </div>
                         <div>
-                            <label htmlFor="university" className="block text-sm font-medium text-gray-700">University <span className="text-red-500">*</span></label>
+                            <label htmlFor="university" className="block text-sm font-medium text-gray-700">University </label>
                             <input id="university" type="text" value={university} onChange={e => setUniversity(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
                         </div>
                         <div>
@@ -133,18 +134,19 @@ function Register() {
                                 <p>{error}</p>
                             </div>
                         )}
-                        <div>
+
+                    </form>
+                    <form onSubmit={handleSubmit}>
                             <button type="submit" className="w-full py-2 px-4 mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded-md">
                                 Register
                             </button>
-                        </div>
-                    </form>
-                    <div className="mt-6 text-center">
+                        </form>
+                    <div className="mt-1 text-center">
                         <p className="text-sm text-gray-600">
                             Already have an account?{" "}
                             <button 
                                 onClick={() => navigate('/')}
-                                className="text-blue-500 hover:text-blue-700 font-bold"
+                                className="text-orange-500 hover:text-orange-700 font-bold"
                             >
                                 Login
                             </button>
