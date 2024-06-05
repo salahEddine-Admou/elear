@@ -26,6 +26,8 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
       title: 'Êtes-vous sûr de vouloir ajouter cette formation ?',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#e24e0e', // Couleur orange
+      cancelButtonColor: '#808080',
       confirmButtonText: 'Oui, ajouter',
       cancelButtonText: 'Annuler',
       customClass: {
@@ -36,38 +38,41 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
         try {
           // Appel à votre fonction API pour ajouter une formation
           const response = await addFormation(formation);
-          if (response.status === 'success') {
-            onAddFormation(response.data); 
-            Swal.fire(
-              'Ajoutée!',
-              'La formation a été ajoutée avec succès.',
-              'success'
-            );
+          console.log('Response from API:', response); // Ajoutez ce log pour voir la réponse
+  
+          if (response.status === 'success' || response.status === 200) { // Ajustez cette condition selon le format réel de la réponse
+            onAddFormation(response.data);
+            Swal.fire({
+              title: 'Ajoutée!',
+              text: 'La formation a été ajoutée avec succès.',
+              icon: 'success',
+              showConfirmButton: false, // Pas de bouton OK
+              timer: 3000, // Affiche le message pendant 3 secondes
+              customClass: {
+                popup: 'sweetalert-popup-success' // Classe personnalisée pour le succès
+              }
+            });
+  
             setShowSuccess(true); // Affiche le message de succès
             setTimeout(() => {
               setShowSuccess(false);
               onClose(); // Fermez le modal
               // Réinitialiser l'état de la formation après la fermeture
-              
-              //window.location.reload();
               setFormation({
                 title: "",
                 domaine: "",
                 date: "",
-                phot: "",
+                photo: "",
               });
             }, 3000); // Message de succès affiché pendant 3 secondes
+  
           } else {
             // Gérez les réponses d'erreur de votre API ici
             Swal.fire({
               title: 'Erreur',
-              text: 'already exists',
+              text: response.message || 'La formation existe déjà.',
               icon: 'error',
-              confirmButtonText: 'OK',
-              customClass: {
-                  confirmButton: 'custom-ok-button' // Applying custom class to the confirm button
-              }
-          });
+            });
             console.error('Échec de l\'ajout de la formation:', response.message);
           }
         } catch (error) {
@@ -82,6 +87,7 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
       }
     });
   };
+  
 
   // Handle closing of the success dialog
   const handleSuccessClose = () => {
@@ -166,7 +172,7 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
              <label className='font-bold text-sm'>
                Durée<span className="text-orange-500">*</span>
              </label><br />
-             <input type="text" name="duree" value={formation.duree} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
+             <input type="text" name="date" value={formation.date} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
      
              <input type="submit" value="Add" className="border-2 border-orange-500 bg-orange-500 text-white py-2 px-4 font-bold text-sm w-250" />
            </form>

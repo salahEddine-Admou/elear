@@ -19,58 +19,6 @@ function Register() {
     const [country, setCountry] = useState('');
     const [countries, setCountries] = useState([]); 
 
-    const handleUsernameChange = (event) => {
-        setUsername(event.target.value);
-    };
-
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-    };
-
-    const handleRetypePasswordChange = (event) => {
-        setRetypePassword(event.target.value);
-    };
-
-    const handleFullnameChange = (event) => {
-        setFullname(event.target.value);
-    };
-
-    const handleAddressChange = (event) => {
-        setAddress(event.target.value);
-    };
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
-
-    const handleProfessionChange = (event) => {
-        setProfession(event.target.value);
-    };
-
-    const handleSpecialityChange = (event) => {
-        setSpeciality(event.target.value);
-    };
-
-    const handleUniversityChange = (event) => {
-        setUniversity(event.target.value);
-    };
-
-    const handleCountryChange = (event) => {
-        setCountry(event.target.value);
-    };
-
-    const formatDate = (datestr) => {
-        const date = new Date(datestr);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${year}-${month}-${day}`;
-    };
-
-    const handleDateChange = (event) => {
-        setDate(formatDate(event.target.value));
-    };
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -107,7 +55,6 @@ function Register() {
                 role: "USER"
             });
 
-            // Check if the registration was successful
             if (response.status === 200) {
                 console.log('Registration successful');
                 navigate('/');
@@ -115,209 +62,99 @@ function Register() {
                 setError('Failed to register, please try again.');
             }
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                setError('Unauthorized: Please check your credentials and try again.');
-            } else {
-                setError('Failed to register, please try again.');
-                console.error('Error registering:', error);
-            }
+            setError('Failed to register, please try again.');
+            console.error('Error registering:', error);
         }
     };
 
     return (
-        <div className="bg-white flex gap-5 max-md:flex-col max-md:gap-0">
-            <div className="w-[45%] max-md:ml-0 max-md:w-full bg-orange-500 items-start">
-                <img src={loginimg} alt="Login" className="max-md:ml-0 max-md:w-full items-start h-full" />
+        <div className="flex bg-white">
+            <div className="w-1/3 h-full">
+                <img src={loginimg} alt="Login" className="w-full h-fit object-cover" />
             </div>
-            <div className="flex flex-col ml-5 w-[40%] max-md:ml-0 max-md:w-full">
-                <div className="flex flex-col self-stretch px-5 my-auto mt-8 max-md:max-w-full">
-                    <h2 className="text-2xl font-bold tracking-normal leading-8 max-md:mr-2.5 max-md:max-w-full">
-                        <span className="text-black">Register</span>
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="flex flex-col justify-center font-bold mt-8 max-md:max-w-full mb-6">
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="fullname" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">Full name</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <input
-                                    id="fullname"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="text"
-                                    value={fullname}
-                                    onChange={handleFullnameChange}
-                                    required
-                                />
+            <div className="w-1/3 flex items-center justify-center p-8">
+                <div className="w-full max-w-md">
+                    <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+                        <div>
+                            <label htmlFor="fullname" className="block text-sm font-medium text-gray-700">Full Name <span className="text-red-500">*</span></label>
+                            <input id="fullname" type="text" value={fullname} onChange={e => setFullname(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username <span className="text-red-500">*</span></label>
+                            <input id="username" type="text" value={username} onChange={e => setUsername(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+                            <input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="date" className="block text-sm font-medium text-gray-700">Birth Date <span className="text-red-500">*</span></label>
+                            <input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} required min='1970-01-01' max='2008-12-31' className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country <span className="text-red-500">*</span></label>
+                            <select id="country" value={country} onChange={e => setCountry(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4">
+                                <option value="">Select a country</option>
+                                {countries.map(country => (
+                                    <option key={country.name} value={country.name}>
+                                        {country.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="profession" className="block text-sm font-medium text-gray-700">Profession <span className="text-red-500">*</span></label>
+                            <input id="profession" type="text" value={profession} onChange={e => setProfession(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="speciality" className="block text-sm font-medium text-gray-700">Speciality <span className="text-red-500">*</span></label>
+                            <input id="speciality" type="text" value={speciality} onChange={e => setSpeciality(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="university" className="block text-sm font-medium text-gray-700">University <span className="text-red-500">*</span></label>
+                            <input id="university" type="text" value={university} onChange={e => setUniversity(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+                            <input id="address" type="text" value={address} onChange={e => setAddress(e.target.value)} className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
+                            <input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        <div>
+                            <label htmlFor="retypePassword" className="block text-sm font-medium text-gray-700">Retype Password <span className="text-red-500">*</span></label>
+                            <input id="retypePassword" type="password" value={retypePassword} onChange={e => setRetypePassword(e.target.value)} required className="mt-1 block w-full border-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 py-2 px-4" />
+                        </div>
+                        {error && (
+                            <div className="mt-4 p-2 bg-red-100 text-red-700 border-2 border-red-300 rounded flex items-center">
+                                <img src={alertimg} alt="Error" className="w-5 h-5 mr-2" />
+                                <p>{error}</p>
                             </div>
-                            <br/>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="username" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">User name</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <input
-                                    id="username"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="text"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                    required
-                                />
-                            </div>
-                            <br/>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="email" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">Email</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <input
-                                    id="email"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    required
-                                />
-                            </div>
-                            <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
-                                <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
-                                        <span className="grow text-black">Birth date</span>
-                                        <span className="text-orange-500">*</span>
-                                    </label>
-                                    <input
-                                        id="date"
-                                        className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                        type="date"
-                                        value={date}
-                                        onChange={handleDateChange}
-                                        required
-                                        min='1970-01-01'
-                                        max='2008-12-31'
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="country" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">Country</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <select
-                                    id="country"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    value={country}
-                                    onChange={handleCountryChange}
-                                    required
-                                >
-                                    <option value="">Select a country</option>
-                                    {countries.map(country => (
-                                        <option key={country.name} value={country.name}>
-                                            {country.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="profession" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">Profession</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <input
-                                    id="profession"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="text"
-                                    value={profession}
-                                    onChange={handleProfessionChange}
-                                />
-                            </div>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">Speciality</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <input
-                                    id="speciality"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="text"
-                                    value={speciality}
-                                    onChange={handleSpecialityChange}
-                                />
-                            </div>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="university" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">University</span>
-                                    <span className="text-orange-500">*</span>
-                                </label>
-                                <input
-                                    id="university"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="text"
-                                    value={university}
-                                    onChange={handleUniversityChange}
-                                />
-                            </div>
-                            <div className="flex flex-col max-md:max-w-full">
-                                <label htmlFor="address" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                                    <span className="grow text-black">Address</span>
-                                </label>
-                                <input
-                                    id="address"
-                                    className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                    type="text"
-                                    value={address}
-                                    onChange={handleAddressChange}
-                                />
-                            </div>
-                            <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
-                                <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="password" className="flex gap-1.5 self-start text-sm">
-                                        <span className="grow text-black">Password</span>
-                                        <span className="text-orange-500">*</span>
-                                    </label>
-                                    <input
-                                        id="password"
-                                        className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                        type="password"
-                                        value={password}
-                                        onChange={handlePasswordChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            {error && <div className="flex gap-2 max-md:flex-wrap mt-6 text-sm tracking-normal leading-4 text-black max-md:max-w-full">
-                                <img src={alertimg} className="shrink-0 aspect-square w-[31px]" alt="Error Icon" />
-                                <div className="grow justify-center self-start py-1 w-fit">
-                                    {error}
-                                </div>
-                            </div>}
-                            <div className="flex flex-col justify-center mt-6 font-bold tracking-normal whitespace-nowrap max-md:max-w-full">
-                                <div className="flex flex-col max-md:max-w-full">
-                                    <label htmlFor="retypepassword" className="flex gap-1.5 self-start text-sm">
-                                        <span className="grow text-black">Retype Password</span>
-                                        <span className="text-orange-500">*</span>
-                                    </label>
-                                    <input
-                                        id="retypepassword"
-                                        className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-md:max-w-full"
-                                        type="password"
-                                        value={retypePassword}
-                                        onChange={handleRetypePasswordChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center mt-6 max-w-full text-sm tracking-normal leading-6 text-center text-black whitespace-nowrap w-[182px]">
-                                <button type="submit" className="justify-center px-2 py-2 bg-orange-500 max-md:px-2 mt-2">
-                                    Register
-                                </button>
-                            </div>
+                        )}
+                        <div>
+                            <button type="submit" className="w-full py-2 px-4 mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded-md">
+                                Register
+                            </button>
                         </div>
                     </form>
+                    <div className="mt-6 text-center">
+                        <p className="text-sm text-gray-600">
+                            Already have an account?{" "}
+                            <button 
+                                onClick={() => navigate('/')}
+                                className="text-blue-500 hover:text-blue-700 font-bold"
+                            >
+                                Login
+                            </button>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     );
+    
 }
 
 export default Register;

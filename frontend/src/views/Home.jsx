@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import Search from "../components/Search";
+import CrudUsersAdmin from "../components/CrudUsersAdmin";
 
 function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +16,7 @@ function Home() {
       
       <div className="relative flex justify-between ">
         {/* <Sidebar /> */}
-        <Search />
+        <CrudUsersAdmin />
       </div>
     </div>
   );

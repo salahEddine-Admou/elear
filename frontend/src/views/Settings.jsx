@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
-import DefaultProfilePicture from '../images/13392061.jpg'; // Import the default image
+import DefaultProfilePicture from '../images/13392061.jpg';
 
 const Settings = ({ onClose, user: initialUser }) => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Settings = ({ onClose, user: initialUser }) => {
     linkedinUrl: '',
     countries: [],
     country: '',
-    profilePicture: '', // Add this line
+    profilePicture: '',
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -76,7 +76,7 @@ const Settings = ({ onClose, user: initialUser }) => {
         university: user.university,
         linkedinUrl: user.linkedinUrl,
         country: user.country,
-        profilePicture: user.profilePicture || DefaultProfilePicture, // Use default image if no profile picture is set
+        profilePicture: user.profilePicture || DefaultProfilePicture,
       }));
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -102,7 +102,7 @@ const Settings = ({ onClose, user: initialUser }) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      setFormData(prevState => ({ ...prevState, profilePicture: reader.result })); // Update profilePicture
+      setFormData(prevState => ({ ...prevState, profilePicture: reader.result }));
     };
     reader.onerror = (error) => {
       console.error('Error uploading profile image:', error);
@@ -121,7 +121,7 @@ const Settings = ({ onClose, user: initialUser }) => {
       });
       console.log('User info updated successfully:', response.data);
       setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000); // Hide success message after 3 seconds
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error updating user info:', error);
     }
@@ -130,40 +130,40 @@ const Settings = ({ onClose, user: initialUser }) => {
   return (
     <>
       <Navbar />
-      <div className="mx-auto max-w-[800px] px-10 py-8">
-        <h2 className="text-2xl font-bold mb-4">Settings</h2>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full mb-6">
-            <div className="ant-col full-width">
-              <div className="upload-profile-picture">
-                <img
-                  src={formData.profilePicture || DefaultProfilePicture} // Use default profile picture if none is set
-                  alt="Profile Picture"
-                  className="w-18 h-18 rounded-full object-cover"
+      <div className="container mx-auto max-w-4xl p-8 bg-white shadow-md rounded-lg">
+        <nav className="text-black-600 mt-10">
+          <ol className="list-reset flex">
+            <li><a href="/home" className="text-orange-600 hover:underline">Home</a></li>
+            <li><span className="mx-2">/</span></li>
+            <li className="text-black-500">Settings</li>
+          </ol>
+        </nav>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col items-center space-y-4">
+            <img
+              src={formData.profilePicture || DefaultProfilePicture}
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+            />
+            {isEditMode && (
+              <label htmlFor="profile-image-upload" className="cursor-pointer px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 text-center">
+                <input
+                  type="file"
+                  id="profile-image-upload"
+                  accept="image/*"
+                  onChange={handleProfileImageChange}
+                  className="sr-only"
                 />
-                {isEditMode && (
-                  <label htmlFor="profile-image-upload" className="upload-button cursor-pointer inline-block px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">
-                    <input
-                      type="file"
-                      id="profile-image-upload"
-                      accept="image/*"
-                      onChange={handleProfileImageChange}
-                      className="sr-only"
-                    />
-                    Change Photo
-                  </label>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="fullName" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Full Name</span>
-                <span className="text-orange-500">*</span>
+                Change Photo
               </label>
+            )}
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="flex flex-col">
+              <label htmlFor="fullName" className="text-sm font-semibold text-gray-700">Full Name <span className="text-red-500">*</span></label>
               <input
                 id="fullName"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="text"
                 value={formData.fullName}
                 onChange={handleChange}
@@ -172,13 +172,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="username" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Username</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="username" className="text-sm font-semibold text-gray-700">Username <span className="text-red-500">*</span></label>
               <input
                 id="username"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="text"
                 value={formData.username}
                 onChange={handleChange}
@@ -187,13 +184,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="email" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Email</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="email" className="text-sm font-semibold text-gray-700">Email <span className="text-red-500">*</span></label>
               <input
                 id="email"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -202,13 +196,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="date" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Date of Birth</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="date" className="text-sm font-semibold text-gray-700">Date of Birth <span className="text-red-500">*</span></label>
               <input
                 id="date"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
@@ -217,13 +208,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="country" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Country</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="country" className="text-sm font-semibold text-gray-700">Country <span className="text-red-500">*</span></label>
               <select
                 id="country"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 value={formData.country}
                 onChange={handleChangeCountry}
                 required
@@ -236,16 +224,11 @@ const Settings = ({ onClose, user: initialUser }) => {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4 font-bold mt-8 max-md:max-w-full">
             <div className="flex flex-col">
-              <label htmlFor="profession" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Profession</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="profession" className="text-sm font-semibold text-gray-700">Profession <span className="text-red-500">*</span></label>
               <input
                 id="profession"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="text"
                 value={formData.profession}
                 onChange={handleChange}
@@ -253,13 +236,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="speciality" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">Speciality</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="speciality" className="text-sm font-semibold text-gray-700">Speciality <span className="text-red-500">*</span></label>
               <input
                 id="speciality"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="text"
                 value={formData.speciality}
                 onChange={handleChange}
@@ -267,13 +247,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="university" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">University</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="university" className="text-sm font-semibold text-gray-700">University <span className="text-red-500">*</span></label>
               <input
                 id="university"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="text"
                 value={formData.university}
                 onChange={handleChange}
@@ -281,13 +258,10 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="linkedinUrl" className="flex gap-1.5 self-start text-sm whitespace-nowrap">
-                <span className="grow text-black">LinkedIn URL</span>
-                <span className="text-orange-500">*</span>
-              </label>
+              <label htmlFor="linkedinUrl" className="text-sm font-semibold text-gray-700">LinkedIn URL <span className="text-red-500">*</span></label>
               <input
                 id="linkedinUrl"
-                className="justify-center px-4 py-2.5 mt-3 text-sm text-black bg-white border-solid border-[3px] border-stone-300 max-w-full"
+                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                 type="url"
                 value={formData.linkedinUrl}
                 onChange={handleChange}
@@ -295,17 +269,13 @@ const Settings = ({ onClose, user: initialUser }) => {
               />
             </div>
           </div>
-          <div className="mt-8">
-            <button type="submit" className="px-4 py-2 rounded-md bg-orange-500 hover:bg-blue-600 text-white">
-              Save
-            </button>
-            <button type="button" className="ml-4 px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-600 text-white" onClick={onClose}>
-              Cancel
-            </button>
+          <div className="flex justify-end space-x-4 mt-6">
+            <button type="submit" className="px-6 py-2 rounded-md bg-orange-500 hover:bg-blue-600 text-white font-semibold">Save</button>
+            <button type="button" className="px-6 py-2 rounded-md bg-gray-500 hover:bg-gray-600 text-white font-semibold" onClick={onClose}>Cancel</button>
           </div>
         </form>
         {showSuccess && (
-          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-md">
+          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-md text-center">
             Settings updated successfully!
           </div>
         )}
