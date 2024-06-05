@@ -63,7 +63,7 @@ public class FormationController {
         Formation formation1 = formationService.updateFormation(id, formation);
 
         if (formation1 != null) {
-            return new ResponseEntity<>(formation1, HttpStatus.OK);
+            return  ResponseEntity.status(HttpStatus.OK).body(formation1);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
