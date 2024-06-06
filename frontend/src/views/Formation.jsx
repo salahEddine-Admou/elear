@@ -109,6 +109,9 @@ const Formation = (onAdd) => {
       });
     
       if (confirmation.isConfirmed) {
+        const updatedCourses = coursesM.filter(course => course.id !== id);
+          setCoursesM(updatedCourses);
+    
         // Suppression de la formation (assurez-vous que deleteFormation est asynchrone et retourne une réponse correcte)
         const response = await deleteFormation(id);
     
@@ -116,9 +119,7 @@ const Formation = (onAdd) => {
           console.log(`Formation with id: ${id} deleted successfully`);
     
           // Rafraîchir la liste des formations après la suppression
-          const updatedCourses = courses.filter(course => course.id !== id);
-          setCourses(updatedCourses);
-    
+          
           Swal.fire({
             title: 'Supprimé !',
             text: 'La formation a été supprimée avec succès.',
@@ -129,7 +130,7 @@ const Formation = (onAdd) => {
     
           // Actualiser automatiquement la page après la suppression
           setTimeout(() => {
-            window.location.reload();
+          //  window.location.reload();
           }, 30);
         } else {
           console.error(`Failed to delete formation with id: ${id}: ${response.message}`);
@@ -196,7 +197,11 @@ const Formation = (onAdd) => {
     setFormationId();
     setFormationDetails({});
   };
-
+  const handleFormationUpdate = (updatedFormation) => {
+    setCoursesM(coursesM.map(formation => {
+      return formation.id === updatedFormation.id ? updatedFormation : formation;
+    }));
+  };
 
 
   if (error) return <div>Error: {error}</div>;
@@ -267,7 +272,8 @@ const Formation = (onAdd) => {
         <ModifyFormationModal
         isOpen={isOpen}
         onClose={handleCloseModal}
-        formationDetails={formationDetails}     
+        formationDetails={formationDetails}    
+        onUpdate={handleFormationUpdate} // Passing the update handler 
         />
       )}
       </div>

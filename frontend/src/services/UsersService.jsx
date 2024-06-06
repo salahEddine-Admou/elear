@@ -213,7 +213,7 @@ export const updateFormation = async (id,dataa) => {
             const data = await response.json(); // Convertit la réponse JSON en objet JavaScript
             console.log('Formation updated successfully');
             
-            return { status: 'success', message: 'formation updated successfully' };
+            return { status: 'success', message: 'formation updated successfully', data: data };
 
         }     
                 // Succès de la mise à jour

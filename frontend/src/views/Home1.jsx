@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom"; // Importez useNavigate
 import img from '../images/img.png';
 import { getFormationsCurrent, getFormationsMore, inscription, getUserFromToken} from '../services/UsersService';
-  import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 
 
@@ -19,6 +19,10 @@ const Home1 = () => {
   const [name, setName] = useState('');
   const [showSuccess, setShowSuccess] = useState(false); 
   const navigate = useNavigate();
+  
+  const [someState, setSomeState] = useState(null);
+  const [temporaryData, setTemporaryData] = useState(null);
+  
   useEffect(() => {
     const fullName = localStorage.getItem("fullName")
     if (fullName) {
@@ -90,73 +94,103 @@ const Home1 = () => {
         navigate('/modules');
     };
 
-    const handleClickAcces = async (trainingTitle) => {
-      try {
-        // Appel à la fonction inscription pour tenter d'inscrire l'utilisateur au cours
-        const response = await inscription(trainingTitle);
-        if (response.status === 'success') {
-          const { formation, state, progress } = response.data;
-          // Affichage d'une boîte de dialogue avec les détails du cours
-          Swal.fire({
-            title: `Cours: ${formation.title}`,
-            html: `
-              <a>${formation.description}</a>
-              <div style="text-align: left;">
-                <p><strong>Détails du cours:</strong></p>
-                <li><strong>- Domaine:</strong> ${formation.domaine}</li>
-                <li><strong>- Langue:</strong> ${formation.langue}</li>
-                <li><strong>- Localisation:</strong> ${formation.localisation}</li>
-              </div>
-            `,
-            confirmButtonText: 'Enroll Now',
-            showCloseButton: true
-          }).then((result) => {
-            // Vérification si l'utilisateur a cliqué sur "Enroll Now"
-            if (result.isConfirmed) {
-              // L'utilisateur a confirmé l'inscription
-              const formationData = {
-                id: formation.id,
-                title: formation.title,
-                domaine: formation.domaine,
-                description: formation.description,
-                photo: formation.photo,
-                langue: formation.langue,
-                localisation: formation.localisation,
-                modules: formation.modules.map(module => ({
-                  id: module.id,
-                  title: module.title,
-                  stateM: module.stateM,
-                  subtitles: module.subtitles
-                })),
-                state: state,
-                progress: progress
-              };
-              // Mise à jour des états pour ajouter le cours et supprimer le cours en cours de l'affichage des cours disponibles
-              setCourses(prevCourses => [...prevCourses, formationData]);
-              setCoursesM(prevCoursesM => prevCoursesM.filter(course => course.title !== trainingTitle));
-            } else if (result.dismiss === Swal.DismissReason.close) {
-              // L'utilisateur a annulé l'inscription en cliquant sur le bouton de fermeture
-              console.log('Inscription annulée par l\'utilisateur.');
-              // Vous pouvez ajouter ici toute logique supplémentaire pour annuler l'inscription
-              // Par exemple, envoyer une demande au serveur pour annuler l'inscription enregistrée.
-              // Ou simplement ne rien faire, si aucune action n'est requise pour annuler l'inscription.
-            }
-          });
-        } else {
-          console.error('Failed:', response.message);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-    
-
-    
-    
-  
+ 
   const handleSuccessClose = () => {
     setShowSuccess(false);
   };
+  const handleClickAcces = async (trainingTitle) => {
+    try {
+        const foundCourse = coursesM.find(course => course.title === trainingTitle);
+        //const response = await inscription(trainingTitle);
+        console.log(foundCourse)
+
+
+        const result = await Swal.fire({
+            title: `Cours: ${foundCourse.title}`,
+            html: `
+          <a>${foundCourse.description}</a>
+          <div style="text-align: left;">
+            <p><strong>Détails du cours:</strong></p>
+            <li><strong>Domaine:</strong> ${foundCourse.domaine}</li>
+            <li><strong>Langue:</strong> ${foundCourse.langue}</li>
+            <li><strong>Localisation:</strong> ${foundCourse.localisation}</li>
+          </div>
+        `,
+            showCancelButton: true,
+            confirmButtonText: "Enroll",
+            cancelButtonText: "Non, annuler",
+            cancelButtonColor: "#d3d3d3",
+        });
+
+        if (result.isConfirmed) {
+            // Si l'utilisateur confirme, inscrivez-le au cours
+            const inscriptionResult = await inscription(trainingTitle);
+
+            if (inscriptionResult.status === 'success') {
+                // Inscription réussie
+                const { formation, state, progress } = inscriptionResult.data;
+                const formationData = {
+                    id: formation.id,
+                    title: formation.title,
+                    domaine: formation.domaine,
+                    description: formation.description,
+                    photo: formation.photo,
+                    langue: formation.langue,
+                    localisation: formation.localisation,
+                    modules: formation.modules.map(module => ({
+                        id: module.id,
+                        title: module.title,
+                        stateM: module.stateM,
+                        subtitles: module.subtitles
+                    })),
+                    state: state,
+                    progress: progress
+                };
+
+                setCourses(prevCourses => [...prevCourses, formationData]);
+                setCoursesM(prevCoursesM => prevCoursesM.filter(course => course.title !== trainingTitle));
+
+                Swal.fire({
+                    title: "Inscription réussie !",
+                    icon: "success",
+                    showConfirmButton: false 
+                });
+            } else {
+                // Erreur lors de l'inscription
+                Swal.fire({
+                    title: "Erreur",
+                    text: "Erreur lors de l'inscription au cours : " + inscriptionResult.message,
+                    icon: "error",
+                });
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // L'utilisateur a cliqué sur "Non, annuler"
+            handleCancel();
+        }
+    } catch (error) {
+        console.error('Erreur lors de la confirmation de l\'inscription:', error);
+        Swal.fire({
+            title: "Erreur",
+            text: "Une erreur est survenue lors de l'inscription. Veuillez réessayer plus tard.",
+            icon: "error",
+        });
+    }
+};
+
+  
+  const handleCancel = () => {
+    console.log("Annulation de l'inscription");
+    Swal.fire({
+      title: "Annulation",
+      text: "Inscription annulée.",
+      icon: "info",
+      showConfirmButton: false,
+    });
+  };
+  
+
+
+  
  // if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   const visibleTrainings = showAllCurrent ? courses : courses.slice(0, 3);

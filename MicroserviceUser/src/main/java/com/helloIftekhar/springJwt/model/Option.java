@@ -4,13 +4,9 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-import java.util.List;
-@Document(collection = "Question")
 @Data
-public class Question {
+@Document(collection = "Option")
+public class Option {
     private String id;
-    private String questionText;
-    @DocumentReference(collection = "Option")
-    private List<Option> options;
-    private int correctOption;
+    private String text;
 }

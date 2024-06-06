@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -62,7 +63,7 @@ public class FormationController {
         Formation formation1 = formationService.updateFormation(id, formation);
 
         if (formation1 != null) {
-            return new ResponseEntity<>(formation1, HttpStatus.OK);
+            return  ResponseEntity.status(HttpStatus.OK).body(formation1);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -267,5 +268,53 @@ System.out.println(module1);
         String s = formationService.getNotes(idUser,idFormation);
         System.out.println(s);
         return s;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    @PostMapping(value = "/Quiz/{ModuleId}")
+    public ResponseEntity<?> createQuiz(@RequestBody Quiz quiz,@PathVariable String ModuleId) {
+        Quiz createdQuiz = formationService.createQuiz(quiz,ModuleId);
+        if(createdQuiz==null){
+            String message = "erreur de quiz";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", message));
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.OK).body(createdQuiz);
+        }
+    }
+
+    @PostMapping("/Quiz/Question/{IdQuiz}")
+    public ResponseEntity<?> createQuestionWithOptions(@RequestBody Question request, @PathVariable String IdQuiz) {
+        try {
+            Question question = formationService.createQuestion(
+                    request.getQuestionText(),
+                    request.getOptions().stream().map(Option::getText).collect(Collectors.toList()),
+                    IdQuiz
+
+            );
+            return ResponseEntity.ok(question);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+        }
+    }
+
+
+    @PostMapping("/score/{quizId}")
+    public ResponseEntity<?> calculateQuizScore(@PathVariable String quizId, @RequestBody List<Integer> answers) {
+        try {
+            int score = formationService.calculateScore(quizId, answers);
+            return ResponseEntity.ok().body(score);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 }

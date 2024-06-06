@@ -5,12 +5,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
-@Document(collection = "Question")
+
+@Document(collection = "TestFinal")
 @Data
-public class Question {
+public class TestFinal {
     private String id;
-    private String questionText;
-    @DocumentReference(collection = "Option")
-    private List<Option> options;
-    private int correctOption;
+    private String title;
+    @DocumentReference(collection = "Question")
+    private List<Question> questions;
+    private int timeLimit;
+    private double passingScore;
 }
