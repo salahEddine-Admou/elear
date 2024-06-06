@@ -14,9 +14,13 @@ import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
 import Certificats from './views/Certificats';
+<<<<<<< HEAD
 
 import AjoutFormation from './views/ajoutFormation';
 
+=======
+import AjoutFormation from "./views/ajoutFormation";
+>>>>>>> 738f3d987ae7fc56a11d346ec51cd4452e1e0fd1
 import Par from "./views/UserCours"
 import FormationInput from "./views/FormationInput";
 import Settings from './views/Settings';
