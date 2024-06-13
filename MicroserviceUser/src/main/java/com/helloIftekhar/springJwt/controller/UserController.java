@@ -52,6 +52,19 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+
+    @DeleteMapping("/user/{ids}")
+    public ResponseEntity<String> deleteUsersByIds(@PathVariable List<String> ids) {
+        for (String id : ids) {
+            if (userService.existsById(id)) {
+                userService.deleteUserById(id);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 }
 
 
