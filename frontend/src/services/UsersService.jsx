@@ -53,34 +53,36 @@ export const deleteUser = async (userId) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
-export const deleteSelectedUsers = async (userIds) => {
-    const api = `http://localhost:8080/users/delete/${userIds}`; // API URL
+export const deleteUsers = async (userIds) => {
     const token = localStorage.getItem("userToken");
-    
+    console.log(token);
+    if (!token) {
+        console.error("Token not found in localStorage");
+        return { status: 'error', message: 'Token not found' };
+    }
+
     try {
+        const api = `http://localhost:8080/users/user/${userIds}`;
         const response = await fetch(api, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
-            // body: JSON.stringify({ userIds }) // Sending the user IDs in the body
+            }
         });
 
         if (response.ok) {
-            // Succès de la suppression
-            console.log('User deleted successfully');
-            return { status: 'success', message: 'User deleted successfully' };
+            console.log('Users deleted successfully');
+            return { status: 'success', message: 'Users deleted successfully' };
         } else {
-            console.error('HTTP-Error:', response.status);
-            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+            console.error('HTTP-Error:', response.status, response.statusText);
+            return { status: 'error', message: `HTTP-Error: ${response.status} ${response.statusText}` };
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
-        return { status: 'error', message: `Error fetching data: ${error}` };
+        console.error("Error fetching data:", error.message);
+        return { status: 'error', message: `Error fetching data: ${error.message}` };
     }
-};
-
+}
 export const addUser = async (user) => {
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
     const api = `http://localhost:8080/users/add`;

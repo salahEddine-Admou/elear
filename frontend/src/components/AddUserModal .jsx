@@ -89,7 +89,6 @@ const handleSubmit = async (e) => {
   });
 };
 
-  // Handle form submission
   const handleSubmit2 = async (e) => {
 
     e.preventDefault();
@@ -97,7 +96,6 @@ const handleSubmit = async (e) => {
 
     try {
       
-      // Appel à votre fonction API pour ajouter un utilisateur
       const response = await addUser(user);
       if (response.status === 'success') {
         Add(user);
