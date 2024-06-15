@@ -5,7 +5,7 @@ import Side from '../components/sidebarcours';
 import { AiOutlineLeft } from "react-icons/ai";
 import "../App.css";
 
-const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,handleClick}) => {
+const ParcourirModules = ({handleSubSelect,selectedContenu,selectedContenu2,handleClick,Test}) => {
   const [duration, setDuration] = useState('');
   const [activeTab, setActiveTab] = useState('notes');
    const [note, setNote] = useState(

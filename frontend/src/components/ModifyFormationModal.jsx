@@ -84,7 +84,7 @@ const ModifyFormationModal = ({ isOpen, onClose,formationDetails,onUpdate }) => 
           // Fermer le modal après un délai
           setTimeout(() => {
             onClose();
-            window.location.reload()
+        
           }, 3000);
         } else {
           // Afficher un message d'erreur

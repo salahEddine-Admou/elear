@@ -8,7 +8,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Settings from '../views/Settings';
 import { getUserById, getUserFromToken } from '../services/UsersService';
 import { FaAngleDown } from "react-icons/fa6";
-
+import Swal from 'sweetalert2';
 
 const navigation = [];
 
@@ -47,7 +47,7 @@ export default function NavBar() {
     fetchUserProfile();
   }, []);
 
-  const handleSettingsClick = async () => {
+  const handleSettingsClick = async (e) => {
     try {
       const token = localStorage.getItem("userToken");
       if (!token) {
@@ -66,9 +66,14 @@ export default function NavBar() {
         navigate('/login');
       }
     }
+  
   };
 
-  const logout = async () => {
+  const logout = async (e) => {
+    
+
+    // Vérifie si 'st' dans localStorage est true
+   
     const api = `http://localhost:8080/logOut`; // Logout URL
 
     try {
@@ -83,6 +88,7 @@ export default function NavBar() {
       if (response.ok) {
         console.log('Logout successful');
         localStorage.removeItem("userToken"); // Remove token on successful logout
+        
         navigate('/'); // Redirect to login
       } else {
         console.error('HTTP-Error:', response.status);
@@ -92,16 +98,32 @@ export default function NavBar() {
       console.error("Error fetching data:", error);
       alert(`Error: ${error.message}`);
     }
-  };
+  
 
+  };
+  const handleNavigation = (e) => {
+    console.log(localStorage.getItem('st'));
+    // Vérifie si 'st' dans localStorage est true
+    if (localStorage.getItem('st') === "true") {
+        e.preventDefault(); // Empêche la navigation
+        Swal.fire({
+            title: 'Attention!',
+            text: 'Vous ne pouvez pas quitter cette page pendant que le test est en cours.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+    } else {
+        navigate('/Home/home1'); // Navigate programmatically
+    }
+};
   return (
     <Disclosure as="nav" className="bg-slate-950 fixed top-0 left-0 right-0 z-10">
       {({ Open }) => (
         <>
           <div className="mx-auto max-w-9xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
-              <Link to="/home" className="flex flex-shrink-0 items-center m-6">
-                <img className="h-9 w-auto" src={Orangelogo} alt="Orange" />
+            <a onClick={handleNavigation} className="flex flex-shrink-0 items-center m-6 cursor-pointer">
+                <img className="h-9 w-auto" src={Orangelogo} alt="Orange"  />
                 <div className="text-white ml-2 text-sm">
                   <span className="font-bold">
                     Orange Digital
@@ -109,7 +131,7 @@ export default function NavBar() {
                     Center
                   </span>
                 </div>
-              </Link>
+              </a>
 
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* Profile dropdown */}

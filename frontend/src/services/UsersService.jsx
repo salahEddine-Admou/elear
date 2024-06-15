@@ -880,6 +880,37 @@ export const deleteModule = async (moduleId) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 };
+export const deleteInscr = async () => {
+    const idf = localStorage.getItem("selectedTrainingId");
+    const idU = localStorage.getItem("userId");
+    // Supposons que l'API nécessite l'ID de l'utilisateur dans l'URL
+    const api = `http://localhost:8080/formations/DeleteInscription/${idf}/${idU}`;
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+    try {
+        const response = await fetch(api, {
+            method: 'DELETE', // Méthode HTTP
+            headers: {
+                'Authorization': `Bearer ${token}`, // En-tête d'autorisation avec le token
+                'Content-Type': 'application/json' // Type de contenu (facultatif, mais recommandé)
+            }
+        });
+
+        if (response.ok) { // Vérifie si le statut de la réponse est 2xx
+            // Succès de la suppression
+            console.log(' deleted successfully');
+            return { status: 'success', message: 'deleted successfully' };
+        } else {
+            // Gestion des réponses non réussies
+            console.error('HTTP-Error:', response.status);
+            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+        }
+    } catch (error) {
+        // Gestion des erreurs de la requête
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+};
 export const deleteSubmodule = async (subid, moduleId) => {
     // Supposons que l'API nécessite l'ID de l'utilisateur dans l'URL
     const api = `http://localhost:8080/formations/DeleteSubModule/${moduleId}/${subid}`;
@@ -1069,5 +1100,77 @@ export const getNotes= async () => {
         console.error("Failed to fetch data:", error);
         // Rethrow the error to be handled by the calling component
         throw error;
+    }
+};
+export const getTest = async () => {
+    const TrainingId = localStorage.getItem("selectedTrainingId");
+    const api = `http://localhost:8080/formations/getTest/${TrainingId}`;
+    const token = localStorage.getItem("userToken");
+
+
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+
+
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+export const setEndFormation = async (score) => {
+    const FormationId = localStorage.getItem("selectedTrainingId");
+    const id = localStorage.getItem("userId");
+    // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
+    const api = `http://localhost:8080/formations/setEndFormation/${FormationId}/${id}/${score}`;
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+    try {
+        const response = await fetch(api, {
+            method: 'POST', // Méthode HTTP pour ajouter des données
+            headers: {
+                'Authorization': `Bearer ${token}`, // En-tête d'autorisation avec le token
+                'Content-Type': 'application/json' // Spécifier le type de contenu des données envoyées
+            },
+            //body: JSON.stringify(note) // Convertit l'objet utilisateur en chaîne JSON pour l'envoi
+        });
+
+        if (response.ok) { // Vérifie si le statut de la réponse est 2xx
+            // Succès de l'ajout
+            console.log('End added successfully');
+          //  const data = await response.json(); // Optionnel, dépend de si vous avez besoin de la réponse
+            return { status: 'success', message: 'End added successfully' };
+        } else {
+            // Gestion des réponses non réussies
+            console.error('HTTP-Error:', response.status);
+            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+        }
+    } catch (error) {
+        // Gestion des erreurs de la requête
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
     }
 };

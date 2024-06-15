@@ -217,7 +217,7 @@ const Formation = (onAdd) => {
                     <div className="flex flex-wrap -mx-2">
                     {visibleTrainings2.map((training, i) => (
         <div key={i} className="p-2 w-full sm:w-1/2 lg:w-2/6">
-        <a href="#" className="inline-block w-full h-full bg-white border overflow-hidden">
+        <a  className="inline-block w-full h-full bg-white border overflow-hidden">
             <div className="shadow-lg">
                 <img src={training.photo} alt="Training" className="w-full object-cover h-48" loading="lazy" />
                 <div className="p-3 flex flex-col">

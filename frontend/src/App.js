@@ -7,17 +7,18 @@ import Layouts from './layout/Layouts';
 import Notification from './views/Notification';
 import Email from './views/Email';
 import Test from './views/Test';
-import Dashbord from './views/Dashbord';
+import Dashboard from './views/Dashboard';
 import Formation from './views/Formation';
 import Parcourirmodules from './views/ParcourirModules';
 import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
 import Certificats from './views/Certificats';
-import AjoutFormation from "./views/ajoutFormation";
+import AjoutFormation from "./views/AjoutFormation";
 import Par from "./views/UserCours"
 import FormationInput from "./views/FormationInput";
 import Settings from './views/Settings';
+import TestFinal from './views/TestFinal';
 
 
 function App() {
@@ -35,13 +36,13 @@ function App() {
     <Routes>
       <Route path="/Home" element={<Layouts />}>
       <Route path="trainings" element={<Training />} />
-        <Route index element={userRole === 'ADMIN' ? <Dashbord /> : <HomeC />} />
+        <Route index element={userRole === 'ADMIN' ? <Dashboard /> : <HomeC />} />
         <Route path="notification" element={<Notification />} />
         <Route path="email" element={<Email />} />
         <Route path="test" element={<Test />} />
         <Route path="users" element={<Home />} />
         <Route path="formation" element={<Formation />} />
-        <Route path="dashbord" element={<Dashbord />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="Certificats" element={<Certificats />} />
         <Route path="homeC" element={<HomeC />} />
         <Route path="home1" element={<Home1 />} />
@@ -52,6 +53,7 @@ function App() {
       <Route path='AjoutModuleFormation' element={<AjoutFormation />} />
       <Route path='FormationInput' element={<FormationInput />} />
       <Route path="settings" element={<Settings />} />
+      <Route path="TestFinal" element={<TestFinal />} />
     </Routes>
   </BrowserRouter>
           

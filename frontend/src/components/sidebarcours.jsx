@@ -3,20 +3,25 @@ import "../styles/sidebarcourse.css";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { BsFillPlayCircleFill } from "react-icons/bs";
 import { FaReadme } from "react-icons/fa6";
-const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2,submoduleBoldStatus }) => {
+import Swal from 'sweetalert2';
+const Sidebarcours = ({ modules, TestTitle, onVideoSelect , onVideoSelect2,submoduleBoldStatus ,setState}) => {
     const [selectedVideo, setSelectedVideo] = useState(null);
   const [activeTab, setActiveTab] = useState('notes');
   const [selectedSubmodule, setSelectedSubmodule] = useState(null);
   const [openModules, setOpenModules] = useState(new Set());
   const [submoduleDurations, setSubmoduleDurations] = useState({});  
+  const [Test, setTest] = useState({
+  });  
  
   useEffect(() => {
     if (modules.length > 0) {
+
       for (const module of modules) {
         if (module.submodules.length > 0 && selectedSubmodule === null) {
           const firstSubmodule = module.submodules[0]; 
           setSelectedSubmodule(firstSubmodule.title); 
           selectContenu(firstSubmodule, module.id);
+          setState("sub");
           toggleModule(module.id);
           setActiveTab(firstSubmodule.title)
           break; 
@@ -39,14 +44,29 @@ const Sidebarcours = ({ modules, onVideoSelect , onVideoSelect2,submoduleBoldSta
       return newOpenModules;
     });
   };
-
+  const toggleTest = () => {
+   // onTestSe(lect(Test);
+   
+    setState("test");
+  };
 
 
 
  const selectContenu = (submodule, module) => {
+  const st = localStorage.getItem('st');
+  if(st === ''){
     setSelectedVideo(submodule);
     onVideoSelect(submodule);
     onVideoSelect2(module);
+    setState("sub");
+  }else{
+    Swal.fire({
+      title: 'Attention!',
+      text: 'Vous ne pouvez pas quitter cette page pendant que le test est en cours.',
+      icon: 'warning',
+      confirmButtonText: 'OK'
+    });
+  }
    };
 
 
@@ -208,6 +228,9 @@ const formatDuration = (seconds) => {
           </li>
         ))}
       </ul>
+      <div className="module-container font-bold" onClick={() => toggleTest()}>
+      {TestTitle}
+        </div>
     </div>
   );
 };

@@ -133,7 +133,7 @@ const Settings = ({ onClose, user: initialUser }) => {
       <div className="container mx-auto max-w-4xl p-8 bg-white shadow-md rounded-lg">
         <nav className="text-black-600 mt-10">
           <ol className="list-reset flex">
-            <li><a href="/home" className="text-orange-600 hover:underline">Home</a></li>
+            <li><a href="/Home/home1" className="text-orange-600 hover:underline">Home</a></li>
             <li><span className="mx-2">/</span></li>
             <li className="text-black-500">Settings</li>
           </ol>

@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { TimerProvider } from './views/TimerContext';  // Corrected import path
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <TimerProvider>
+      <App />
+    </TimerProvider>
   </React.StrictMode>
 );
 

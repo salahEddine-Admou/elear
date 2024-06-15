@@ -17,7 +17,7 @@ const navLinks = [
   {
     name: "Dashboard",
     icon: HomeFilled,
-    path: "/Home/dashbord"
+    path: "/Home/dashboard"
   },
   {
     name: "Users",

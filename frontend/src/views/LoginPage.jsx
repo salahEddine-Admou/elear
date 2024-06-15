@@ -37,7 +37,7 @@ function LoginPage() {
                 localStorage.setItem('fullName', fullName);
 
                 if (message === 'ADMIN') {
-                    navigate('/Home/dashbord');
+                    navigate('/Home/dashboard');
                 } else {
                     navigate('/Home/home1');
                 }

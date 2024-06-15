@@ -20,6 +20,7 @@ const Home1 = () => {
   const [showSuccess, setShowSuccess] = useState(false); 
   const navigate = useNavigate();
   useEffect(() => {
+    
     const fullName = localStorage.getItem("fullName")
     if (fullName) {
       setName(fullName);
@@ -46,6 +47,15 @@ const Home1 = () => {
           progress: course.progress
         }));
         setCourses(formations || []);
+        if( localStorage.getItem('fois') === ""){
+          localStorage.setItem('fois', "0");
+        }
+        if (formations.length > 0) {
+          localStorage.setItem('name', "Final Test - "+formations[0].title);
+          console.log(formations[0].title);
+        } else {
+          console.log('No courses available.');
+        }
         console.log(courses)
       } catch (err) {
         console.error("An error occurred while fetching courses:", err);
@@ -134,6 +144,11 @@ const Home1 = () => {
               // Mise à jour des états pour ajouter le cours et supprimer le cours en cours de l'affichage des cours disponibles
               setCourses(prevCourses => [...prevCourses, formationData]);
               setCoursesM(prevCoursesM => prevCoursesM.filter(course => course.title !== trainingTitle));
+ if(formationData.length>0){
+  localStorage.setItem('name', "Final Test - "+formationData.title);
+ }
+                
+
             } else if (result.dismiss === Swal.DismissReason.close) {
               // L'utilisateur a annulé l'inscription en cliquant sur le bouton de fermeture
               console.log('Inscription annulée par l\'utilisateur.');
