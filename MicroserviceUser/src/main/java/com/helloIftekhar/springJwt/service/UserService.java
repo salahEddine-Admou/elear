@@ -72,5 +72,15 @@ public class UserService implements IUserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+
+    public boolean existsById(String userId) {
+        return userRepository.existsById(userId);
+    }
+
+    public void deleteUserById(String userId) {
+        userRepository.deleteById(userId);
+    }
+
+
 }
 

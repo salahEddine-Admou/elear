@@ -17,4 +17,6 @@ public class Certificat {
     private Binary pdfData;
     private String stateCert;
     private Integer progress;
+    private Integer score;
+
 }

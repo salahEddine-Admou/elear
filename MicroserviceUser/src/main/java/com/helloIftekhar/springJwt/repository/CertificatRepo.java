@@ -19,4 +19,6 @@ public interface CertificatRepo extends MongoRepository<Certificat, String> {
 
     @Query("{'user.id' : ?0, 'formation.id' : ?1, 'stateCert' : ?2  }")
     Certificat findByUserFormationState(String userid, String formationid, String state);
+    @Query(value = "{'formation.id': ?0, 'user.id': ?1}", delete = true)
+    void deleteByFormationUser(String formationId,String userId);
 }

@@ -24,6 +24,8 @@ public class Formation {
     private String level;
     @DocumentReference(collection = "module")
     List<MyModule> modules;
+    @DocumentReference(collection = "TestFinal")
+    TestFinal testFinal;
 
     //@Getter
     //@Setter

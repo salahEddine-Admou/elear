@@ -100,6 +100,15 @@ public class FormationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @DeleteMapping("/DeleteInscription/{idFormation}/{idUser}")
+    public ResponseEntity<Void> deleteFormation(@PathVariable String idFormation,@PathVariable String idUser) {
+        boolean deleted = formationService.DeleteInscrption(idUser,idFormation);
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @DeleteMapping("DeleteModule/{idModule}/{idFormation}")
     public ResponseEntity<Void> deleteModule(@PathVariable String idModule,@PathVariable String idFormation) {
         boolean deleted = formationService.deleteModule(idModule,idFormation);
@@ -306,6 +315,20 @@ System.out.println(module1);
             return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
         }
     }
+    @PostMapping("/TestFinal/Question/{IdTest}")
+    public ResponseEntity<?> createQuestionWithOptions2(@RequestBody Question request, @PathVariable String IdTest) {
+        try {
+            Question question = formationService.createQuestionTest(
+                    request.getQuestionText(),
+                    request.getOptions().stream().map(Option::getText).collect(Collectors.toList()),
+                    IdTest
+
+            );
+            return ResponseEntity.ok(question);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+        }
+    }
 
 
     @PostMapping("/score/{quizId}")
@@ -316,5 +339,19 @@ System.out.println(module1);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/addTest/{FormationId}")
+    public ResponseEntity<TestFinal> addTestFinal(@RequestBody TestFinal testFinal,@PathVariable String FormationId) {
+        TestFinal createdTestFinal = formationService.addTestFinal(testFinal,FormationId);
+        return new ResponseEntity<>(createdTestFinal, HttpStatus.CREATED);
+    }
+    @GetMapping("/getTest/{idFormation}")
+    public TestFinal getTestFinal(@PathVariable String idFormation) {
+        return formationService.getTestFinal(idFormation);
+    }
+    @PostMapping("/setEndFormation/{idFormation}/{idUser}/{score}")
+    public void setEndFormation(@PathVariable String idFormation,@PathVariable String idUser,@PathVariable Integer score) {
+         formationService.setEndFormation(idFormation,idUser,score);
     }
 }

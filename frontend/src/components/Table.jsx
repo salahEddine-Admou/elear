@@ -5,11 +5,11 @@ import ModifyUserModal from './ModifyUserModal';
 import "../styles/table.css"
 import Swal from 'sweetalert2';
 
-const UserTable = ({ searchValue , user}) => {
+const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [checkedIndices, setCheckedIndices] = useState(new Set());
+
 
 
   useEffect(() => {
@@ -105,11 +105,7 @@ const UserTable = ({ searchValue , user}) => {
       showCancelButton: true,
       confirmButtonText: 'Yes, Delete it',
       cancelButtonText: 'Cancel',
-      customClass: {
-        popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
-        confirmButton: 'confirm-button-class', // Custom class for the confirm button
-    cancelButton: 'cancel-button-class' // Custom class for the cancel button
-      }
+    
     }).then(async (result) => {
       if (result.isConfirmed) {
         setData(data.filter(user => user.id !== userId));

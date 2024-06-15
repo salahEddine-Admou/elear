@@ -84,7 +84,6 @@ const ModifyFormationModal = ({ isOpen, onClose,formationDetails,onUpdate }) => 
           // Fermer le modal après un délai
           setTimeout(() => {
             onClose();
-        
           }, 3000);
         } else {
           // Afficher un message d'erreur
@@ -173,11 +172,15 @@ const ModifyFormationModal = ({ isOpen, onClose,formationDetails,onUpdate }) => 
                  <input type="text" name="date" value={formData.date} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
                </div>
                <div className="w-1/2 pr-2">
-                 <label className="font-bold text-sm">
-                   Level<span className="text-orange-500">*</span>
-                 </label><br />
-                 <input type="text" name="level" value={formData.level} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
-               </div>
+              <label className="font-bold text-sm">
+                Level<span className="text-orange-500">*</span>
+              </label><br />
+              <select name="level" value={formData.level} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
                <div className="w-1/2 pl-2">
                  <label className="font-bold text-sm">
                    Description<span className="text-orange-500">*</span>

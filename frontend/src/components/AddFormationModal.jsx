@@ -56,7 +56,6 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
                 popup: 'sweetalert-popup-success' // Classe personnalisée pour le succès
               }
             });
-  
             setShowSuccess(true); // Affiche le message de succès
             setTimeout(() => {
               setShowSuccess(false);
@@ -194,11 +193,15 @@ const AddFormationModal = ({ isOpen, onClose , onAddFormation }) => {
                 <input type="text" name="date" value={formation.date} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
               </div>
               <div className="w-1/2 pr-2">
-                <label className="font-bold text-sm">
-                  Level<span className="text-orange-500">*</span>
-                </label><br />
-                <input type="text" name="level" value={formation.level} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
-              </div>
+            <label className="font-bold text-sm">
+              Level<span className="text-orange-500">*</span>
+            </label><br />
+            <select name="level" value={formation.level} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
               <div className="w-1/2 pl-2">
                 <label className="font-bold text-sm">
                   Description<span className="text-orange-500">*</span>

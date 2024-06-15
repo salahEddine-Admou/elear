@@ -1,5 +1,8 @@
 package com.helloIftekhar.springJwt.service;
-
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import com.helloIftekhar.springJwt.DTO.ProgressDTO;
 import com.helloIftekhar.springJwt.model.*;
 import com.helloIftekhar.springJwt.repository.*;
@@ -46,6 +49,8 @@ public class FormationService {
     private QuestionRepository questionRepository ;
     @Autowired
     private OptionRepository optionRepository ;
+    @Autowired
+    private TestFinalRepository testFinalRepository ;
 
     //// formations
     public Formation CreateFormation(Formation formation) {
@@ -126,22 +131,21 @@ public class FormationService {
     public List<Formation> getAllFormationsMore(String userId) {
         // Get all available formations with complete modules and submodules
         List<Formation> allFormations = getAllFormationsWithModulesAndSubmodules();
-
         // Get current formations for the user
         List<Formation> currentFormations = getAllFormationsCurrent(userId).stream()
                 .map(InscriptionFormation::getFormation)
                 .collect(Collectors.toList());
-
+        System.out.println(currentFormations);
         // Get finished formations for the user
         List<Formation> finishedFormations = getAllFormationsFinish(userId).stream()
                 .map(InscriptionFormation::getFormation)
                 .collect(Collectors.toList());
-
+        System.out.println(finishedFormations);
         // Combine the lists of current and finished formations to filter them out
         Set<Formation> excludedFormations = new HashSet<>();
         excludedFormations.addAll(currentFormations);
         excludedFormations.addAll(finishedFormations);
-
+        System.out.println(excludedFormations);
         // Filter out formations that the user is currently registered for or has finished
         return allFormations.stream()
                 .filter(formation -> !excludedFormations.contains(formation))
@@ -150,6 +154,7 @@ public class FormationService {
 
     private List<Formation> getAllFormationsWithModulesAndSubmodules() {
         List<Formation> formations = formationRepository.findAll();
+
         return formations.stream()
                 .filter(formation -> formation.getModules() != null && !formation.getModules().isEmpty())
                 .filter(formation -> formation.getModules().stream()
@@ -160,6 +165,8 @@ public class FormationService {
                         )
                 )
                 .collect(Collectors.toList());
+
+
     }
 
 
@@ -322,7 +329,7 @@ public class FormationService {
                             System.out.println("Total number of FormationModules: " + countSubmodules);
                             System.out.println("Total number of ModuleSubmodules with state true: " + countSubmodulesTrue);
 
-                                int progressPercentage = (int) Math.round((double) countSubmodulesTrue / countSubmodules * 100);
+                                int progressPercentage = (int) Math.round((double) (countSubmodulesTrue) / (countSubmodules+1) * 100);
                                 inscription.setProgress(progressPercentage);
                                 Certificat c = certificatRepo.findByUserFormation(idUser,inscription.getFormation().getId());
                                 // System.out.println("helooooooooooooo"+c);
@@ -346,6 +353,69 @@ public class FormationService {
             }
         }
         return false;
+    }
+
+
+    public void setEndFormation(String formationId, String idUser, Integer score) {
+        try {
+            // Assuming these repositories are defined and available in your context
+            Optional<User> userOptional = userRepo.findById(idUser);
+            Optional<Formation> formationOptional = formationRepository.findById(formationId);
+            if (!userOptional.isPresent() || !formationOptional.isPresent()) {
+                throw new IllegalArgumentException("User or Formation not found");
+            }
+
+            InscriptionFormation inscriptionFormation = inscriptionFormationRepository.findByUserFormation(idUser, formationId);
+            Certificat certificat = certificatRepo.findByUserFormation(idUser, formationId);
+            if (inscriptionFormation == null || certificat == null) {
+                throw new IllegalStateException("InscriptionFormation or Certificat not found");
+            }
+
+            // Update state to "finish" and progress to 100%
+            inscriptionFormation.setState("finish");
+            inscriptionFormation.setProgress(100);
+            certificat.setStateCert("finish");
+            certificat.setProgress(100);
+            certificat.setScore(score);
+            Binary base64Image = certificat.getPdfData();
+
+            byte[] imageBytes = base64Image.getData();
+            // Decode the base64 image
+            //byte[] imageBytes = Base64.getDecoder().decode(certificat.getPdfData().getData());
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            BufferedImage image = ImageIO.read(bis);
+            bis.close();
+
+            // Add text to the image
+            Graphics2D g2d = image.createGraphics();
+            g2d.setColor(Color.BLACK);
+            g2d.setFont(new Font("Helvetica", Font.BOLD, 20));
+            g2d.drawString("with Score: " , 160, 500); // Adjust position as needed
+            g2d.setColor(Color.BLACK);
+            g2d.setFont(new Font("Helvetica", Font.BOLD, 22));
+            g2d.drawString( score + "%", 300, 500);
+            g2d.dispose();
+
+            // Convert the BufferedImage back to a byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", bos);
+            byte[] newImageBytes = bos.toByteArray();
+            bos.close();
+
+            // Update the certificat's PDF data
+            certificat.setPdfData(new Binary(newImageBytes));
+
+            // Save the updated inscription and certificat records
+            inscriptionFormationRepository.save(inscriptionFormation);
+            certificatRepo.save(certificat);
+
+        } catch (IOException e) {
+            System.err.println("IOException occurred: " + e.getMessage());
+            // Handle the exception or rethrow as needed
+        } catch (Exception e) {
+            System.err.println("An unexpected error occurred: " + e.getMessage());
+            // Handle or log other exceptions
+        }
     }
 
     public List<FormationModule> getModulesForFormation(String formationId, String idUser) {
@@ -570,7 +640,9 @@ public class FormationService {
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("organised by Orange Digital Center Rabat", 160, 420);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
-        g2d.drawString("in duration"+date, 160, 460);
+        g2d.drawString("in duration ", 160, 460);
+        g2d.drawString(date, 260, 460);
+        g2d.drawString("mois", 300, 460);
         g2d.drawString("Mm.Nadia Mrabi", 640, 540);
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("Senior Manager PSE et Orange Digital Center", 640, 580);
@@ -589,6 +661,7 @@ public class FormationService {
 
         return certificatRepo.findByUserState(userId, "current");
     }
+
     public Boolean addCertificat(String userId, String formationId, Integer progress) {
         User user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Formation formation = formationRepository.findById(formationId).orElseThrow(() -> new IllegalArgumentException("Formation not found"));
@@ -604,6 +677,7 @@ public class FormationService {
             newCertificat.setFormation(formation);
             newCertificat.setStateCert("current");
             newCertificat.setProgress(progress);
+            newCertificat.setScore(0);
 
             BufferedImage certImage = generateCertificateImage(user.getFullName(), formation.getTitle(), formation.getDate());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -616,7 +690,10 @@ public class FormationService {
             System.err.println("Error generating certificate image: " + e.getMessage());
             return false;
         }
+
     }
+
+
 
 
 
@@ -668,7 +745,28 @@ public class FormationService {
 
 
 
+    public TestFinal addTestFinal(TestFinal testFinal,String FormationId) {
+        Optional<Formation> formation1 = formationRepository.findById(FormationId);
+        testFinal.setTitle("Final Test - "+formation1.get().getTitle());
+        if (formation1.isPresent()) {
+            TestFinal testFinal1 = testFinalRepository.findByTitle(testFinal.getTitle());
+            if (testFinal1 == null) {
+                Formation existingFormation= formation1.get();
+                TestFinal testFinal2 = testFinalRepository.save(testFinal);
+                existingFormation.setTestFinal(testFinal2);
 
+                formationRepository.save(existingFormation);
+                return testFinal2;}
+            else{
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+
+
+    }
 
 
     public Quiz createQuiz(Quiz quiz,String ModuleId) {
@@ -725,6 +823,35 @@ public class FormationService {
 
         return question;
     }
+    @Transactional
+    public Question createQuestionTest(String text, List<String> optionsTexts, String TestId) {
+        // Créer la question
+        Question question = new Question();
+        question.setQuestionText(text);
+
+        // Créer et sauvegarder chaque option
+        List<Option> options = new ArrayList<>();
+        for (String optionText : optionsTexts) {
+            Option option = new Option();
+            option.setText(optionText);
+            option = optionRepository.save(option);
+            options.add(option);
+        }
+        question.setOptions(options);
+        question = questionRepository.save(question);
+
+        // Associer la question au quiz
+        TestFinal testFinal = testFinalRepository.findById(TestId).orElseThrow(() -> new RuntimeException("Quiz not found with id: " + TestId));
+        List<Question> questions = testFinal.getQuestions();
+        if (questions == null) {
+            questions = new ArrayList<>();
+        }
+        questions.add(question);
+        testFinal.setQuestions(questions);
+        testFinalRepository.save(testFinal);
+
+        return question;
+    }
 
 
     public Quiz getQuiz(String id)  {
@@ -771,6 +898,22 @@ public class FormationService {
         return (int)percentage;
     }
 
+    public TestFinal getTestFinal(String formationId) {
+        Formation formation = formationRepository.findById(formationId).orElseThrow(() -> new RuntimeException("Formation not found"));
+        TestFinal testFinal1 = testFinalRepository.findById(formation.getTestFinal().getId()).orElseThrow(() -> new RuntimeException("TestFinal not found"));
 
-
+        return testFinal1;
+    }
+    public Boolean DeleteInscrption(String userId,String IdFormation) {
+        inscriptionFormationRepository.deleteByFormationUser(IdFormation,userId);
+        certificatRepo.deleteByFormationUser(IdFormation,userId);
+        List<FormationModule> formationModules =formationModuleRep.findAllByUser(userId,IdFormation);
+        for(FormationModule f : formationModules ){
+            formationModuleRep.deleteById(f.getId());
+            for(ModuleSubModule s : f.getModuleSubModules()){
+                moduleSubRep.deleteById(s.getId());
+            }
+        }
+        return true;
+    }
 }
