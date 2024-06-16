@@ -9,7 +9,7 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
-
+  const [stt, setStt ]= useState(false);
 
 
   useEffect(() => {
@@ -24,6 +24,8 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
       });
     }
   }, [user]); 
+ 
+
   
   useEffect(() => {
     

@@ -11,12 +11,14 @@ const Search = () => {
  const [searchValue, setSearchValue] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [filteredValue, setFilteredValue] = useState('');
   const [user, setUser] = useState();
   const [checkedIndices, setCheckedIndices] = useState(new Set());
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null); // or useState("")
-
+  const [deletee, setDeletee] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -56,9 +58,11 @@ const handleDeleteSelectedUsers = async () => {
     });
 
     if (confirmation.isConfirmed) {
-      const selectedUserIds = Array.from(checkedIndices); 
+      const selectedUserIds = Array.from(checkedIndices);
+      console.log(selectedUserIds) 
+      setSelectedUserIds(selectedUserIds)
       const response = await deleteUsers(selectedUserIds);
-
+      setDeletee(true);
       if (response.status === 'success') {
         console.log(`Users with ids: ${selectedUserIds} deleted successfully`);
         Swal.fire({
@@ -144,7 +148,7 @@ const handleDeleteSelectedUsers = async () => {
         </div>
       </div>
       {/* <UserTable searchValue={filteredValue} user={user} /> */}
-      <UserTable searchValue={filteredValue} user={user} checkedIndices={checkedIndices} setCheckedIndices={setCheckedIndices} />
+      <UserTable searchValue={filteredValue} user={user} checkedIndices={checkedIndices} setCheckedIndices={setCheckedIndices}  />
 
       <AddUserModal isOpen={isModalOpen} onClose={closeModal} Add={AddUs} />
     </div>
