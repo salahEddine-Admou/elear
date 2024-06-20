@@ -7,14 +7,14 @@ import Layouts from './layout/Layouts';
 import Notification from './views/Notification';
 import Email from './views/Email';
 import Test from './views/Test';
-import Dashboard from './views/Dashboard';
 import Formation from './views/Formation';
+import Dashboard from './views/Dashboard';
 import Parcourirmodules from './views/ParcourirModules';
 import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
 import Training from './views/Trainings';
 import Certificats from './views/Certificats';
-import AjoutFormation from "./views/AjoutFormation";
+import AjoutFormation from "./views/ajoutFormation";
 import Par from "./views/UserCours"
 import FormationInput from "./views/FormationInput";
 import Settings from './views/Settings';
