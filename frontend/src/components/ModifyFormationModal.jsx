@@ -167,7 +167,7 @@ const ModifyFormationModal = ({ isOpen, onClose,formationDetails,onUpdate }) => 
                </div>
                <div className="w-1/2 pl-2">
                  <label className="font-bold text-sm">
-                   Durée<span className="text-orange-500">*</span>
+                   Durée/mois<span className="text-orange-500">*</span>
                  </label><br />
                  <input type="text" name="date" value={formData.date} onChange={handleChange} className="border-2 border-gray-400 px-2 py-1 w-full mb-4" />
                </div>

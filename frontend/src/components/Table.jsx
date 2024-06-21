@@ -234,8 +234,9 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
         className="custom-table"
         dataSource={filteredData}
         rowClassName={(record) => checkedIndices.has(record.key) ? 'table-row-selected' : '' 
-        
+       
       }
+      pagination={{ pageSize: 5 }}
       />
       {selectedUser && (
         <ModifyUserModal

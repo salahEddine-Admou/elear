@@ -298,8 +298,8 @@ try {
         pauseTimer();
     saveAttemptTime();
     Swal.fire({
-        title: `${title} - Result Retry after 24h you must have >80`,
-        text: `Your score: ${Math.round(scorePercentage)}%`,
+        title: `Retry after 24h `,
+        text: `Your score: ${Math.round(scorePercentage)}% you must have >80%`,
         icon: 'failed',
         confirmButtonText: 'Close'
     }).then((result) => {

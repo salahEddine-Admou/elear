@@ -72,6 +72,7 @@ const AjoutFormation = () => {
     const fetchData2 = async () => {
       try { 
         const modules1 = await getModulesAdmin(); // Supposons que getFormationsMore() soit une fonction qui récupère les données des modules depuis l'API
+        console.log(modules1)
         setModules(modules1 || []);
         console.log("hiiii"+modules1);
       } catch (err) {
