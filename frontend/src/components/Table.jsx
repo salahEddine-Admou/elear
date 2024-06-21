@@ -1,15 +1,19 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Modal, Button, Upload } from 'antd';
 import { getUsers, deleteUser } from '../services/UsersService';
 import ModifyUserModal from './ModifyUserModal';
+import { UploadOutlined } from '@ant-design/icons';
 import "../styles/table.css"
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+import FileUpload from "../components/FileUpload";
 
-const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => {
+const UserTable = ( {searchValue, user, checkedIndices, setCheckedIndices }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [stt, setStt ]= useState(false);
+  const [previewData, setPreviewData] = useState([]);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -98,7 +102,7 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
     }
     setCheckedIndices(updatedIndices);
   };
-
+ 
   const handleDeleteUser = async (userId) => {
     Swal.fire({
       title: 'Are you sure you want to delete this user?',
@@ -139,10 +143,14 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
     {
       title: 'Full Name',
       dataIndex: 'fullName',
+      sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Username',
       dataIndex: 'username',
+      sorter: (a, b) => a.username.localeCompare(b.username),
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Email',
@@ -151,10 +159,14 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
     {
       title: 'Date',
       dataIndex: 'date',
+      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Role',
       dataIndex: 'role',
+      sorter: (a, b) => a.role.localeCompare(b.role),
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Action',
@@ -229,6 +241,9 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
 
   return (
     <div className='w-[95%] m-auto'>
+      <div style={{ marginBottom: 16 }}>
+      <FileUpload />
+      </div>
       <Table
         columns={columns}
         className="custom-table"
@@ -246,6 +261,7 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
           Update={UpdateUser}
         />
       )}
+
     </div>
   );
 };

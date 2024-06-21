@@ -1,4 +1,5 @@
 ﻿import {jwtDecode} from 'jwt-decode';
+import axios from 'axios';
 
 export const getUsers = async () => {
     const api = "http://localhost:8080/users";
@@ -82,7 +83,9 @@ export const deleteUsers = async (userIds) => {
         console.error("Error fetching data:", error.message);
         return { status: 'error', message: `Error fetching data: ${error.message}` };
     }
-}
+};
+
+
 export const addUser = async (user) => {
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
     const api = `http://localhost:8080/users/add`;
