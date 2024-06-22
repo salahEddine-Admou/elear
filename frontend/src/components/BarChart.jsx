@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 const data = [
   { name: 'DevOps', students: 110  },
   { name: 'Cyber', students: 75 },
-  { name: 'Coding', students: 90 },
+  { name: 'React', students: 90 },
   { name: 'Scrum', students: 25 },
 ];
 

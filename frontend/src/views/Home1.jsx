@@ -121,9 +121,9 @@ const Home1 = () => {
           <a>${foundCourse.description}</a>
           <div style="text-align: left;">
             <p><strong>Détails du cours:</strong></p>
-            <li><strong>Domaine:</strong> ${foundCourse.domaine}</li>
-            <li><strong>Langue:</strong> ${foundCourse.langue}</li>
-            <li><strong>Localisation:</strong> ${foundCourse.localisation}</li>
+            <li><strong>Duration:</strong> ${foundCourse.date} months</li>
+            <li><strong>Level:</strong> ${foundCourse.level}</li>
+            <li><strong>Instructor:</strong> ${foundCourse.instructor}</li>
           </div>
         `,
             showCancelButton: true,
@@ -173,6 +173,7 @@ const Home1 = () => {
                     title: "Erreur",
                     text: "Erreur lors de l'inscription au cours : " + inscriptionResult.message,
                     icon: "error",
+                    iconColor:"#d3d3d3",
                 });
             }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -216,7 +217,7 @@ const Home1 = () => {
 
 
 
-      <div className='mt-12 '>
+      <div className='mt-6 '>
         <div className='flex flex-row space-x-3 mb-8 '><div className='text-xl font-bold w-56 '>Continue Studying</div>
         <div className='bg-gray-300 h-0.5 m-4 w-full'></div></div>
 
