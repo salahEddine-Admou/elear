@@ -87,7 +87,7 @@ public class FormationService {
             existingFormation.setPhoto(updatedFormation.getPhoto());
             existingFormation.setDate(updatedFormation.getDate());
             existingFormation.setLocalisation(updatedFormation.getLocalisation());
-            existingFormation.setModules(updatedFormation.getModules());
+          //  existingFormation.setModules(updatedFormation.getModules());
             existingFormation.setInstructor(updatedFormation.getInstructor());
             existingFormation.setLevel(updatedFormation.getLevel());
             return formationRepository.save(existingFormation);
@@ -640,9 +640,9 @@ public class FormationService {
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("organised by Orange Digital Center Rabat", 160, 420);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
-        g2d.drawString("in duration ", 160, 460);
-        g2d.drawString(date, 260, 460);
-        g2d.drawString("mois", 300, 460);
+        g2d.drawString("in duration of", 160, 460);
+        g2d.drawString(date, 300, 460);
+        g2d.drawString("month", 330, 460);
         g2d.drawString("Mm.Nadia Mrabi", 640, 540);
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("Senior Manager PSE et Orange Digital Center", 640, 580);
