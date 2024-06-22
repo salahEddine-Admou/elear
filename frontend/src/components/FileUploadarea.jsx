@@ -191,6 +191,7 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
       <div className="bg-white p-8 shadow-md w-full flex flex-col items-center h-[1050px]">
       <div className=" w-full mb-6">
       {val === 'true' && (
+<<<<<<< HEAD
         <div className="w-full py-6 px-4 bg-gray-100 rounded-md border-2 border-gray-100 focus-within:ring-1 focus-within:ring-blue-500 flex flex-col items-start ">
             <p className="font-bold mb-4">Save the <span className='text-orange-500'>changes</span></p>
             <div className="flex">
@@ -203,6 +204,18 @@ const FileUploadArea = ({ moduleId, submoduleIndex, submodule, onSubmoduleNameCh
                 </svg><span>Yes</span>
               </button>
               <button className="bg-gray-300 hover:bg-gray-400 text-black px-3 py-1.5 text-xs font-bold" onClick={() => handleClickAnnuler()}>No</button>
+=======
+          <div className="w-full py-6 px-4 bg-gray-100 rounded-md border-2 border-gray-100 focus-within:ring-1 focus-within:ring-blue-500 flex flex-col items-start ">
+            <p className="font-bold mb-4">Save the <span className='text-orange-500'>changes</span></p>
+            <div className="flex">
+            <button
+  className="bg-orange-500 hover:bg-orange-600 text-black px-3 py-1.5 text-xs font-bold mr-2 flex items-center justify-center"
+  onClick={() => handleClick(submodule.id,submodulupdate.title, submodulupdate.contenu)}
+><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11.8383 1.69134C11.8409 1.31273 11.6173 0.969098 11.2702 0.81793C10.9231 0.666762 10.5193 0.737194 10.2438 0.996948L10.2436 0.996772L4.64107 6.45163L2.79514 4.39589L2.79498 4.39609C2.42 4.07211 1.85821 4.09371 1.50921 4.44553L1.1304 4.82635C0.789088 5.17017 0.759138 5.71504 1.06071 6.0942L1.06055 6.09432L4.09103 9.90255L4.09117 9.90244C4.27012 10.1282 4.54242 10.2599 4.83051 10.2599C5.1186 10.2599 5.3909 10.1282 5.56984 9.90244L5.57 9.90257L11.6309 2.28609L11.6307 2.28598C11.7655 2.11711 11.8387 1.90738 11.8383 1.69134Z" fill="black"/>
+</svg><span>Yes</span></button>
+                <button className="bg-gray-300 hover:bg-gray-400 text-black px-3 py-1.5 text-xs font-bold" onClick={() => handleClickAnnuler()}>No</button>
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
             </div>
         </div>
       )}

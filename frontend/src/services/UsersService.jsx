@@ -1,4 +1,8 @@
 ﻿import {jwtDecode} from 'jwt-decode';
+<<<<<<< HEAD
+=======
+import axios from 'axios';
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 
 export const getUsers = async () => {
     const api = "http://localhost:8080/users";
@@ -82,7 +86,13 @@ export const deleteUsers = async (userIds) => {
         console.error("Error fetching data:", error.message);
         return { status: 'error', message: `Error fetching data: ${error.message}` };
     }
+<<<<<<< HEAD
 }
+=======
+};
+
+
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 export const addUser = async (user) => {
     // Supposons que l'URL de l'API pour ajouter un utilisateur est légèrement différente
     const api = `http://localhost:8080/users/add`;
@@ -1175,6 +1185,7 @@ export const setEndFormation = async (score) => {
         console.error("Error fetching data:", error);
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
+<<<<<<< HEAD
 };
 
 export const createQuestionWithOptionsTest = async (jso) => {
@@ -1331,3 +1342,6 @@ export const updateTest = async (jso) => {
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
 }
+=======
+};
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7

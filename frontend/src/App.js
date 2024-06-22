@@ -7,8 +7,13 @@ import Layouts from './layout/Layouts';
 import Notification from './views/Notification';
 import Email from './views/Email';
 import Test from './views/Test';
+<<<<<<< HEAD
 import Dashboard from './views/Dashboard';
 import Formation from './views/Formation';
+=======
+import Formation from './views/Formation';
+import Dashboard from './views/Dashboard';
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 import Parcourirmodules from './views/ParcourirModules';
 import HomeC from './views/HomeC';
 import Home1 from './views/Home1';
@@ -19,8 +24,11 @@ import Par from "./views/UserCours"
 import FormationInput from "./views/FormationInput";
 import Settings from './views/Settings';
 import TestFinal from './views/TestFinal';
+<<<<<<< HEAD
 import TestFinalInput from './components/TestFinalsInput';
 import TestInput from './components/TestInput';
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 
 
 function App() {
@@ -53,11 +61,17 @@ function App() {
       <Route path="register" element={<Register />} />
       <Route path="modules" element={<Par />} />
       <Route path='AjoutModuleFormation' element={<AjoutFormation />} />
+<<<<<<< HEAD
       <Route path='TestFinal' element={<TestFinalInput />} />
       <Route path='FormationInput' element={<FormationInput />} />
       <Route path="settings" element={<Settings />} />
       <Route path="TestFinal" element={<TestFinal />} />
       <Route path="testInput" element={<TestInput />} />
+=======
+      <Route path='FormationInput' element={<FormationInput />} />
+      <Route path="settings" element={<Settings />} />
+      <Route path="TestFinal" element={<TestFinal />} />
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     </Routes>
   </BrowserRouter>
           

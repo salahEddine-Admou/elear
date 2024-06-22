@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Table } from 'antd';
 import { getUsers, deleteUser } from '../services/UsersService';
 import ModifyUserModal from './ModifyUserModal';
@@ -10,6 +11,23 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
   const [stt, setStt ]= useState(false);
+=======
+import { Table, Modal, Button, Upload } from 'antd';
+import { getUsers, deleteUser } from '../services/UsersService';
+import ModifyUserModal from './ModifyUserModal';
+import { UploadOutlined } from '@ant-design/icons';
+import "../styles/table.css"
+import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+import FileUpload from "../components/FileUpload";
+
+const UserTable = ( {searchValue, user, checkedIndices, setCheckedIndices }) => {
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState([]);
+  const [previewData, setPreviewData] = useState([]);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 
 
   useEffect(() => {
@@ -98,7 +116,11 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
     }
     setCheckedIndices(updatedIndices);
   };
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
   const handleDeleteUser = async (userId) => {
     Swal.fire({
       title: 'Are you sure you want to delete this user?',
@@ -139,10 +161,20 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
     {
       title: 'Full Name',
       dataIndex: 'fullName',
+<<<<<<< HEAD
+=======
+      sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+      sortDirections: ['ascend', 'descend'],
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     },
     {
       title: 'Username',
       dataIndex: 'username',
+<<<<<<< HEAD
+=======
+      sorter: (a, b) => a.username.localeCompare(b.username),
+      sortDirections: ['ascend', 'descend'],
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     },
     {
       title: 'Email',
@@ -151,10 +183,20 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
     {
       title: 'Date',
       dataIndex: 'date',
+<<<<<<< HEAD
+=======
+      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      sortDirections: ['ascend', 'descend'],
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     },
     {
       title: 'Role',
       dataIndex: 'role',
+<<<<<<< HEAD
+=======
+      sorter: (a, b) => a.role.localeCompare(b.role),
+      sortDirections: ['ascend', 'descend'],
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     },
     {
       title: 'Action',
@@ -229,6 +271,12 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
 
   return (
     <div className='w-[95%] m-auto'>
+<<<<<<< HEAD
+=======
+      <div style={{ marginBottom: 16 }}>
+      <FileUpload />
+      </div>
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
       <Table
         columns={columns}
         className="custom-table"
@@ -245,6 +293,10 @@ const UserTable = ({ searchValue, user, checkedIndices, setCheckedIndices }) => 
           Update={UpdateUser}
         />
       )}
+<<<<<<< HEAD
+=======
+
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     </div>
   );
 };

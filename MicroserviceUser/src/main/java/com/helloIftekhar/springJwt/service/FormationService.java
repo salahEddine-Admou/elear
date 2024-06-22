@@ -768,6 +768,7 @@ public class FormationService {
 
     }
 
+<<<<<<< HEAD
     public TestFinal updateTestFinal(TestFinal testFinal, String testId) {
         return testFinalRepository.findById(testId)
                 .map(existingTestFinal -> {
@@ -778,6 +779,8 @@ public class FormationService {
                 })
                 .orElse(null);
     }
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 
     public Quiz createQuiz(Quiz quiz,String ModuleId) {
 

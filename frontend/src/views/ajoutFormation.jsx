@@ -4,11 +4,15 @@ import FileUploadArea from '../components/FileUploadarea';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import { getModulesAdmin } from '../services/UsersService';
+<<<<<<< HEAD
 import TestFinalInput from '../components/TestFinalsInput';
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 const AjoutFormation = () => {
   const [modules, setModules] = useState([]);
   const [selectedSubmodule, setSelectedSubmodule] = useState(null);
   const [fileUploads, setFileUploads] = useState({}); // State to track file uploads
+<<<<<<< HEAD
   const [stateA, setStateA] = useState("sub");
   const setStateAdmin = (newState) => {
     setStateA(newState);
@@ -16,6 +20,12 @@ const AjoutFormation = () => {
   const handleSubmoduleSelect = (moduleId, index, s) => {
     const module = modules.find(m => m.id === moduleId);
     setStateA(s);
+=======
+
+  const handleSubmoduleSelect = (moduleId, index) => {
+    const module = modules.find(m => m.id === moduleId);
+
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     // First, check if the module exists
     if (!module) {
         console.error('No module found with id:', moduleId);
@@ -95,10 +105,15 @@ const AjoutFormation = () => {
           modules={modules}
           setModules={setModules}
           onSubmoduleSelect={handleSubmoduleSelect}
+<<<<<<< HEAD
           setStateAdmin={setStateAdmin}
         />
         {stateA === "sub" ? (
         selectedSubmodule && (
+=======
+        />
+        {selectedSubmodule && (
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
           <FileUploadArea
             moduleId={selectedSubmodule.moduleId}
             submoduleIndex={selectedSubmodule.index}
@@ -107,6 +122,7 @@ const AjoutFormation = () => {
             onFileUpload={handleFileUpload}
             fileUploads={fileUploads[selectedSubmodule.moduleId]?.[selectedSubmodule.index] || {}}
           />
+<<<<<<< HEAD
         )
       ) : (
         <TestFinalInput
@@ -116,4 +132,12 @@ const AjoutFormation = () => {
   </>
 );
 };
+=======
+        )}
+      </div>
+    </>
+  );
+};
+
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 export default AjoutFormation;

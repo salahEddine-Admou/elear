@@ -4,8 +4,11 @@ import { getTest, setEndFormation } from '../services/UsersService';
 import Swal from 'sweetalert2';
 import { useNavigate, Link } from "react-router-dom"; 
 import { deleteInscr } from '../services/UsersService';
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 const TestFinal = ({allSubmodulesComplete,  Timer}) => {
     const [questions, setQuestions] = useState([]); 
     const [title, setTitle] = useState('');
@@ -238,7 +241,11 @@ try {
           }
       });
       if(questions.length === 0){
+<<<<<<< HEAD
         questions.length  = localStorage.getItem('questions');
+=======
+        questions.length  = localStorage.getItem('questions').length;
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
       }
       const scorePercentage = (correctCount / questions.length) * 100;
      
@@ -340,11 +347,19 @@ try {
     return (
         <>
             
+<<<<<<< HEAD
         <div className="bg-gray-200 h-full overflow-hidden" onContextMenu={preventRightClick}>
             <div className="sm:mx-6 md:ml-60 md:mr-4 md:mt-14 p-6">
                 <div className="bg-white mb-2 ml-6 no-select" style={{ height: '500px' }}>
                           
                     <div className="py-2 px-12">
+=======
+                <div className="bg-gray-200 h-full overflow-hidden" onContextMenu={preventRightClick}>
+                    <div className="sm:mx-6 md:ml-60 md:mr-4 md:mt-14 p-6">
+                        <div className="bg-white mb-2 ml-6 no-select" style={{ height: '500px' }}>
+                          
+                            <div className="py-2 px-12">
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
                                 {showTest ? (
                                     <>
                                         <div className="text-center p-12 mt-4">

@@ -3,7 +3,10 @@ package com.helloIftekhar.springJwt.controller;
 
 import com.helloIftekhar.springJwt.model.*;
 import com.helloIftekhar.springJwt.repository.CertificatRepo;
+<<<<<<< HEAD
 import com.helloIftekhar.springJwt.repository.TestFinalRepository;
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 import com.helloIftekhar.springJwt.service.FormationService;
 import com.helloIftekhar.springJwt.service.JwtService;
 import com.helloIftekhar.springJwt.service.UserService;
@@ -38,9 +41,12 @@ public class FormationController {
     private final JwtService jwtTokenProvider;
     @Autowired
     private CertificatRepo certificatRepo;
+<<<<<<< HEAD
     @Autowired
     private TestFinalRepository testFinalRepository;
 
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     @PostMapping("/add")
     public ResponseEntity<Object> createFormation(@RequestBody Formation formation) {
         Formation createdFormation = formationService.CreateFormation(formation);
@@ -350,6 +356,7 @@ System.out.println(module1);
         TestFinal createdTestFinal = formationService.addTestFinal(testFinal,FormationId);
         return new ResponseEntity<>(createdTestFinal, HttpStatus.CREATED);
     }
+<<<<<<< HEAD
 
     @PutMapping("/updateTest/{testId}")
     public ResponseEntity<TestFinal> updateTestFinal(@RequestBody TestFinal testFinal, @PathVariable String testId) {
@@ -362,10 +369,13 @@ System.out.println(module1);
     }
 
 
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     @GetMapping("/getTest/{idFormation}")
     public TestFinal getTestFinal(@PathVariable String idFormation) {
         return formationService.getTestFinal(idFormation);
     }
+<<<<<<< HEAD
     @GetMapping("/getTestByName/{NameFormation}")
     public Boolean getTestFinalNAME(@PathVariable String NameFormation) {
         TestFinal name = testFinalRepository.findByTitle(NameFormation);
@@ -377,6 +387,8 @@ System.out.println(module1);
         }
 
     }
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
     @PostMapping("/setEndFormation/{idFormation}/{idUser}/{score}")
     public void setEndFormation(@PathVariable String idFormation,@PathVariable String idUser,@PathVariable Integer score) {
          formationService.setEndFormation(idFormation,idUser,score);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { RiEditLine } from 'react-icons/ri';
+<<<<<<< HEAD
 import { addModule, addSubmodule, deleteModule, deleteSubmodule, updateModule, addTestFinal, getTestName } from '../services/UsersService';
 import CustomAlert from '../components/CustomAlert '
 import Swal from 'sweetalert2';
@@ -9,6 +10,13 @@ import TestInput from './TestInput';
 
 
 const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) => {
+=======
+import { addModule, addSubmodule, deleteModule, deleteSubmodule, updateModule } from '../services/UsersService';
+import CustomAlert from '../components/CustomAlert '
+import Swal from 'sweetalert2';
+import '../styles/Popp.css'
+const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
  modules.forEach(module => {
   module.submodules.forEach(module1 => {
     // console.log('Submodules for module:',module1.title);
@@ -20,8 +28,11 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) 
   const [editableModuleId, setEditableModuleId] = useState(null);
   const [module, setModule] = useState({ name: '' });
   const [module2, setModule2] = useState({ name: '' });
+<<<<<<< HEAD
   const [testFinal, setTestFinal] = useState({ name: '' });
   const [testFinals, setTestFinals] = useState([]);
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 
   const [submodule, setSubmodule] = useState({ 
     id:'',
@@ -47,7 +58,11 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) 
   };
    useEffect(() => {
        if (!initialSelectDone && typeof onSubmoduleSelect === 'function' && modules.length > 0 && modules[0].submodules.length > 0) {
+<<<<<<< HEAD
            onSubmoduleSelect(modules[0].id, 0, 'sub');
+=======
+           onSubmoduleSelect(modules[0].id, 0);
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
            setInitialSelectDone(true); 
        }
    }, [modules, onSubmoduleSelect, initialSelectDone]);
@@ -91,7 +106,11 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) 
         await new Promise(resolve => setTimeout(resolve, 0));  // A trick to wait for the state to update
         const response = await addModule(module2);
         if (response.status === 'success') {
+<<<<<<< HEAD
           setModules(prevCourses  => [...prevCourses, {...response.data, submodules: response.data.submodules || []}]);
+=======
+          setModules(prevCourses => [...prevCourses, {...response.data, submodules: response.data.submodules || []}]);
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
           setModule2({
             name:""
           })
@@ -127,6 +146,7 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) 
   
     }
   };
+<<<<<<< HEAD
   const handleKeyPressTest = async (e) => {
     if (e.key === 'Enter') {
       const testFinalValue = testFinal.name.trim();
@@ -202,6 +222,8 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) 
   
     }
   };
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
   const handleKeyPressModify = async (e, id) => {
 
     if (e.key === 'Enter') {
@@ -372,6 +394,7 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) 
  
   }
 };
+<<<<<<< HEAD
 const handleTest = async (e) => {
   setStateAdmin("test");
 
@@ -400,6 +423,9 @@ const handleTest = async (e) => {
  
 
 };
+=======
+
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -504,9 +530,15 @@ const handleTest = async (e) => {
   
           // Set the next selection if any submodule or previous module is available
           if (nextSelection.moduleId !== null) {
+<<<<<<< HEAD
             onSubmoduleSelect(nextSelection.moduleId, nextSelection.index, 'sub');
           } else {
             onSubmoduleSelect(null, null, 'sub');  // No submodules at all in the project
+=======
+            onSubmoduleSelect(nextSelection.moduleId, nextSelection.index);
+          } else {
+            onSubmoduleSelect(null, null);  // No submodules at all in the project
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
           }
           return newModules;
         });
@@ -525,9 +557,13 @@ const handleTest = async (e) => {
   
   };
   const [moduleEdits, setModuleEdits] = useState({}); // To track changes locally
+<<<<<<< HEAD
 const handleonTestFinalSelect  = () =>{
   
 }
+=======
+
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
   const handleBlur = (moduleId) => {
     // e.target.blur(); // Not necessary to call blur() here as onBlur is called because it's already blurring
     // window.location.reload(); // Uncomment if you really need to reload the entire page (not recommended in most SPAs)
@@ -574,13 +610,21 @@ const handleonTestFinalSelect  = () =>{
           {module.submodules.map((submodule, index) => (
             <div key={index} className="flex items-center mt-2 relative">
               <div className="w-full items-center border border-gray-300 bg-gray-200 px-4 py-2"
+<<<<<<< HEAD
                    onClick={() => onSubmoduleSelect(module.id, index, 'sub')}
+=======
+                   onClick={() => onSubmoduleSelect(module.id, index)}
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
                    
                    >
                 {submodule.title}
                 <RiEditLine
                   className="absolute top-1/2 right-6 transform -translate-y-1/2 cursor-pointer text-gray-500"
+<<<<<<< HEAD
                   onClick={() => onSubmoduleSelect(module.id, index, 'sub')} 
+=======
+                  onClick={() => onSubmoduleSelect(module.id, index)} 
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
                 />
                 <IoMdClose
                   className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer text-gray-500"
@@ -626,11 +670,14 @@ const handleonTestFinalSelect  = () =>{
       </button>
     </div>
   )}
+<<<<<<< HEAD
 <div className="flex justify-center mb-4 border-t pt-6">
 <button onClick={() => handleTest()} className="bg-orange-500 text-black px-6 py-2 text-xs font-bold mr-8">
        ADD Test
       </button>
     </div>
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
   <CustomAlert
         isOpen={alertOpen}
         message={alertMessage}
@@ -646,6 +693,7 @@ export default ModuleInput;
                   
                
    
+<<<<<<< HEAD
   
 
 
@@ -1398,4 +1446,6 @@ export default ModuleInput;
                   
                
    
+=======
+>>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
   
