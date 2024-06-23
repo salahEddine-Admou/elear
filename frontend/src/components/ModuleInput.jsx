@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { RiEditLine } from 'react-icons/ri';
-import { addModule, addSubmodule, deleteModule, deleteSubmodule, updateModule } from '../services/UsersService';
+import { addModule, addSubmodule, deleteModule, deleteSubmodule, updateModule, addTestFinal, getTestName } from '../services/UsersService';
 import CustomAlert from '../components/CustomAlert '
 import Swal from 'sweetalert2';
 import '../styles/Popp.css'
-const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
+import TestInput from './TestInput';
+
+
+const ModuleInput = ({ modules, setModules, onSubmoduleSelect, setStateAdmin }) => {
  modules.forEach(module => {
   module.submodules.forEach(module1 => {
     // console.log('Submodules for module:',module1.title);
@@ -17,6 +20,8 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
   const [editableModuleId, setEditableModuleId] = useState(null);
   const [module, setModule] = useState({ name: '' });
   const [module2, setModule2] = useState({ name: '' });
+  const [testFinal, setTestFinal] = useState({ name: '' });
+  const [testFinals, setTestFinals] = useState([]);
 
   const [submodule, setSubmodule] = useState({ 
     id:'',
@@ -42,7 +47,7 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
   };
    useEffect(() => {
        if (!initialSelectDone && typeof onSubmoduleSelect === 'function' && modules.length > 0 && modules[0].submodules.length > 0) {
-           onSubmoduleSelect(modules[0].id, 0);
+           onSubmoduleSelect(modules[0].id, 0, 'sub');
            setInitialSelectDone(true); 
        }
    }, [modules, onSubmoduleSelect, initialSelectDone]);
@@ -86,7 +91,7 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
         await new Promise(resolve => setTimeout(resolve, 0));  // A trick to wait for the state to update
         const response = await addModule(module2);
         if (response.status === 'success') {
-          setModules(prevCourses => [...prevCourses, {...response.data, submodules: response.data.submodules || []}]);
+          setModules(prevCourses  => [...prevCourses, {...response.data, submodules: response.data.submodules || []}]);
           setModule2({
             name:""
           })
@@ -112,6 +117,81 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
     }
    else if (result.dismiss === Swal.DismissReason.cancel) {
     setModule2({
+      name:""
+    })
+    handleFocus();
+   
+    e.target.blur();
+  }
+    });
+  
+    }
+  };
+  const handleKeyPressTest = async (e) => {
+    if (e.key === 'Enter') {
+      const testFinalValue = testFinal.name.trim();
+      if (testFinalValue === '') {
+        console.error('The module name cannot be empty.');
+        Swal.fire({
+          title: 'Invalid Input',
+          text: 'The module name cannot be empty.',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'confirm-button-class'
+          }
+        });
+        return;  
+      }
+      Swal.fire({
+        title: 'Are you sure you want to add this Module?',
+        icon: 'question',
+        iconColor: 'rgb(226, 78, 14)',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, add it!',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          popup: 'sweetalert-popup', // Utilisez la classe personnalisée ici
+          confirmButton: 'confirm-button-class', // Custom class for the confirm button
+      cancelButton: 'cancel-button-class' // Custom class for the cancel button
+        }
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+      e.preventDefault();  // Prevent the default action of the enter key
+       handleChange(e);  // Await the handleChange function to finish
+      try {
+        // Wait until the state is updated before making an API call
+        await new Promise(resolve => setTimeout(resolve, 0));  // A trick to wait for the state to update
+        const response = await addTestFinal(testFinal);
+        if (response.status === 'success') {
+          setTestFinal(prevFinalTests => [...prevFinalTests, {...response.data, testFinal: response.data.testFinal || []}]);
+          setTestFinal({
+            name:""
+          })
+          e.target.blur(); 
+        } else {
+          Swal.fire({
+            title: 'Erreur',
+            text: 'already exists',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'custom-ok-button'
+            }
+        });
+          setTestFinal({
+            name:""
+          })
+          console.error('Failed to add module:', response.message);
+        }
+      } catch (error) {
+        console.error("Error adding module:", error);
+      }
+    }
+   else if (result.dismiss === Swal.DismissReason.cancel) {
+    setTestFinal({
       name:""
     })
     handleFocus();
@@ -292,7 +372,34 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
  
   }
 };
+const handleTest = async (e) => {
+  setStateAdmin("test");
 
+  
+  
+      const reponse1 = await getTestName();
+      console.log(reponse1)
+      if(reponse1 === "false"){
+        try {
+        const reponse = await addTestFinal();
+        //    const updatedTests = await fetchFinalTests();
+           // setTestFinals(updatedTests);
+            console.log(reponse.data.id)
+            localStorage.setItem('idTEST',reponse.data.id)
+            
+          //  setAlertMessage('Test final added successfully!');
+           // setAlertOpen(true);
+          } catch (error) {
+            console.error('Failed to add test final:', error);
+            //setAlertMessage('Failed to add test final');
+            setAlertOpen(true);
+          }
+      }
+     
+  
+ 
+
+};
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -397,9 +504,9 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
   
           // Set the next selection if any submodule or previous module is available
           if (nextSelection.moduleId !== null) {
-            onSubmoduleSelect(nextSelection.moduleId, nextSelection.index);
+            onSubmoduleSelect(nextSelection.moduleId, nextSelection.index, 'sub');
           } else {
-            onSubmoduleSelect(null, null);  // No submodules at all in the project
+            onSubmoduleSelect(null, null, 'sub');  // No submodules at all in the project
           }
           return newModules;
         });
@@ -418,7 +525,9 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
   
   };
   const [moduleEdits, setModuleEdits] = useState({}); // To track changes locally
-
+const handleonTestFinalSelect  = () =>{
+  
+}
   const handleBlur = (moduleId) => {
     // e.target.blur(); // Not necessary to call blur() here as onBlur is called because it's already blurring
     // window.location.reload(); // Uncomment if you really need to reload the entire page (not recommended in most SPAs)
@@ -465,13 +574,13 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
           {module.submodules.map((submodule, index) => (
             <div key={index} className="flex items-center mt-2 relative">
               <div className="w-full items-center border border-gray-300 bg-gray-200 px-4 py-2"
-                   onClick={() => onSubmoduleSelect(module.id, index)}
+                   onClick={() => onSubmoduleSelect(module.id, index, 'sub')}
                    
                    >
                 {submodule.title}
                 <RiEditLine
                   className="absolute top-1/2 right-6 transform -translate-y-1/2 cursor-pointer text-gray-500"
-                  onClick={() => onSubmoduleSelect(module.id, index)} 
+                  onClick={() => onSubmoduleSelect(module.id, index, 'sub')} 
                 />
                 <IoMdClose
                   className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer text-gray-500"
@@ -517,6 +626,11 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
       </button>
     </div>
   )}
+<div className="flex justify-center mb-4 border-t pt-6">
+<button onClick={() => handleTest()} className="bg-orange-500 text-black px-6 py-2 text-xs font-bold mr-8">
+       ADD Test
+      </button>
+    </div>
   <CustomAlert
         isOpen={alertOpen}
         message={alertMessage}
@@ -528,8 +642,3 @@ const ModuleInput = ({ modules, setModules, onSubmoduleSelect }) => {
 };
 
 export default ModuleInput;
-
-                  
-               
-   
-  

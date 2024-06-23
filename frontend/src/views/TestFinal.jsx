@@ -19,6 +19,7 @@ const TestFinal = ({allSubmodulesComplete,  Timer}) => {
 
     
     useEffect(() => {
+        console.log(Timer)
         setTimer(Timer);
        console.log(localStorage.getItem('answers'));
     }, []);
@@ -236,7 +237,9 @@ try {
           }
       });
       if(questions.length === 0){
+
         questions.length  = localStorage.getItem('questions').length;
+
       }
       const scorePercentage = (correctCount / questions.length) * 100;
      
@@ -337,12 +340,13 @@ try {
     const l = questions.length;
     return (
         <>
-            
-                <div className="bg-gray-200 h-full overflow-hidden" onContextMenu={preventRightClick}>
-                    <div className="sm:mx-6 md:ml-60 md:mr-4 md:mt-14 p-6">
-                        <div className="bg-white mb-2 ml-6 no-select" style={{ height: '500px' }}>
+
+        <div className="bg-gray-200 h-full overflow-hidden" onContextMenu={preventRightClick}>
+            <div className="sm:mx-6 md:ml-60 md:mr-4 md:mt-14 p-6">
+                <div className="bg-white mb-2 ml-6 no-select" style={{ height: '500px' }}>
                           
-                            <div className="py-2 px-12">
+                    <div className="py-2 px-12">
+
                                 {showTest ? (
                                     <>
                                         <div className="text-center p-12 mt-4">
@@ -369,7 +373,7 @@ try {
                                     <>
                                         <div className="text-center p-8"><h2 className="font-bold mt-4">{title}</h2></div>
                                         <div className='px-12 ml-12 py-6'>
-                                            <p>You have 10 minutes to complete the test</p>
+                                            <p>You have  {formatTime()} to complete the test</p>
                                             <br/>
                                             <ul className="text-left list-disc ml-12">
                                                 <li>{questions.length} multiple-choice questions</li>

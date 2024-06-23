@@ -4,14 +4,18 @@ import FileUploadArea from '../components/FileUploadarea';
 import NavBar from '../components/Navbar';
 import axios from 'axios';
 import { getModulesAdmin } from '../services/UsersService';
+import TestFinalInput from '../components/TestFinalsInput';
 const AjoutFormation = () => {
   const [modules, setModules] = useState([]);
   const [selectedSubmodule, setSelectedSubmodule] = useState(null);
   const [fileUploads, setFileUploads] = useState({}); // State to track file uploads
-
-  const handleSubmoduleSelect = (moduleId, index) => {
+  const [stateA, setStateA] = useState("sub");
+  const setStateAdmin = (newState) => {
+    setStateA(newState);
+          }
+  const handleSubmoduleSelect = (moduleId, index, s) => {
     const module = modules.find(m => m.id === moduleId);
-
+    setStateA(s);
     // First, check if the module exists
     if (!module) {
         console.error('No module found with id:', moduleId);
@@ -72,7 +76,6 @@ const AjoutFormation = () => {
     const fetchData2 = async () => {
       try { 
         const modules1 = await getModulesAdmin(); // Supposons que getFormationsMore() soit une fonction qui récupère les données des modules depuis l'API
-        console.log(modules1)
         setModules(modules1 || []);
         console.log("hiiii"+modules1);
       } catch (err) {
@@ -92,8 +95,10 @@ const AjoutFormation = () => {
           modules={modules}
           setModules={setModules}
           onSubmoduleSelect={handleSubmoduleSelect}
+          setStateAdmin={setStateAdmin}
         />
-        {selectedSubmodule && (
+        {stateA === "sub" ? (
+        selectedSubmodule && (
           <FileUploadArea
             moduleId={selectedSubmodule.moduleId}
             submoduleIndex={selectedSubmodule.index}
@@ -102,10 +107,13 @@ const AjoutFormation = () => {
             onFileUpload={handleFileUpload}
             fileUploads={fileUploads[selectedSubmodule.moduleId]?.[selectedSubmodule.index] || {}}
           />
-        )}
-      </div>
-    </>
-  );
+        )
+      ) : (
+        <TestFinalInput
+        />
+      )}
+    </div>
+  </>
+);
 };
-
 export default AjoutFormation;

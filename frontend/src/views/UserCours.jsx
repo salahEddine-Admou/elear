@@ -114,8 +114,8 @@ setStatee(newState);
           const fetchInitialTimer = async () => {
               try {
                   const response = await getTest();
-                  setTimer(response.timeLimit * 60);
-                   
+                  setTimer(response.timeLimit);
+                   console.log(response.timeLimit)
               } catch (error) {
                   console.error('Failed to fetch initial timer', error);
               }

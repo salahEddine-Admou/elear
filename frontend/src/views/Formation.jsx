@@ -75,9 +75,9 @@ const Formation = (onAdd) => {
  
   }, []);
   
-  const handleButtonClick = (id) => {
+  const handleButtonClick = (id, name) => {
     localStorage.setItem('selectedTrainingId', id);
-        
+    localStorage.setItem('selectedTrainingName', 'Final Test - '+name); 
         // Rediriger vers une nouvelle page
         navigate('/AjoutModuleFormation');
   };
@@ -224,7 +224,7 @@ const Formation = (onAdd) => {
                     <h3 className="text-md lg:text-xl font-bold">{training.title}</h3>
                     <p className="font-semibold text-sm lg:text-md text-gray-500">{training.domaine}</p>
                     <div className="mt-1.5">
-                        <button  onClick={() => handleButtonClick(training.id)} className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1">Edit</button>
+                        <button  onClick={() => handleButtonClick(training.id,training.title)} className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1">Edit</button>
                         <button  onClick={() => handleOpenModal(training.id)} className="bg-orange-500 text-black text-xs lg:text-sm font-bold w-20 py-1 ml-2">Modify</button>
                         <button onClick={() => handleDeleteClick(training.id)} className="bg-red-500 text-black text-xs lg:text-sm font-bold w-20 py-1 ml-2">Delete</button>
                     

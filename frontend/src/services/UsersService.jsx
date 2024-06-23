@@ -1,5 +1,7 @@
 ﻿import {jwtDecode} from 'jwt-decode';
+
 import axios from 'axios';
+
 
 export const getUsers = async () => {
     const api = "http://localhost:8080/users";
@@ -83,7 +85,8 @@ export const deleteUsers = async (userIds) => {
         console.error("Error fetching data:", error.message);
         return { status: 'error', message: `Error fetching data: ${error.message}` };
     }
-};
+
+}
 
 
 export const addUser = async (user) => {
@@ -1178,4 +1181,163 @@ export const setEndFormation = async (score) => {
         console.error("Error fetching data:", error);
         return { status: 'error', message: `Error fetching data: ${error}` };
     }
+
 };
+
+export const createQuestionWithOptionsTest = async (jso) => {
+     const TestId = localStorage.getItem("idTEST");
+    const api = `http://localhost:8080/formations/TestFinal/Question/${TestId}`;
+    const token = localStorage.getItem("userToken");
+    if (!token) {
+        console.error('User token not found in localStorage.');
+    }
+       try {
+        const response = await fetch(api, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jso) // Assuming an empty body is intended, or adjust accordingly
+        });
+        console.log('Token:', token);  // Check if token is correctly logged
+
+   
+        if (response.ok) {
+           const data = await response.json();
+            console.log('Test added successfully');
+            console.log(data);
+          return { status: 'success', message: 'Test added successfully' , data: data};
+        } else {
+            if (response.status === 401) {
+                console.error('Unauthorized: Invalid token or token expired.');
+            } else {
+                console.error('HTTP-Error:', response.status, response.statusText);
+            }
+            return { status: 'error', message: `HTTP-Error: ${response.status} ${response.statusText}` };
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error.message}` };
+    }
+};
+
+export const addTestFinal = async () => {
+    const FormationId = localStorage.getItem("selectedTrainingId");
+    if (!FormationId) {
+        console.error('Formation ID not found in localStorage.');
+        return { status: 'error', message: 'Formation ID not found' };
+    }
+
+    const api = `http://localhost:8080/formations/addTest/${FormationId}`;
+    
+    const token = localStorage.getItem("userToken");
+    if (!token) {
+        console.error('User token not found in localStorage.');
+        return { status: 'error', message: 'User token not found' };
+    }
+    try {
+        const response = await fetch(api, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({}) // Assuming an empty body is intended, or adjust accordingly
+        });
+
+
+    console.log('Token:', token);  // Check if token is correctly logged
+
+   
+        if (response.ok) {
+           const data = await response.json();
+            console.log('Test added successfully');
+            console.log(data);
+          return { status: 'success', message: 'Test added successfully' , data: data};
+        } else {
+            if (response.status === 401) {
+                console.error('Unauthorized: Invalid token or token expired.');
+            } else {
+                console.error('HTTP-Error:', response.status, response.statusText);
+            }
+            return { status: 'error', message: `HTTP-Error: ${response.status} ${response.statusText}` };
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error.message}` };
+    }
+}
+export const getTestName = async () => {
+    const TrainingName = localStorage.getItem("selectedTrainingName");
+    const api = `http://localhost:8080/formations/getTestByName/${TrainingName}`;
+    const token = localStorage.getItem("userToken");
+
+
+    if (!token) {
+        console.error("Authorization token is missing.");
+        throw new Error("Authorization token is not available.");
+    }
+
+    try {
+        const response = await fetch(api, {
+
+
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("succ");
+
+        if (!response.ok) {
+            // If the HTTP status code is not in the 200-299 range,
+            // we throw an error with the status and statusText
+            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.text();  // Assuming the server responds with JSON-formatted data
+        console.log(data);
+        return data;  // Return the data to be used by the calling component
+        
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Rethrow the error to be handled by the calling component
+        throw error;
+    }
+};
+
+
+export const updateTest = async (jso) => {
+    const idTEST = localStorage.getItem("idTEST");
+    const api = `http://localhost:8080/formations/updateTest/${idTEST}`; // Incluez l'ID de l'utilisateur dans l'URL
+    const token = localStorage.getItem("userToken");
+
+    try {
+        const response = await fetch(api, {
+            method: 'PUT', // Utilisez 'PUT' ou 'PATCH' selon les besoins de votre API
+            headers: {
+                'Authorization': ` Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jso) // userData contient les informations mises à jour de l'utilisateur
+        });
+
+        if (response.ok) {
+            console.log('Module updated successfully');
+            const data = await response.json(); // Récupérez la réponse de l'API si nécessaire
+            console.log(data);
+            return { status: 'success', message: 'Module updated successfully', data };
+        } else {
+            console.error('HTTP-Error:', response.status);
+            return { status: 'error', message: `HTTP-Error: ${response.status}` };
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { status: 'error', message: `Error fetching data: ${error}` };
+    }
+}
+
+
+
