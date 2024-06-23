@@ -768,7 +768,6 @@ public class FormationService {
 
     }
 
-<<<<<<< HEAD
     public TestFinal updateTestFinal(TestFinal testFinal, String testId) {
         return testFinalRepository.findById(testId)
                 .map(existingTestFinal -> {
@@ -779,8 +778,7 @@ public class FormationService {
                 })
                 .orElse(null);
     }
-=======
->>>>>>> aa17e615cf6c958c94d848f0888ba0a740b7c2f7
+
 
     public Quiz createQuiz(Quiz quiz,String ModuleId) {
 
@@ -837,11 +835,11 @@ public class FormationService {
         return question;
     }
     @Transactional
-    public Question createQuestionTest(String text, List<String> optionsTexts, String TestId) {
+    public Question createQuestionTest(int correct, String text, List<String> optionsTexts, String TestId) {
         // Créer la question
         Question question = new Question();
         question.setQuestionText(text);
-
+        question.setCorrectOption(correct);
         // Créer et sauvegarder chaque option
         List<Option> options = new ArrayList<>();
         for (String optionText : optionsTexts) {
