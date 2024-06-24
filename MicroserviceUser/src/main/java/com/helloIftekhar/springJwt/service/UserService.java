@@ -1,25 +1,33 @@
 
 package com.helloIftekhar.springJwt.service;
-
 import com.helloIftekhar.springJwt.model.User;
 import com.helloIftekhar.springJwt.repository.Formationrepository;
 import com.helloIftekhar.springJwt.repository.InscriptionFormationRepository;
 import com.helloIftekhar.springJwt.repository.TokenRepository;
 import com.helloIftekhar.springJwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.*;
+
+import static java.sql.JDBCType.NUMERIC;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
-    private final UserRepository userRepository;
     private final Formationrepository formationRepository;
     private final PasswordEncoder passwordEncoder;
     private  final InscriptionFormationRepository inscriptionFormationRepository;
     private TokenRepository tokenRepository;
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();

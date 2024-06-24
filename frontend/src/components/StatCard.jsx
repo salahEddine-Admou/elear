@@ -6,14 +6,14 @@ const StatCard = ({ title, value, icon, color }) => {
     <Card className={`shadow-lg rounded-lg ${color} text-white`}>
       <CardContent>
         <div className="flex items-center">
-          <div className="mr-4">
+          <div className="mr-4 ">
             {icon}
           </div>
           <div>
             <Typography variant="h6" component="h2" className="font-bold">
               {title}
             </Typography>
-            <Typography variant="h3" component="p">
+            <Typography variant="h3" component="p" className='font-bold text-orange-500 ml-6'>
               {value}
             </Typography>
           </div>

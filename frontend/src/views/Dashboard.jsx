@@ -17,7 +17,7 @@ const Dashboard = () => {
       <Grid container spacing={3}>
         {/* Statistic Cards */}
         <Grid item xs={10} md={4}>
-          <StatCard title="Students" value="200" icon={<GroupIcon />} color="border-2	border-solid border-orange-500" />
+          <StatCard title="Students" value="200" icon={<GroupIcon className="size-20"/>} color="border-2	border-solid border-orange-500" />
         </Grid>
         <Grid item xs={10} md={4}>
           <StatCard title="Instructors" value="10" icon={<SchoolIcon />} color="border-2	border-solid border-orange-500" />
