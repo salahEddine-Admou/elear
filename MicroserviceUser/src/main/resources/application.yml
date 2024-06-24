@@ -4,4 +4,3 @@ spring:
       database: security
       host: localhost
       port: 27017
- 
